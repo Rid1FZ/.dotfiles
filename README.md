@@ -57,7 +57,7 @@ chromium-browser --enable-features=UseOzonePlatform --ozone-platform=wayland
 Run the installer
 
 ```bash
-bash <(curl --location 'https://raw.githubusercontent.com/Rid1FZ/.dotfiles/master/install')
+bash <(curl --location 'https://raw.githubusercontent.com/Rid1FZ/.dotfiles/master/bootstrap')
 
 ```
 
