@@ -1,0 +1,36 @@
+#!/bin/env bash
+
+command -v kitten &>/dev/null && kitten icat --clear --transfer-mode file 2>/dev/null
+
+__mime_type="$(file -b --mime-type --dereference "$1")"
+
+case "$__mime_type" in
+	inode/directory ) 
+		eza --classify --icons --group-directories-first --all --color=always "$1"
+		;;
+	video/* )
+		exiftool "$1"
+		;;
+	image/*)
+		if command -v kitten &>/dev/null; then
+			kitten icat --transfer-mode file --stdin no "$1" < /dev/null 2>/dev/null
+		else
+			exiftool "$1"
+		fi
+		;;
+	text/* )
+		bat "$1"
+		;;
+	application/* )
+		case "$__mime_type" in
+			*/pdf )
+				exiftool "$1"
+				;;
+			*/gzip )
+				{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || gunzip -l "$1"
+				;;
+			*/x-xz )
+				{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || xz -l "$1"
+				;;
+		esac
+esac

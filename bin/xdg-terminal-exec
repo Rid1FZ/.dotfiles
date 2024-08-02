@@ -1,0 +1,13 @@
+#!/bin/env bash
+
+function _launch_terminal {
+    nohup kitty --title Terminal "$@" &>/dev/null &
+}
+
+if [[ -d "$1" ]]; then
+    _launch_terminal --working-directory "$1"
+else
+    _launch_terminal "$@"
+fi
+
+exit

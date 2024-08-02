@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+TryExec=alacritty
+Exec=xdg-terminal-exec %U
+Icon=Terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+NoDisplay=true
+MimeType=inode/directory;
+Name=Terminal
+GenericName=Terminal
+Comment=A fast, cross-platform, OpenGL terminal emulator
+StartupWMClass=Terminal
+X-Desktop-File-Install-Version=0.26

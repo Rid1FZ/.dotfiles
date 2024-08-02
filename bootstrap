@@ -1,0 +1,180 @@
+#!/bin/env bash
+
+shopt -s failglob extglob dotglob
+
+DOTFILES="${DOTFILES:-${HOME}/.dotfiles}"
+
+required_packages=(
+  "qt6-qtwayland" "qt5-qtwayland" "kvantum" "polkit-kde" "hyprpicker"
+  "hyprland" "sddm" "ripgrep" "plocate" "eza" "fzf" "git" "nodejs" "zsh" "wlogout"
+  "gh" "bat" "feh" "zathura" "zathura-pdf-poppler" "waybar" "symlinks" "trash-cli"
+  "neovim" "fd-find" "exiftool" "zsh-autosuggestions" "zsh-syntax-highlighting" "unzip"
+  "slurp" "grim" "python3-pip" "grimblast" "brave-browser" "kitty" "xdg-desktop-portal-gtk"
+  "xdg-desktop-portal-hyprland"
+)
+
+development_packages=(
+  "freetype-devel" "cairo-devel" "pango-devel" "wayland-devel" "libxkbcommon-devel"
+  "scdoc" "harfbuzz" "wayland-protocols-devel" "meson" "ninja" "rustc" "cargo" "rustup"
+  "make" "cmake" "clang" "clang-tools-extra"
+)
+
+theming_tools=(
+  "kvantum-qt5" "lxappearance" "gnome-tweaks" "qt6ct" "qt5ct"
+)
+
+groups=(
+  "multimedia" "fonts" "vlc"
+)
+
+function usage {
+  echo "Usage: install [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo " --help, -h    Display this help message and exit"
+  echo " --no-package  Do not install dnf packages"
+}
+
+function __logger {
+  local normal='\033[0m'
+  local red='\033[1;31m'
+  local yellow='\033[1;33m'
+  local blue='\033[1;34m'
+
+  case "$1" in
+    --info ) echo -e "${blue}[info]${normal}: $2" ;;
+    --warning ) echo -e "${yellow}[warning]${normal}: $2" >&2 ;;
+    --error ) echo -e "${red}[error]${normal}: $2" >&2 ;;
+  esac
+}
+
+function linker {
+  local skip=false
+  case "$1" in
+    --skip ) skip=true;;
+    --backup ) skip=false;;
+    * )
+      __logger --error 'invalid argument for __linker'
+      exit 1;;
+  esac
+
+  local target="${HOME}/${2//"${DOTFILES}/"}"
+
+  if ! [[ -d "$(dirname "${target}")" ]]; then
+    mkdir -p "$(dirname "${target}")"
+  fi
+
+  if [[ -e "${target}" ]]; then
+    __logger --error "${target} already exists"
+    if $skip; then
+      __logger --info "skipping..."
+      return
+    fi
+    __logger --warning "backing up ${target} -> ${target}.bak"
+    mv "${target}" "${target}.bak"
+  fi
+
+  __logger --info "creating link $2 -> ${target}"
+  ln -s "$2" "${target}"
+}
+
+function link_config {
+  __logger --info "linking configs"
+
+  for bin in "${DOTFILES}"/.local/bin/*; do
+    linker --skip "${bin}"
+  done
+
+  for file in "${DOTFILES}"/.config/* "${DOTFILES}"/.local/share/applications/* "${DOTFILES}"/.ipython/profile_default/* "${DOTFILES}"/!(.config|.local|.git*|.stow*|README*|install|setup|.ipython|bin); do
+    linker --backup "${file}"
+  done
+}
+
+function install_packages {
+  # check OS
+  if [[ "$(grep -E '^ID=.*$' '/etc/os-release' | cut -d= -f2)" != "fedora" ]]; then
+    __logger --error 'not fedora. skipping package installation...'
+    return 0
+  fi
+
+  # check dnf5
+  if ! command -v dnf5 &>/dev/null; then
+    __logger --info "installing dnf5"
+    sudo dnf install dnf5 --refresh --assumeyes
+  fi
+
+  # enable rpm fusion repo
+  __logger --info "enabling rpm fusion repos"
+  sudo dnf install \
+    "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+    "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" --assumeyes
+
+  # enable brave repo
+  __logger --info "enabling brave repository"
+  sudo dnf install dnf-plugins-core --assumeyes
+  sudo dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo --assumeyes
+  sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc --assumeyes
+
+  # enable copr repo for hyprland
+  __logger --info "enabling copr repo for hyprland"
+  dnf copr enable solopasha/hyprland --assumeyes
+
+  # install dnf packages
+  __logger --info "refreshing cache"
+  sudo dnf5 makecache --refresh -y
+  __logger --info "updating packages"
+  sudo dnf5 upgrade --setopt='max_parallel_downloads=10' --assumeyes
+
+  __logger --info "installing required packages"
+  sudo dnf5 install "${required_packages[@]}" "${theming_tools[@]}" "${development_packages[@]}" --setopt='max_parallel_downloads=10' --setopt='install_weak_deps=False' --assumeyes 
+  __logger --info "installing required groups"
+  sudo dnf5 group install "${groups[@]}" --setopt='max_parallel_downloads=10' --with-optional --assumeyes
+
+  # install tofi
+  __logger --info "installing tofi"
+  mkdir -p '/tmp/tofi'
+  git clone --depth=1 'https://github.com/philj56/tofi.git' '/tmp/tofi'
+  cd /tmp/tofi || { __logger --error 'tofi installation failed' ; exit 1; }
+  meson build && ninja -C build install
+}
+
+function main {
+  local __install_packages=true
+  
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -h | --help ) 
+        usage
+        exit 0
+        ;;
+      --no-package )
+        __install_packages=false
+        ;;
+      * )
+        __logger --error "invalid option: $1" >&2
+        echo ""
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  if "${__install_packages}"; then
+    install_packages
+  fi
+
+  if ! [[ -e "$DOTFILES" ]]; then
+    mkdir -p "$DOTFILES"
+
+    if ! command -v git &>/dev/null; then
+      __logger --error 'git not found. could not clone dotfiles'
+      exit 1
+    fi
+    git clone 'https://github.com/Rid1FZ/.dotfiles.git' "$DOTFILES"
+  fi
+  
+  link_config
+}
+
+main "$@"

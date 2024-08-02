@@ -1,0 +1,142 @@
+/* -----------------------------------------------------------------------------
+ * Keyframes
+ * -------------------------------------------------------------------------- */
+
+@keyframes blink-warning {
+  70% {
+    color: #cdd6f4;
+  }
+
+  to {
+    color: #f9e2af;
+  }
+}
+
+@keyframes blink-critical {
+  70% {
+    color: #cdd6f4;
+  }
+
+  to {
+    color: #f38ba8;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+
+/* Reset all styles */
+* {
+  border: none;
+  border-radius: 0;
+  min-height: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+/* The whole bar */
+#waybar {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: JetBrainsMono Nerd Font Propo;
+  font-size: 16px;
+}
+
+/* Each module */
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#backlight,
+#tray {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Module styles
+ * -------------------------------------------------------------------------- */
+
+/* Power Button */
+#custom-power {
+  padding: 0px 5px;
+  font-size: 20px;
+}
+
+/* Network */
+#network.disconnected {
+  color: #f9e2af;
+}
+
+#network.disabled {
+  color: #f38ba8;
+}
+
+/* Volume */
+#pulseaudio.muted {
+  color: #f9e2af;
+}
+
+/* CPU Usage */
+#cpu {
+  background: #1e1e2e;
+}
+
+#cpu.warning {
+  color: #f9e2af;
+}
+
+#cpu.critical {
+  color: #f38ba8;
+}
+
+/* Memory Usage */
+#memory {
+  background: #1e1e2e;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#memory.warning {
+  color: #f9e2af;
+}
+
+#memory.critical {
+  color: #f38ba8;
+  animation-name: blink-critical;
+  animation-duration: 2s;
+}
+
+/* Systray */
+#tray {
+  background: #1e1e2e;
+}
+
+/* Window Title */
+#window {
+  font-weight: bold;
+}
+
+/* Workspaces */
+#workspaces button {
+  border-top: 2px solid transparent;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #585b70;
+}
+
+#workspaces button.active {
+  border-color: #f9e2af;
+  color: #1e1e2e;
+  background-color: #89b4fa;
+}
+
+#workspaces button.urgent {
+  border-color: #f38ba8;
+  background-color: #f9e2af;
+  color: #1e1e2e;
+}

@@ -1,0 +1,143 @@
+{
+    // -------------------------------------------------------------------------
+    // Bar
+    // -------------------------------------------------------------------------
+    
+    "layer": "top",
+    "position": "top",
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-center": [
+    ],
+    "modules-right": [
+        "tray",
+        "memory",
+        "cpu",
+        "backlight",
+        "pulseaudio",
+        "network",
+        "clock",
+        "custom/power",
+    ],
+
+
+    // -------------------------------------------------------------------------
+    // Modules
+    // -------------------------------------------------------------------------
+    
+    // Power Button
+    "custom/power": {
+        "format": " 󰤆 ",
+        "tooltip": false,
+        "on-click": "wlogout -b 2"
+    },
+
+    // Clock
+    "clock": {
+        "format-alt": " {:%a, %d %b %Y}",
+        "format": " {:%I:%M %p}"
+    },
+
+    // Network
+    "network": {
+        "format-wifi" : "{icon}",
+        "format-icons": [" 󰤯"," 󰤟"," 󰤢"," 󰤥"," 󰤨"],
+        "format-ethernet": " 󰀂",
+        "format-disconnected" : " 󰤭",
+        "format-disabled": " 󰤯",
+	    "tooltip-format-wifi": "{icon} {essid}",
+        "tooltip-format-ethernet": "󰀂  {ifname}",
+	    "tooltip-format-disconnected": "Disconnected",
+	    "tooltip-format-disabled": "Disabled",
+	    "interval": 1,
+	    "nospacing": 1,
+    },
+
+    // Volume
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-bluetooth": " 󰂰",
+        "nospacing": 1,
+        "tooltip-format": "Volume : {volume}%",
+        "format-muted": " ",
+        "format-icons": {
+            "headphone": " 󰋋",
+            "default": [" "," "," "]
+        },
+        "on-click": "pamixer --toggle-mute",
+        "scroll-step": 1,
+    },
+
+    // Brightness
+    "backlight": {
+  	    "device": "intel_backlight",
+  	    "format": "{icon}",
+  	    "format-icons": [" 󰃞", " 󰃟", " 󰃠"],
+        "nospacing": 1,
+        "tooltip-format": "Brightness : {percent}%",
+        "scroll-step": 1
+    },
+
+    // CPU Usage
+    "cpu": {
+        "interval": 1,
+        "format": " {usage}%",
+        "on-click": "_htop_launcher",
+        "states": {
+          "warning": 70,
+          "critical": 90
+        }
+    },
+
+    // Memory Usage
+    "memory": {
+        "interval": 1,
+        "format": " {}%",
+        "max-length": 10,
+        "on-click": "_htop_launcher",
+        "states": {
+          "warning": 70,
+          "critical": 90
+        }
+    },
+
+    // Systray
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    },
+
+    // Window Title
+    "hyprland/window": {  
+        "format": "  {}",
+        "max-length": 60,
+    },
+
+    // Workspaces
+    "hyprland/workspaces": {
+        "on-click": "activate",
+        "format": "{icon}",
+        "format-icons": {
+            "default": "",
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "urgent": "!"
+        },
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+}
