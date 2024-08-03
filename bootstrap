@@ -85,7 +85,7 @@ function link_config {
     linker --skip "${bin}"
   done
 
-  for file in "${DOTFILES}"/.config/* "${DOTFILES}"/.local/share/applications/* "${DOTFILES}"/.ipython/profile_default/* "${DOTFILES}"/!(.config|.local|.git*|.stow*|README*|install|setup|.ipython|bin); do
+  for file in "${DOTFILES}"/.config/* "${DOTFILES}"/.local/share/applications/* "${DOTFILES}"/.ipython/profile_default/* "${DOTFILES}"/!(.config|.local|.git*|.stow*|README*|install|setup|bootstrap|.ipython|bin); do
     linker --backup "${file}"
   done
 }
