@@ -1,3 +1,3 @@
 #!/bin/env bash
 
-nohup kitty --config="${HOME}/.config/kitty/no-maps.conf" --title Htop --class htop --app-id htop htop &>/dev/null &
+nohup kitty --single-instance --instance-group htop --config="${HOME}/.config/kitty/no-maps.conf" --title Htop --class htop --app-id htop htop &>/dev/null &

@@ -1,3 +1,4 @@
 #!/bin/env bash
 
-nohup kitty --config="${HOME}/.config/kitty/no-maps.conf" --title Neovim --class nvim --app-id nvim nvim "$@" &>/dev/null &
+nohup kitty --single-instance --instance-group nvim --config="${HOME}/.config/kitty/no-maps.conf" --title Neovim --class nvim --app-id nvim nvim "$@" &>/dev/null &
+
