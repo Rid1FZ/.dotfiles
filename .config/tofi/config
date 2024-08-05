@@ -5,8 +5,9 @@ num-results = 0
 drun-launch = true
 
 # font
-font = /usr/share/fonts/JetBrainsMono/JetBrainsMonoNerdFontMono-Medium.ttf
-font-size = 14.5
+# font = /usr/share/fonts/JetBrainsMono/JetBrainsMonoNerdFontMono-Medium.ttf
+font = /usr/share/fonts/Ubuntu/UbuntuNerdFont-Medium.ttf
+font-size = 15
 
 # style
 anchor = top
@@ -15,7 +16,7 @@ width = 100%
 height = 35
 min-input-width = 240
 result-spacing = 30
-padding-top = 5
+padding-top = 3
 padding-bottom = 5
 padding-left = 5
 padding-right = 0
