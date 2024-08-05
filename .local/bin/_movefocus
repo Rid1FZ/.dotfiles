@@ -14,33 +14,29 @@ function usage {
   echo " -d            Move focus to lower window"
 }
 
-
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -h | --help ) 
-      usage
-      exit 1
-      ;;
-    -l )
-      nextfocus="l"
-      ;;
-    -r )
-      nextfocus="r"
-      ;;
-    -u )
-      nextfocus="u"
-      ;;
-    -d )
-      nextfocus="d"
-      ;;
-    * )
-      echo "error: invalid option: $1" >&2
-      usage
-      exit 1
-      ;;
-  esac
-  shift
-done
+case "$1" in
+  -h | --help ) 
+    usage
+    exit 1
+    ;;
+  -l )
+    nextfocus="l"
+    ;;
+  -r )
+    nextfocus="r"
+    ;;
+  -u )
+    nextfocus="u"
+    ;;
+  -d )
+    nextfocus="d"
+    ;;
+  * )
+    echo "error: invalid option: $1" >&2
+    usage
+    exit 1
+    ;;
+esac
 
 if [[ -z "${nextfocus}" ]]; then
   echo "error: no option provided" >&2
