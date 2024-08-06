@@ -15,6 +15,6 @@ function precmd() {
 PS1='%(?.%F{white}.%F{red})%#%f '
 RPS1='%B%F{magenta}$vcs_info_msg_0_%f%b%B%F{blue}%(1j. [ %j   ].)%f%b'
 if [[ -n "$CONTAINER_ID" || -n "$container" ]]; then
-  RPS1+=' %B%F{green}%f%b'
+  RPS1+=' %B%F{green} %f%b'
 fi
 # <<< prompt <<<
