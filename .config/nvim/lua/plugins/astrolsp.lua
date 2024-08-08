@@ -28,6 +28,15 @@ return {
 		---@diagnostic disable: missing-fields
 		config = {
 			clangd = { capabilities = { offsetEncoding = "utf-8" } },
+			rust_analyzer = {
+				settings = {
+					["rust-analyzer"] = {
+						cargo = {
+							features = "all",
+						},
+					},
+				},
+			},
 		},
 		handlers = {},
 		autocmds = {
