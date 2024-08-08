@@ -55,6 +55,7 @@ function _run_script()
 		bash = __run(shell, [[bash %s]]),
 		sh = __run(shell, [[bash %s]]),
 		zsh = __run(shell, [[zsh %s]]),
+		rust = __run(shell, [[cargo run --quiet]]),
 	}
 
 	-- call function with appropriate filetype
