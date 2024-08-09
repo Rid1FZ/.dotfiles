@@ -83,7 +83,7 @@ REPOSITORIES: tuple[str, ...] = (
     rf"""sudo dnf install 'https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{platform.freedesktop_os_release()["VERSION_ID"]}.noarch.rpm' 'https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{platform.freedesktop_os_release()["VERSION_ID"]}.noarch.rpm' --assumeyes""",
 
     # copr repo for hyprland tools
-    r"""sudo dnf copr 'enable solopasha/hyprland' --assumeyes""",
+    r"""sudo dnf copr enable 'solopasha/hyprland' --assumeyes""",
 
     # brave browser repo
     r"""sudo dnf config-manager --add-repo 'https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo' --assumeyes
