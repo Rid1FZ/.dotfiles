@@ -176,8 +176,9 @@ def link_config(path: str, *, skip_if_available=True) -> None:
 def main() -> None:
     global DOTFILES, PATHS_TO_COPY, PATHS_TO_LINK
 
-    os.makedirs(DOTFILES, exist_ok=True)
+    install_packages()
 
+    os.makedirs(DOTFILES, exist_ok=True)
     subprocess.call(
         ["git", "clone", r"https://github.com/Rid1FZ/.dotfiles.git", DOTFILES]
     )
