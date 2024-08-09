@@ -42,7 +42,7 @@ if [[ -z "${nextfocus}" ]]; then
   echo "error: no option provided" >&2
   usage
   exit 1
-elif "${isfullscreen}"; then
+elif [[ "${isfullscreen}" = 1 ]]; then
   notify-send --app-name=Hyprland "Window is maximized" "Current window is maximized. Please tile current window to move focus"
   exit 1
 else
