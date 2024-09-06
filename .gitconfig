@@ -1,0 +1,19 @@
+[init]
+	defaultBranch = master
+[user]
+	name = Ridwan Faiz
+	email = rid1.fz.06@gmail.com
+[credential "https://github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[push]
+	autoSetupRemote = true
+[alias]
+	nccommit = commit --allow-empty-message -m ""
+[github]
+	user = Rid1FZ
+[core]
+	pager = bat --style=changes

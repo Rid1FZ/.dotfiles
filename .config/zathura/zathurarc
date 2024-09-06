@@ -1,0 +1,21 @@
+# options
+set adjust-open "width"
+set pages-per-row 1
+set scroll-page-aware "true"
+set scroll-full-overlap 0.01
+set scroll-step 100
+set zoom-min 10
+set guioptions "s"
+set font "JetBrainsMono Nerd Font Bold 12"
+set render-loading "false"
+set scroll-step 50
+set show-directories "true"
+set show-hidden "true"
+
+# keybindings
+unmap f
+map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
+
+# theme
+include catppuccin-mocha

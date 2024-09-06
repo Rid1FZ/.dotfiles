@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+nohup nvim-launcher-hold "${@}" &>/dev/null &
