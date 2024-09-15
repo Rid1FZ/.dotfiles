@@ -45,19 +45,11 @@ return {
 		mappings = {
 			-- normal mode
 			n = {
-				["<s-l>"] = { "<cmd>bn<cr>", desc = "Next Buffer" },
-				["<s-h>"] = { "<cmd>bp<cr>", desc = "Previous Buffer" },
-				["<Leader>tp"] = { "<cmd>lua _ipython_toggle()<cr>", desc = "Toggleterm IPython" },
-				["<Leader>r"] = { "<cmd>lua _run_script()<cr>", desc = "Run Script" },
-				["<Leader>tt"] = { "<cmd>lua _htop_toggle()<cr>", desc = "Toggleterm Htop" },
-				["<Leader>th"] = { '<cmd>lua _shell_toggle(10, "horizontal")<cr>', desc = "Horizontal Split" },
-				["<Leader>tv"] = { '<cmd>lua _shell_toggle(60, "vertical")<cr>', desc = "Vertical Split" },
+				["<Leader>fb"] = { "<cmd>Telescope buffers initial_mode=normal<cr>", desc = "Search buffers" },
 			},
 
 			-- terminal mode
-			t = {
-				["<esc>"] = { "<cmd>quit<cr>", desc = "Close Terminal" },
-			},
+			t = {},
 
 			-- insert mode
 			i = {},

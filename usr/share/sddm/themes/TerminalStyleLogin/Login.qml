@@ -70,7 +70,7 @@ Column {
 			id: passwordInput
 			
   		echoMode: TextInput.Password
-  		passwordCharacter: ""
+  		passwordCharacter: "*"
 
 			text: ""
 
