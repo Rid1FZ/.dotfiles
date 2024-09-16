@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import json
+import subprocess
+
+activewindow: dict = json.loads(subprocess.getoutput("hyprctl activewindow -j"))
+
+width_px: int = activewindow["size"][0]
+height_px: int = activewindow["size"][1]
+
+width_block: int = int(
+    subprocess.getoutput("tmux display-message -p '#{client_width}'")
+)
+height_block: int = int(
+    subprocess.getoutput("tmux display-message -p '#{client_height}'")
+)
+
+block_width_px: float = width_px / width_block
+block_height_px: float = height_px / height_block
+
+pane_width_block: int = int(
+    subprocess.getoutput("tmux display-message -p '#{pane_width}'")
+)
+pane_height_block: int = int(
+    subprocess.getoutput("tmux display-message -p '#{pane_height}'")
+)
+
+if block_width_px * pane_width_block > block_height_px * pane_height_block:
+    subprocess.run(["tmux split-pane -h -c '#{pane_current_path}'"], shell=True)
+else:
+    subprocess.run(["tmux split-pane -c '#{pane_current_path}'"], shell=True)

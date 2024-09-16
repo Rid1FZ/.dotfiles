@@ -10,7 +10,7 @@ case "${__mime_type}" in
 		exiftool "$1"
 		;;
 	text/* )
-		bat "$1"
+		bat --style=changes,numbers,header-filename,grid "$1"
 		;;
 	application/* )
 		case "${__mime_type}" in

@@ -24,7 +24,7 @@ function open {
 function floc {
 	PREFIX="plocate --ignore-case --regex"
 	
-	target="$(fzf --disabled --ansi --bind "start:reload:${PREFIX} {q}" --bind "change:reload:sleep 0.1; ${PREFIX} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
+	target="$(fzf --disabled --keep-right --ansi --bind "start:reload:${PREFIX} {q}" --bind "change:reload:sleep 0.1; ${PREFIX} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
 	[[ -z "${target}" ]] && return 1
 	
 	open "${target}"
@@ -34,7 +34,7 @@ function ff {
 	arg="${1:-.}"
 	test -d "${arg}" || return 1
 
-	_path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${arg}" | fzf --ansi --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
+	_path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
 	[[ -z "${_path}" ]] && return 1
 	
 	open "${_path}"
@@ -43,7 +43,7 @@ function ff {
 function fcd {
 	arg="${1:-.}"
 	test -d "${arg}" || return 1
-	cd "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
+	cd "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
 }
 
 function fw {
