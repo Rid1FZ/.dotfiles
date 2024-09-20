@@ -54,13 +54,17 @@ chromium-browser --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 ## emacs
 
-The best way to use emacs is to build it from source. The following flags will enable wayland support for emacs, add native-compilation feature, use local home directories to install emacs instead of using root directories, and much more...
+Get the latest stable tarball from [here](https://ftp.gnu.org/gnu/emacs).
+
+Build it from source...
 
 ```bash
-./configure --with-native-compilation --without-ns --without-x --with-pgtk --prefix="$HOME/.local" --exec-prefix="$HOME/.local" --sysconfdir="$HOME/.config" --with-tree-sitter --without-compress-install --with-json --with-imagemagick
+./configure --with-native-compilation=aot --without-ns --without-x --with-pgtk --prefix="$HOME/.local" --exec-prefix="$HOME/.local" --sysconfdir="$HOME/.config" --with-tree-sitter --without-compress-install --with-json --with-imagemagick
+make -j $(nproc --all)
+make install
 ```
 
-Use `--aot` flag during Installation of doom emacs as it will compile all packages to binaries
+Use `--aot` flag during Installation/Sync/Update of doom emacs to compile all packages to native binary...
 
 ```bash
 doom install --aot
