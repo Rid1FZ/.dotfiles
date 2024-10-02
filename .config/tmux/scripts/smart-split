@@ -65,7 +65,7 @@ def main() -> None:
     if not shutil.which("hyprctl"):
         subprocess.run(
             shlex.split(
-                """tmux display-message -d 3000 \"error: `hyprctl' command not found\""""
+                """tmux display-message -p -d 3000 \"error: `hyprctl' command not found\""""
             )
         )
         return
