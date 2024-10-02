@@ -33,6 +33,8 @@ for lang, cstring in pairs(cstrings) do
 	vim.api.nvim_create_autocmd("FileType", {
 		group = "set_commentstring",
 		pattern = lang,
-		command = [[set commentstring=]] .. cstring,
+		callback = function(_)
+			vim.opt_local["commentstring"] = cstring
+		end,
 	})
 end

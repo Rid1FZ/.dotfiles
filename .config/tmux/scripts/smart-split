@@ -7,15 +7,8 @@ import shutil
 import subprocess
 
 
-class CommandNotFoundError(Exception):
-    """shell command not found"""
-
-
 def get_window_dimension(inblock: bool = False) -> tuple[int, int]:
     if not inblock:
-        if not shutil.which("hyprctl"):
-            raise CommandNotFoundError("`hyprctl` command not found")
-
         return tuple(
             json.loads(
                 subprocess.run(
@@ -69,20 +62,21 @@ def main() -> None:
     if not os.environ.get("TMUX"):
         return
 
-    try:
-        block_dimension: tuple[float, float] = get_block_dimension()
-        pane_dimension: tuple[float, float] = get_pane_dimension()
-        if (
-            block_dimension[0] * pane_dimension[0]
-            > block_dimension[1] * pane_dimension[1]
-        ):
-            subprocess.run(["tmux split-pane -h -c '#{pane_current_path}'"], shell=True)
-            return
+    if not shutil.which("hyprctl"):
+        subprocess.run(
+            shlex.split(
+                """tmux display-message -d 3000 \"error: `hyprctl' command not found\""""
+            )
+        )
+        return
 
-        subprocess.run(["tmux split-pane -c '#{pane_current_path}'"], shell=True)
-
-    except CommandNotFoundError as ex:
+    block_dimension: tuple[float, float] = get_block_dimension()
+    pane_dimension: tuple[float, float] = get_pane_dimension()
+    if block_dimension[0] * pane_dimension[0] > block_dimension[1] * pane_dimension[1]:
         subprocess.run(["tmux split-pane -h -c '#{pane_current_path}'"], shell=True)
+        return
+
+    subprocess.run(["tmux split-pane -c '#{pane_current_path}'"], shell=True)
 
 
 if __name__ == "__main__":
