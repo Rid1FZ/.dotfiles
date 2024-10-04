@@ -16,6 +16,7 @@ vim.filetype.add({
 		[".*/hyperland/.*.conf"] = "hyprlang",
 		["/home/.*/.config/waybar/config"] = "jsonc",
 		["/home/.*/.config/zathura/.*"] = "zathurarc",
+		["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
 	},
 })
 

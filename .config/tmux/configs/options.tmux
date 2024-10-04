@@ -1,0 +1,20 @@
+set-option -g default-terminal 'tmux-256color'
+# set-option -as terminal-overrides ",xterm-kitty:Tc"
+set-option -sa terminal-overrides ",xterm-256color:Tc" # temporarily for windows terminal
+set-option -g display-time 1
+set-option -s escape-time 0
+set-option -g history-limit 50000
+set-option -g focus-events on
+set-option -g status-interval 1
+set-option -g repeat-time 500
+set-option -g base-index 1
+set-option -g pane-base-index 1
+set-option -g renumber-windows on
+set-option -g default-shell '/usr/bin/zsh'
+set-window-option -g mode-keys vi
+set-window-option -g pane-base-index 1
+
+# >>> Prefix >>>
+set-option -g prefix C-Space
+bind-key C-Space send-prefix
+# <<< Prefix <<<
