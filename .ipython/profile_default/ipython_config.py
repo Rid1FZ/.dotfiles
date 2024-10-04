@@ -13,16 +13,25 @@ except pygments.util.ClassNotFound:
 
     print(f"\033[92m[INFO]:\033[00m theme not found. installing...")
 
-    subprocess.run(shlex.split("python3 -m ensurepip"), stdout=subprocess.DEVNULL)
-    subprocess.run(
-        shlex.split("python3 -m pip install catppuccin[pygments]"),
-        stdout=subprocess.DEVNULL,
-    )
+    try:
+        subprocess.run(shlex.split("python3 -m ensurepip"), stdout=subprocess.DEVNULL)
+        # fmt:off
+        assert (
+            subprocess.run(
+                shlex.split("python3 -m pip install catppuccin[pygments]"),
+                stdout=subprocess.DEVNULL,
+            ).returncode == 0
+        )
+        # fmt:on
 
-    print(f"\033[92m[INFO]:\033[00m theme installed")
+        print(f"\033[92m[INFO]:\033[00m theme installed")
 
-    pgstyles = importlib.reload(pgstyles)
-    style = pgstyles.get_style_by_name("catppuccin-mocha")
+        pgstyles = importlib.reload(pgstyles)
+        style = pgstyles.get_style_by_name("catppuccin-mocha")
+
+    except (AssertionError, FileNotFoundError):
+        print(f"\033[31m[ERROR]:\033[00m could not install theme")
+        style = pgstyles.get_style_by_name("one-dark")
 
 c.InteractiveShell.banner1 = ""
 c.InteractiveShell.banner2 = ""
