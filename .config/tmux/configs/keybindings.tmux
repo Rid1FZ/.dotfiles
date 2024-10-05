@@ -3,9 +3,9 @@ bind-key -T prefix r {
   set-option prefix None
   set-option key-table resize
   select-pane -d
-  set-option status-left "#[fg=#f38ba8]█"
-  set-option status-right "󰩨#[fg=#f38ba8]  █"
-  set-option window-status-current-format "#[fg=#f38ba8] #I:#W "
+  set-option window-status-current-style fg=#f38ba8
+  set-option status-left "#[fg=#f38ba8]█ "
+  set-option status-right " 󰩨#[fg=#f38ba8]  █"
   refresh-client -S
 }
 
@@ -13,9 +13,9 @@ bind-key -T resize Escape {
   set-option -u prefix
   set-option -u key-table
   select-pane -e
+  set-option -u window-status-current-style
   set-option -u status-left
   set-option -u status-right
-  set-option -u window-status-current-format
   refresh-client -S
 }
 
@@ -24,6 +24,50 @@ bind-key -r -T resize k resize-pane -U 2
 bind-key -r -T resize h resize-pane -L 2
 bind-key -r -T resize l resize-pane -R 2
 # <<< resize <<<
+
+# >>> choose mode >>>
+bind-key -T prefix f {
+  set-option prefix None
+  set-option key-table choose
+  select-pane -d
+  set-option window-status-current-style fg=#f5c2e7
+  set-option status-left "#[fg=#f5c2e7]█ "
+  set-option status-right " #[fg=#f5c2e7]  █"
+  refresh-client -S
+}
+
+bind-key -T choose Escape {
+  set-option -u prefix
+  set-option -u key-table
+  select-pane -e
+  set-option -u window-status-current-style
+  set-option -u status-left
+  set-option -u status-right
+  refresh-client -S
+}
+
+bind-key -T choose w {
+  run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session_name}}"'
+  set-option -u prefix
+  set-option -u key-table
+  select-pane -e
+  set-option -u window-status-current-style
+  set-option -u status-left
+  set-option -u status-right
+  refresh-client -S
+}
+
+bind-key -T choose t {
+  choose-tree -Z
+  set-option -u prefix
+  set-option -u key-table
+  select-pane -e
+  set-option -u window-status-current-style
+  set-option -u status-left
+  set-option -u status-right
+  refresh-client -S
+}
+# <<< choose mode <<<
 
 # >>> copy mode >>>
 copymode_enabled="! ps -o state= -o comm= -t '#{pane_tty}' \
@@ -38,6 +82,7 @@ bind-key -T copy-mode-vi i send-keys -X cancel
 
 bind-key -r H previous-window
 bind-key -r L next-window
+bind-key Space run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session_name}}"'
 bind-key c new-window -c "#{pane_current_path}"
 bind-key s run-shell "~/.config/tmux/bin/smart-split"
 bind-key "|" split-pane -h -c "#{pane_current_path}"
