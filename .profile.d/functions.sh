@@ -5,10 +5,10 @@
 function open {
 	case "$(file -b --mime-type --dereference "${1}")" in
 		inode/directory )
-			cd "${1}"
+			cd "${1}" || exit 1
 			;;
 		text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize )
-			nvim "${1}"
+			exec "${EDITOR} \"${1}\""
 			;;
 		* )
 			xdg-open "$1" &>/dev/null || {
@@ -32,7 +32,7 @@ function floc {
 
 function ff {
 	arg="${1:-.}"
-	test -d "${arg}" || return 1
+	[[ -d "${arg}" ]] || return 1
 
 	_path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
 	[[ -z "${_path}" ]] && return 1
@@ -42,8 +42,8 @@ function ff {
 
 function fcd {
 	arg="${1:-.}"
-	test -d "${arg}" || return 1
-	cd "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
+	[[ -d "${arg}" ]] || return 1
+	cd "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || exit 1
 }
 
 function fw {
@@ -56,5 +56,25 @@ function fw {
 		--height=100% \
 		--preview-window 'up,60%,border-bottom,+{2}-5/5' \
 		--bind 'enter:become(nvim {1} +{2})'
+}
+
+
+function rm {
+	(( "$#" == 0 )) && echo "rm: please specify file to remove..." >&2
+	to_trash=()
+	to_unlink=()
+
+	for arg in "$@"; do
+		if [[ -L "${arg}" ]]; then
+			to_unlink+=("${arg}")
+		else
+			to_trash+=("${arg}")
+		fi
+	done
+
+	(( "${#to_trash[@]}" != 0 )) && trash-put "${to_trash[@]}"
+	for link in "${to_unlink[@]}"; do
+		unlink "${link}"
+	done
 }
 # <<< functions <<<
