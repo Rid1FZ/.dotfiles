@@ -47,7 +47,6 @@ bind-key -T choose Escape {
 }
 
 bind-key -T choose w {
-  run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session_name}}"'
   set-option -u prefix
   set-option -u key-table
   select-pane -e
@@ -55,10 +54,10 @@ bind-key -T choose w {
   set-option -u status-left
   set-option -u status-right
   refresh-client -S
+  run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session_name}}"'
 }
 
 bind-key -T choose t {
-  choose-tree -Z
   set-option -u prefix
   set-option -u key-table
   select-pane -e
@@ -66,6 +65,7 @@ bind-key -T choose t {
   set-option -u status-left
   set-option -u status-right
   refresh-client -S
+  choose-tree -Z
 }
 # <<< choose mode <<<
 
@@ -84,6 +84,6 @@ bind-key -r H previous-window
 bind-key -r L next-window
 bind-key Space run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session_name}}"'
 bind-key c new-window -c "#{pane_current_path}"
-bind-key s run-shell "~/.config/tmux/bin/smart-split"
+bind-key s run-shell "~/.config/tmux/scripts/smart-split"
 bind-key "|" split-pane -h -c "#{pane_current_path}"
 bind-key "_" split-pane -c "#{pane_current_path}"

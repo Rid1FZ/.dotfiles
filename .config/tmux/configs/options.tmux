@@ -14,6 +14,10 @@ set-option -g default-shell '/usr/bin/zsh'
 set-window-option -g mode-keys vi
 set-window-option -g pane-base-index 1
 
+# >>> Hooks >>>
+set-hook -g pane-mode-changed "run-shell \"~/.config/tmux/scripts/setup-mode\""
+# <<< Hooks <<<
+
 # >>> Prefix >>>
 set-option -g prefix C-Space
 bind-key C-Space send-prefix
