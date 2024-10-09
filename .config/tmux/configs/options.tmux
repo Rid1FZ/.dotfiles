@@ -11,11 +11,13 @@ set-option -g base-index 1
 set-option -g pane-base-index 1
 set-option -g renumber-windows on
 set-option -g default-shell '/usr/bin/zsh'
+set-option -g  synchronize-panes off
+set-option -g mouse on
 set-window-option -g mode-keys vi
 set-window-option -g pane-base-index 1
 
 # >>> Hooks >>>
-set-hook -g pane-mode-changed "run-shell \"~/.config/tmux/scripts/setup-mode\""
+set-hook -g pane-mode-changed "run-shell \"~/.config/tmux/scripts/configure-mode-options\""
 # <<< Hooks <<<
 
 # >>> Prefix >>>

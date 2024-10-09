@@ -1,0 +1,38 @@
+#!/bin/env bash
+
+function set_mode_options {
+  color="$1"
+  icon="$2"
+  
+  tmux set-option prefix None
+  tmux select-pane -d
+  tmux set-option window-status-current-style fg="${color}"
+  tmux set-option status-left "#[fg=${color}]█ "
+  tmux set-option status-right " ${icon}#[fg=${color}]  █"
+  tmux refresh-client -S
+}
+
+function undo_mode_options {
+  tmux set-option -u prefix
+  tmux select-pane -e
+  tmux set-option -u window-status-current-style
+  tmux set-option -u status-left
+  tmux set-option -u status-right
+  tmux refresh-client -S
+}
+
+function main {
+  case "$(tmux display-message -p '#{pane_mode}')" in
+    copy-mode )
+      set_mode_options '#a6e3a1' ''
+      ;;
+    tree-mode | buffer-mode | client-mode )
+      set_mode_options '#f5c2e7' ''
+      ;;
+    * )
+      undo_mode_options
+      ;;
+  esac
+}
+
+main 
