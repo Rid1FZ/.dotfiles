@@ -60,7 +60,7 @@ function fw {
 
 
 function rm {
-	(( "$#" == 0 )) && echo "rm: please specify file to remove..." >&2
+	(( "$#" == 0 )) && echo "error: please specify file to remove..." >&2
 	to_trash=()
 	to_unlink=()
 
@@ -75,6 +75,21 @@ function rm {
 	(( "${#to_trash[@]}" != 0 )) && trash-put "${to_trash[@]}"
 	for link in "${to_unlink[@]}"; do
 		unlink "${link}"
+	done
+}
+
+function mkfile {
+	(( "$#" == 0 )) && echo "error: please specify at-least one filename to create..." >&2
+
+	for file in "$@"; do
+		parent_dir="$(realpath "$(dirname "${file}")")"
+		if [[ -e "${parent_dir}" ]] && ! [[ -d "${parent_dir}" ]]; then
+			echo "error: ${parent_dir} already exists and is not a directory..." >&2
+			continue
+		fi
+
+		mkdir -p "${parent_dir}"
+		touch "${file}"
 	done
 }
 # <<< functions <<<
