@@ -34,8 +34,29 @@ for lang, cstring in pairs(cstrings) do
 	vim.api.nvim_create_autocmd("FileType", {
 		group = "set_commentstring",
 		pattern = lang,
-		callback = function(_)
+		callback = function()
 			vim.opt_local["commentstring"] = cstring
 		end,
 	})
 end
+
+--------------
+-- autocmd ---
+--------------
+-- switch relativenumber when in insert mode
+vim.api.nvim_create_augroup("switch_relativenumber", {})
+vim.api.nvim_create_autocmd("InsertLeave", {
+	group = "switch_relativenumber",
+	pattern = "*",
+	callback = function()
+		vim.opt.relativenumber = true
+	end,
+})
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+	group = "switch_relativenumber",
+	pattern = "*",
+	callback = function()
+		vim.opt.relativenumber = false
+	end,
+})

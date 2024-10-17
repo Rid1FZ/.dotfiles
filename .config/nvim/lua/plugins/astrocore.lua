@@ -18,7 +18,7 @@ return {
 		options = {
 			-- neovim options
 			opt = {
-				relativenumber = false,
+				relativenumber = true,
 				number = true,
 				spell = false,
 				signcolumn = "yes:1",
