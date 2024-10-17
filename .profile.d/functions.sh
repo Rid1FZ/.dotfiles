@@ -1,11 +1,10 @@
 #!/bin/env bash
 
 # >>> functions >>>
-
 function open {
 	case "$(file -b --mime-type --dereference "${1}")" in
 		inode/directory )
-			cd "${1}" || exit 1
+			builtin cd -- "${1}" || return 1
 			;;
 		text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize )
 			exec "${EDITOR} \"${1}\""
@@ -43,7 +42,7 @@ function ff {
 function fcd {
 	arg="${1:-.}"
 	[[ -d "${arg}" ]] || return 1
-	cd "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || exit 1
+	builtin cd -- "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || return 1
 }
 
 function fw {
@@ -62,20 +61,16 @@ function fw {
 function rm {
 	(( "$#" == 0 )) && echo "error: please specify file to remove..." >&2
 	to_trash=()
-	to_unlink=()
 
 	for arg in "$@"; do
 		if [[ -L "${arg}" ]]; then
-			to_unlink+=("${arg}")
+			unlink "${arg}"
 		else
 			to_trash+=("${arg}")
 		fi
 	done
 
 	(( "${#to_trash[@]}" != 0 )) && trash-put "${to_trash[@]}"
-	for link in "${to_unlink[@]}"; do
-		unlink "${link}"
-	done
 }
 
 function mkfile {

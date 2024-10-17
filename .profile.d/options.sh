@@ -1,5 +1,5 @@
 #!/bin/env bash
 
 # >>> Options >>>
-shopt -s dotglob
+shopt -s dotglob autocd
 # <<< Options <<<
