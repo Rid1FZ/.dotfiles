@@ -7,8 +7,8 @@ import glob
 import os
 import os.path
 import platform
-import subprocess
 import shutil
+import subprocess
 from typing import Callable
 
 # fmt: off
@@ -217,7 +217,11 @@ def main() -> None:
         action="store_true",
         help="do not setup third-party repositories and do not install packages",
     )
-    parser.add_argument("--no-conf", action="store_true", help="do not link dotfiles")
+    parser.add_argument(
+        "--no-conf",
+        action="store_true",
+        help="do not link dotfiles",
+    )
 
     args: argparse.Namespace = parser.parse_args()
 
