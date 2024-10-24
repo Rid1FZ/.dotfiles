@@ -1,6 +1,7 @@
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	opts = {
+		popup_border_style = "rounded",
 		filesystem = {
 			hijack_netrw_behavior = "open_default",
 			filtered_items = {

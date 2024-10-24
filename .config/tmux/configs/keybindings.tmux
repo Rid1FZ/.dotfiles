@@ -3,9 +3,7 @@ bind-key -T prefix r {
   set-option prefix None
   set-option key-table resize
   select-pane -d
-  set-option window-status-current-style fg=#f38ba8
-  set-option status-left "#[fg=#f38ba8]█ "
-  set-option status-right " 󰩨#[fg=#f38ba8]  █"
+  set-option status-right " #[fg=#cba6f7]  #[fg=#89b4fa]█"
   refresh-client -S
 }
 
@@ -13,7 +11,15 @@ bind-key -T resize Escape {
   set-option -u prefix
   set-option -u key-table
   select-pane -e
-  set-option -u window-status-current-style
+  set-option -u status-left
+  set-option -u status-right
+  refresh-client -S
+}
+
+bind-key -T resize q {
+  set-option -u prefix
+  set-option -u key-table
+  select-pane -e
   set-option -u status-left
   set-option -u status-right
   refresh-client -S
