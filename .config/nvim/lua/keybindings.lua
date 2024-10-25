@@ -39,7 +39,6 @@ wk.add({
 		},
 		{
 			"g",
-			group = "Goto",
 			icon = "󰮰 ",
 			{
 				{ "gd", vim.lsp.buf.definition, desc = "Goto definition", icon = " " },
