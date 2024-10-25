@@ -1,6 +1,12 @@
+---------------
+-- Variables --
+---------------
 local wk = require("which-key")
 local tbuiltin = require("telescope.builtin")
 
+----------------------------
+-- Using which-key Plugin --
+----------------------------
 wk.add({
 	{
 		mode = { "n" },
@@ -55,7 +61,9 @@ wk.add({
 	},
 })
 
--- without which-key
+------------------------------
+-- Without which-key Plugin --
+------------------------------
 vim.keymap.set("n", "<c-k>", "<cmd>NvimTmuxNavigateUp<cr>")
 vim.keymap.set("n", "<c-j>", "<cmd>NvimTmuxNavigateDown<cr>")
 vim.keymap.set("n", "<c-h>", "<cmd>NvimTmuxNavigateLeft<cr>")

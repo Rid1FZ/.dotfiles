@@ -1,6 +1,7 @@
 -------------
 -- Options --
 -------------
+vim.g.mapleader = " "
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
@@ -12,6 +13,12 @@ vim.opt.wrap = false
 vim.wo.number = true
 vim.wo.relativenumber = true
 vim.g.background = "dark"
+vim.opt.shortmess = vim.opt.shortmess + {
+	c = true,
+	F = true,
+	W = true,
+	I = true,
+}
 
 -------------------------
 -- LSP and Diagnostics --

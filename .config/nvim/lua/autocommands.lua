@@ -1,3 +1,7 @@
+---------------------------
+-- Trigger lsp_signature --
+---------------------------
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function()
 		require("lsp_signature").on_attach({

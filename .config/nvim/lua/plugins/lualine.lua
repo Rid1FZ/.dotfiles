@@ -2,12 +2,7 @@ return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
-		-- Eviline config for lualine
-		-- Author: shadmansaleh
-		-- Credit: glepnir
 		local lualine = require("lualine")
-
-		-- Color table for highlights
 		local colors = {
 			bg = "#11111b",
 			fg = "#cdd6f4",
@@ -35,33 +30,26 @@ return {
 			end,
 		}
 
-		-- Config
+		-- Reset
 		local config = {
 			options = {
-				-- Disable sections and component separators
 				component_separators = "",
 				section_separators = "",
 				globalstatus = true,
 				theme = {
-					-- We are going to use lualine_c an lualine_x as left and
-					-- right section. Both are highlighted by c theme .  So we
-					-- are just setting default looks o statusline
 					normal = { c = { fg = colors.fg, bg = colors.bg } },
 					inactive = { c = { fg = colors.fg, bg = colors.bg } },
 				},
 			},
 			sections = {
-				-- these are to remove the defaults
 				lualine_a = {},
 				lualine_b = {},
 				lualine_y = {},
 				lualine_z = {},
-				-- These will be filled later
 				lualine_c = {},
 				lualine_x = {},
 			},
 			inactive_sections = {
-				-- these are to remove the defaults
 				lualine_a = {},
 				lualine_b = {},
 				lualine_y = {},
@@ -85,17 +73,15 @@ return {
 			function()
 				return "█"
 			end,
-			color = { fg = colors.blue }, -- Sets highlighting of component
-			padding = { left = 0, right = 1 }, -- We don't need space before this
+			color = { fg = colors.blue },
+			padding = { left = 0, right = 1 },
 		})
 
 		ins_left({
-			-- mode component
 			function()
 				return ""
 			end,
 			color = function()
-				-- auto change color according to neovims mode
 				local mode_color = {
 					n = colors.red,
 					i = colors.green,
@@ -123,7 +109,6 @@ return {
 		})
 
 		ins_left({
-			-- filesize component
 			"filesize",
 			cond = conditions.buffer_not_empty,
 		})
@@ -154,7 +139,6 @@ return {
 
 		ins_right({
 			"diff",
-			-- Is it me or the symbol for modified us really weird
 			symbols = { added = " ", modified = " ", removed = " " },
 			diff_color = {
 				added = { fg = colors.green },
@@ -165,11 +149,10 @@ return {
 		})
 
 		ins_right({
-			-- Lsp server name .
 			function()
 				local msg = ""
-				local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-				local clients = vim.lsp.get_active_clients()
+				local buf_ft = vim.bo.filetype
+				local clients = vim.lsp.get_clients()
 				if next(clients) == nil then
 					return msg
 				end
@@ -189,8 +172,6 @@ return {
 
 		ins_right({ "progress", color = { fg = colors.fg, gui = "bold" } })
 
-		-- Add components to right sections
-
 		ins_right({
 			function()
 				return "█"
@@ -199,7 +180,6 @@ return {
 			padding = { left = 1 },
 		})
 
-		-- Now don't forget to initialize lualine
 		lualine.setup(config)
 	end,
 }
