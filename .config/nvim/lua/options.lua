@@ -10,6 +10,7 @@ vim.opt.swapfile = false
 vim.opt.signcolumn = "yes:2"
 vim.opt.confirm = true
 vim.opt.wrap = false
+vim.opt.clipboard = "unnamedplus"
 vim.wo.number = true
 vim.wo.relativenumber = true
 vim.g.background = "dark"
