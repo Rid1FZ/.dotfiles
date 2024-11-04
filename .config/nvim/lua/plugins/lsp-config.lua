@@ -35,6 +35,8 @@ return {
 					"shfmt",
 					"shellcheck",
 					"bashls",
+					"clangd",
+					"clang-format",
 				},
 			})
 		end,
@@ -48,6 +50,7 @@ return {
 
 			lspconfig.pyright.setup({})
 			lspconfig.bashls.setup({})
+			lspconfig.clangd.setup({})
 			lspconfig.lua_ls.setup({
 				on_init = function(client)
 					if client.workspace_folders then
