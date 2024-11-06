@@ -1,0 +1,5 @@
+[window]
+dynamic_padding = true
+decorations = "Full"
+startup_mode = "Maximized"
+dynamic_title = true

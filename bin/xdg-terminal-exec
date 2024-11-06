@@ -1,13 +1,15 @@
 #!/bin/env bash
 
-function _launch_terminal {
-    nohup kitty --single-instance --instance-group Terminal --title Terminal "$@" &>/dev/null &
+function __launch_terminal {
+	nohup alacritty --class terminal --title Terminal "$@" &>/dev/null &
 }
 
-if [[ -d "$1" ]]; then
-    _launch_terminal --working-directory "$1"
+if (("$#" == 0)); then
+	__launch_terminal --command tmux new-session
+elif [[ -d "$1" ]]; then
+	__launch_terminal --working-directory "$1"
 else
-    _launch_terminal "$@"
+	__launch_terminal --command "$@"
 fi
 
 exit

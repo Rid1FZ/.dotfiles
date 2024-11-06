@@ -1,6 +1,7 @@
 set-option -g default-terminal 'tmux-256color'
-# set-option -as terminal-overrides ",xterm-kitty:Tc"
-set-option -sa terminal-overrides ",xterm-256color:Tc" # temporarily for windows terminal
+# set-option -as terminal-overrides ",xterm-kitty:Tc" # for kitty terminal
+# set-option -sa terminal-overrides ",xterm-256color:Tc" # for windows terminal
+set -g terminal-overrides ",alacritty:Tc" # for alacritty terminal
 set-option -g display-time 1
 set-option -s escape-time 0
 set-option -g history-limit 50000
@@ -11,7 +12,8 @@ set-option -g base-index 1
 set-option -g pane-base-index 1
 set-option -g renumber-windows on
 set-option -g default-shell '/usr/bin/zsh'
-set-option -g  synchronize-panes off
+set-option -g synchronize-panes off
+set-option -g destroy-unattached on
 set-option -g mouse on
 set-window-option -g mode-keys vi
 set-window-option -g pane-base-index 1

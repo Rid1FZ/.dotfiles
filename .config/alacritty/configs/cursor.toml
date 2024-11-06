@@ -1,0 +1,3 @@
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+unfocused_hollow = true
