@@ -21,12 +21,6 @@ vim.opt.shortmess = vim.opt.shortmess + {
 	I = true,
 }
 
--- neovide
-vim.g.neovide_padding_top = 3
-vim.g.neovide_padding_left = 2
-vim.g.neovide_scroll_animation_length = 0
-vim.g.neovide_cursor_animation_length = 0
-
 -------------------------
 -- LSP and Diagnostics --
 -------------------------
