@@ -40,6 +40,7 @@
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
+(setq scroll-conservatively most-positive-fixnum)
 
 ;; Map Modes to Major Modes
 (setq major-mode-remap-alist
