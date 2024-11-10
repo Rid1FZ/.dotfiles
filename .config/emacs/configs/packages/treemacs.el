@@ -1,2 +1,5 @@
-(use-package treemacs)
-(use-package treemacs-evil)
+(use-package treemacs
+  :ensure t)
+
+(use-package treemacs-evil
+  :ensure t)

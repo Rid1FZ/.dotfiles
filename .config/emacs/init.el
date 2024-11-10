@@ -26,8 +26,11 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Do Not Populate Config Directory
+(use-package no-littering
+  :ensure t)
+
 ;; Load Packages
-(use-package no-littering)
 (mapc 'load-file (file-expand-wildcards "~/.config/emacs/configs/packages/*.el"))
 
 ;; Load Custom Configs

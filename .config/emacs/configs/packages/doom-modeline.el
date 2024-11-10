@@ -5,10 +5,10 @@
            (doom-modeline-buffer-file-name-style 'relative-to-project)
            (doom-modeline-highlight-modified-buffer-name t)
            (doom-modeline-modal t)
-           (doom-modeline-icon nil)
-           (doom-modeline-modal-icon nil)
+           (doom-modeline-icon t)
+           (doom-modeline-modal-icon t)
            (doom-modeline-modal-modern-icon nil)
-           (nerd-icons-scale-factor 1.3)
+           (nerd-icons-scale-factor 1.2)
            ))
 
 (custom-set-faces

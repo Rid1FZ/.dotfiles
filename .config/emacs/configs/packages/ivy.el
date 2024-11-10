@@ -1,4 +1,5 @@
 (use-package ivy
+  :ensure t
   :diminish
   :bind (("C-s" . swiper)
          :map ivy-minibuffer-map
@@ -17,16 +18,17 @@
   (ivy-mode 1))
 
 (use-package ivy-rich
+  :ensure t
   :init
   (ivy-rich-mode 1))
 
 (use-package swiper
-             :ensure t)
+  :ensure t)
 
 (use-package counsel
+  :ensure t
   :bind (("M-x" . counsel-M-x)
          ("C-x b" . counsel-ibuffer)
          ("C-x C-f" . counsel-find-file)
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history)))
-

@@ -1,3 +1,4 @@
+;; Set "Custom File's" Path
 (setq disabled-command-function nil)
 (setq custom-file "~/.local/state/emacs/custom.el")
 (load custom-file 'noerror)
@@ -9,6 +10,9 @@
 (tool-bar-mode -1)
 (tooltip-mode -1)
 (menu-bar-mode -1)
+(blink-cursor-mode 0)
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq ring-bell-function 'ignore)
 
 ;; Disable Backup/Lock/Autosave Files
 (setq make-backup-files nil)
@@ -31,7 +35,9 @@
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 treemacs-mode-hook
+		help-mode-hook
                 inferior-emacs-lisp-mode-hook
+		flycheck-error-list-mode-hook
 		dired-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -42,6 +48,9 @@
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 (setq scroll-conservatively most-positive-fixnum)
 
+;; Maximize Window On Startup
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 ;; Map Modes to Major Modes
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)))
@@ -51,4 +60,4 @@
 
 ;; Hooks
 (add-hook 'python-ts-mode-hook (lambda ()
-                                 (setq treesit-font-lock-level 4)))
+				 (setq treesit-font-lock-level 4)))

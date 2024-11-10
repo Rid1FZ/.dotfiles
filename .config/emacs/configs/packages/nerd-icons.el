@@ -1,10 +1,13 @@
-(use-package nerd-icons)
+(use-package nerd-icons
+  :ensure t)
 
 (use-package nerd-icons-dired
+  :ensure t
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
 (use-package treemacs-nerd-icons
+  :ensure t
   :config
   (treemacs-load-theme "nerd-icons"))
 
