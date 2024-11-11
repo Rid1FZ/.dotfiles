@@ -39,3 +39,11 @@
   :hook (python-ts-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
+
+(use-package c++-ts-mode
+  :ensure nil
+  :hook (c++-ts-mode . lsp-deferred))
+
+(use-package c-ts-mode
+  :ensure nil
+  :hook (c-ts-mode . lsp-deferred))

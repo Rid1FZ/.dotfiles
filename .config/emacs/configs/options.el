@@ -52,7 +52,10 @@
 
 ;; Map Modes to Major Modes
 (setq major-mode-remap-alist
-      '((python-mode . python-ts-mode)))
+      '((python-mode . python-ts-mode)
+	(c-mode . c-ts-mode)
+	(c++-mode . c++-ts-mode)
+	(c-or-c++-mode . c-or-c++-ts-mode)))
 
 ;; Autoclose Parens, Quotes, etc...
 (electric-pair-mode t)
