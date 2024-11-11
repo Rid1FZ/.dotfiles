@@ -35,3 +35,4 @@
 
 ;; Load Custom Configs
 (load-user-file "keybindings.el")
+(load-user-file "functions.el")

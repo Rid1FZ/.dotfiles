@@ -1,6 +1,9 @@
 (use-package catppuccin-theme
-  :ensure t)
+  :ensure t
 
-(load-theme 'catppuccin :no-confirm)
-(setq catppuccin-flavor 'mocha) 
-(catppuccin-reload)
+  :custom
+  (catppuccin-highlight-matches t)
+  (catppuccin-flavor 'mocha)
+
+  :init
+  (load-theme 'catppuccin :no-confirm))

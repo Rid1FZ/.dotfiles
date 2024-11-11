@@ -4,15 +4,14 @@
 (load custom-file 'noerror)
 
 ;; Reset Defaults
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (setq inhibit-startup-message t)
+(setq ring-bell-function 'ignore)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
 (menu-bar-mode -1)
 (blink-cursor-mode 0)
 (fset 'yes-or-no-p 'y-or-n-p)
-(setq ring-bell-function 'ignore)
 
 ;; Disable Backup/Lock/Autosave Files
 (setq make-backup-files nil)
@@ -23,9 +22,9 @@
 
 ;; Fonts
 (set-face-attribute 'default nil
-                    :font "JetBrainsMono Nerd Font"
+                    :font "JetBrainsMono Nerd Font Propo"
                     :height 120
-                    :weight 'bold)
+                    :weight 'medium)
 
 ;; Line Numbers
 (column-number-mode)

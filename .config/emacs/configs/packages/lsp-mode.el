@@ -7,24 +7,30 @@
   :ensure t
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . efs/lsp-mode-setup)
+
   :init
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+
   :config
   (lsp-enable-which-key-integration t))
 
 (use-package lsp-ui
   :ensure t
+  :after lsp-mode
   :hook (prog-mode . lsp-ui-mode)
+
   :custom
   (lsp-ui-doc-position 'top)
   (lsp-ui-doc-side 'right)
-  (lsp-ui-sideline-show-diagnostics t))
+  (lsp-ui-sideline-show-diagnostics nil))
 
 (use-package lsp-ivy
-  :ensure t)
+  :ensure t
+  :after (lsp-mode lsp-ui))
 
 (use-package lsp-treemacs
-  :ensure t)
+  :ensure t
+  :after (lsp-mode lsp-ui))
 
 ;; Language Specific Plugins
 (use-package lsp-pyright

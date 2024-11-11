@@ -1,5 +1,7 @@
 (use-package treemacs
-  :ensure t)
+  :ensure t
+  :after treemacs-nerd-icons)
 
 (use-package treemacs-evil
-  :ensure t)
+  :ensure t
+  :after (treemacs evil))

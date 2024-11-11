@@ -1,1 +1,5 @@
-(use-package command-log-mode)
+(use-package command-log-mode
+  :ensure t
+
+  :config
+  (global-command-log-mode))

@@ -7,7 +7,7 @@ function open {
 		builtin cd -- "${1}" || return 1
 		;;
 	text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize)
-		exec "${EDITOR} \"${1}\""
+		"${EDITOR}" "${1}"
 		;;
 	*)
 		xdg-open "$1" &>/dev/null || {
