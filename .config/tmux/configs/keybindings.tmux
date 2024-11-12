@@ -3,7 +3,7 @@ bind-key -T prefix r {
   set-option prefix None
   set-option key-table resize
   select-pane -d
-  set-option status-right " #[fg=#cba6f7]  #[fg=#89b4fa]█"
+  set-option status-right " #[fg=#cba6f7]󰩨  #[fg=#89b4fa]█"
   refresh-client -S
 }
 
