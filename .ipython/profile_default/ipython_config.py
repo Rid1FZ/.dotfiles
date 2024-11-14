@@ -7,31 +7,11 @@ c = get_config()  # type: ignore
 try:
     style = pgstyles.get_style_by_name("catppuccin-mocha")
 except pygments.util.ClassNotFound:
-    import importlib
-    import shlex
-    import subprocess
-
-    print(f"\033[92m[INFO]:\033[00m theme not found. installing...")
-
-    try:
-        subprocess.run(shlex.split("python3 -m ensurepip"), stdout=subprocess.DEVNULL)
-        # fmt:off
-        assert (
-            subprocess.run(
-                shlex.split("python3 -m pip install catppuccin[pygments]"),
-                stdout=subprocess.DEVNULL,
-            ).returncode == 0
-        )
-        # fmt:on
-
-        print(f"\033[92m[INFO]:\033[00m theme installed")
-
-        pgstyles = importlib.reload(pgstyles)
-        style = pgstyles.get_style_by_name("catppuccin-mocha")
-
-    except (AssertionError, FileNotFoundError):
-        print(f"\033[31m[ERROR]:\033[00m could not install theme")
-        style = pgstyles.get_style_by_name("one-dark")
+    print(
+        f"\033[92m[INFO]:\033[00m catppuccin theme not found. Using one-dark...\n\n"
+        "run `python3 -m pip install catppuccin[pygments]` to install theme..."
+    )
+    style = pgstyles.get_style_by_name("one-dark")
 
 c.InteractiveShell.banner1 = ""
 c.InteractiveShell.banner2 = ""
