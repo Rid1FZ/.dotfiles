@@ -15,7 +15,7 @@ wk.add({
 			group = "Open",
 			icon = "󰮰 ",
 			{
-				{ "<Leader>oe", "<cmd>Neotree<cr>", desc = "Open Explorer", icon = " " },
+				{ "<Leader>oe", "<cmd>NvimTreeFocus<cr>", desc = "Open Explorer", icon = " " },
 			},
 		},
 		{

@@ -4,6 +4,7 @@
 vim.g.mapleader = " "
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
+vim.opt.termguicolors = true
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.swapfile = false
@@ -11,15 +12,17 @@ vim.opt.signcolumn = "yes:2"
 vim.opt.confirm = true
 vim.opt.wrap = false
 vim.opt.clipboard = "unnamedplus"
-vim.wo.number = true
-vim.wo.relativenumber = true
-vim.g.background = "dark"
 vim.opt.shortmess = vim.opt.shortmess + {
 	c = true,
 	F = true,
 	W = true,
 	I = true,
 }
+vim.wo.number = true
+vim.wo.relativenumber = true
+vim.g.background = "dark"
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -------------------------
 -- LSP and Diagnostics --

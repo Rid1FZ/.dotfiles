@@ -29,7 +29,7 @@ return {
 				ensure_installed = {
 					"lua_ls",
 					"stylua",
-					"basedpyright",
+					"pyright",
 					"black",
 					"isort",
 					"shfmt",
@@ -48,7 +48,7 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
 
-			lspconfig.basedpyright.setup({})
+			lspconfig.pyright.setup({})
 			lspconfig.bashls.setup({})
 			lspconfig.clangd.setup({})
 			lspconfig.lua_ls.setup({
