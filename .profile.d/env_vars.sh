@@ -13,6 +13,7 @@ export MANROFFOPT="-c"
 export PAGER="bat --plain"
 export MANPAGER="page -t man"
 export BAT_PAGER=""
+export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgreprc"
 [[ "$(basename "${SHELL}")" = "zsh" ]] && export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=100000
 export SAVEHIST=100000

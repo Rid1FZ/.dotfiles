@@ -45,8 +45,9 @@ function fcd {
 	builtin cd -- "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || return 1
 }
 
-function fw {
-	RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always --smart-case "
+function frg {
+	RG_PREFIX="rg --no-config --column --line-number --no-heading --hidden --glob=!.git/* --follow --color=always --colors=path:fg:blue --smart-case "
+
 	fzf --disabled --ansi \
 		--bind "start:reload:${RG_PREFIX} {q} ${1:-.}" \
 		--bind "change:reload:sleep 0.1; ${RG_PREFIX} {q} || true" \
