@@ -91,7 +91,7 @@ return {
 					diagnostics_placement = "signcolumn",
 					bookmarks_placement = "signcolumn",
 					padding = " ",
-					symlink_arrow = " ➛ ",
+					symlink_arrow = "  ",
 					show = {
 						file = true,
 						folder = true,
@@ -131,8 +131,8 @@ return {
 				},
 			},
 			hijack_directories = {
-				enable = true,
-				auto_open = true,
+				enable = false,
+				auto_open = false,
 			},
 			update_focused_file = {
 				enable = true,

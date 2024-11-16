@@ -1,7 +1,5 @@
 set-option -g default-terminal 'tmux-256color'
-# set-option -as terminal-overrides ",xterm-kitty:Tc" # for kitty terminal
-# set-option -sa terminal-overrides ",xterm-256color:Tc" # for windows terminal
-set -g terminal-overrides ",alacritty:Tc" # for alacritty terminal
+set-option -g terminal-overrides ",${TERM}:Tc"
 set-option -g display-time 1
 set-option -s escape-time 0
 set-option -g history-limit 50000
