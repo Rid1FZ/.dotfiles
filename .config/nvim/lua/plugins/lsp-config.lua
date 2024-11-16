@@ -6,7 +6,12 @@ return {
 		local lspconfig = require("lspconfig")
 
 		lspconfig.pyright.setup({})
-		lspconfig.bashls.setup({})
+		lspconfig.bashls.setup({
+			filetypes = {
+				"sh",
+				"bash",
+			},
+		})
 		lspconfig.clangd.setup({})
 		lspconfig.lua_ls.setup({
 			on_init = function(client)

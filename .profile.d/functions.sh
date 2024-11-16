@@ -11,46 +11,58 @@ function open {
 		;;
 	*)
 		xdg-open "$1" &>/dev/null || {
+			local __cmd
 			echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
 			printf "enter command to open file: "
-			read -r cmd
-			exec "${cmd} ${1}"
+			read -r __cmd
+			exec "${__cmd} ${1}"
 		}
 		;;
 	esac
 }
 
 function floc {
-	PREFIX="plocate --ignore-case --regex"
+	local __plocate_prefix __target
 
-	target="$(fzf --disabled --keep-right --ansi --bind "start:reload:${PREFIX} {q}" --bind "change:reload:sleep 0.1; ${PREFIX} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
-	[[ -z "${target}" ]] && return 1
+	echo "updating plocate database. password may require..."
+	sudo updatedb
 
-	open "${target}"
+	__plocate_prefix="plocate --ignore-case --regex"
+	__target="$(fzf --disabled --keep-right --ansi --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
+
+	[[ -z "${__target}" ]] && return 1
+
+	open "${__target}"
 }
 
 function ff {
-	arg="${1:-.}"
-	[[ -d "${arg}" ]] || return 1
+	local __arg __path
 
-	_path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
-	[[ -z "${_path}" ]] && return 1
+	__arg="${1:-.}"
+	[[ -d "${__arg}" ]] || return 1
 
-	open "${_path}"
+	__path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${__arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
+	[[ -z "${__path}" ]] && return 1
+
+	open "${__path}"
 }
 
 function fcd {
-	arg="${1:-.}"
-	[[ -d "${arg}" ]] || return 1
-	builtin cd -- "$(fd -Ha --no-ignore --type directory --follow ".*" "${arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || return 1
+	local __arg
+
+	__arg="${1:-.}"
+	[[ -d "${__arg}" ]] || return 1
+
+	builtin cd -- "$(fd -Ha --no-ignore --type directory --follow ".*" "${__arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || return 1
 }
 
 function frg {
-	RG_PREFIX="rg --no-config --column --line-number --no-heading --hidden --glob=!.git/* --follow --color=always --colors=path:fg:blue --smart-case "
+	local __rg_prefix
 
+	__rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case "
 	fzf --disabled --ansi \
-		--bind "start:reload:${RG_PREFIX} {q} ${1:-.}" \
-		--bind "change:reload:sleep 0.1; ${RG_PREFIX} {q} || true" \
+		--bind "start:reload:${__rg_prefix} {q} ${1:-.}" \
+		--bind "change:reload:sleep 0.1; ${__rg_prefix} {q} || true" \
 		--delimiter : \
 		--preview 'bat --color=always {1} --highlight-line {2} --theme="Catppuccin Macchiato"' \
 		--height=100% \
@@ -59,27 +71,35 @@ function frg {
 }
 
 function rm {
-	(("$#" == 0)) && echo -e "\033[0;31m[error]\033[0m: please specify file to remove..." >&2
-	to_trash=()
+	local __to_trash __arg
 
-	for arg in "$@"; do
-		if [[ -L "${arg}" ]]; then
-			unlink "${arg}"
+	(("$#" == 0)) && echo -e "\033[0;31m[error]\033[0m: please specify file to remove..." >&2
+	__to_trash=()
+
+	for __arg in "$@"; do
+		if [[ -L "${__arg}" ]]; then
+			unlink "${__arg}"
 		else
-			to_trash+=("${arg}")
+			__to_trash+=("${__arg}")
 		fi
 	done
 
-	(("${#to_trash[@]}" != 0)) && trash-put "${to_trash[@]}" || return 0
+	if (("${#__to_trash[@]}" != 0)); then
+		trash-put "${__to_trash[@]}"
+	else
+		return 0
+	fi
 }
 
 function mkfile {
+	local __file __parent_dir
+
 	(("$#" == 0)) && { echo -e "\033[0;31m[error]\033[0m: please specify at-least one filename..." >&2 && exit 1; }
 
-	for file in "$@"; do
-		parent_dir="$(realpath --canonicalize-missing --no-symlinks "$(dirname "${file}")")"
-		if ! { mkdir -p "${parent_dir}" 2>/dev/null && touch "${file}" 2>/dev/null; }; then
-			echo -e "\033[0;31m[error]\033[0m: could not create file ${file}..." >&2
+	for __file in "$@"; do
+		__parent_dir="$(realpath --canonicalize-missing --no-symlinks "$(dirname "${__file}")")"
+		if ! { mkdir -p "${__parent_dir}" 2>/dev/null && touch "${__file}" 2>/dev/null; }; then
+			echo -e "\033[0;31m[error]\033[0m: could not create file ${__file}..." >&2
 			continue
 		fi
 	done

@@ -15,7 +15,7 @@ return {
 			hijack_unnamed_buffer_when_opening = false,
 			root_dirs = {},
 			prefer_startup_root = false,
-			sync_root_with_cwd = false,
+			sync_root_with_cwd = true,
 			reload_on_bufenter = true,
 			respect_buf_cwd = false,
 			select_prompts = false,
@@ -137,7 +137,7 @@ return {
 			update_focused_file = {
 				enable = true,
 				update_root = {
-					enable = false,
+					enable = true,
 					ignore_list = {},
 				},
 				exclude = false,

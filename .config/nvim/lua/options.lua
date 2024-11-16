@@ -63,6 +63,8 @@ vim.filetype.add({
 	extension = {
 		qml = "qml",
 		ipy = "python",
+		sh = "bash",
+		bash = "bash",
 	},
 	pattern = {
 		["/home/.*/.config/hypr/.*.conf"] = "hyprlang",

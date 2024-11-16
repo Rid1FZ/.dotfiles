@@ -14,12 +14,7 @@ alias diff="colordiff"
 alias rg="rg --ignore-case"
 alias tree="eza --classify --color=always --icons --group-directories-first --tree"
 alias cdd="cd \$DOTFILES"
-
-if command -v "bat" &>/dev/null; then
-	alias cat="bat"
-elif command -v "batcat" &>/dev/null; then
-	alias cat="batcat" # in Ubuntu
-fi
+alias cat="bat"
 
 unset eza_cmd leza_cmd
 

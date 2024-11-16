@@ -32,7 +32,7 @@ zstyle ':completion:*:default' list-colors \
 	"ma=7;38;5;68"
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/.zcompcache"
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompcache"
 zstyle ':completion:*' complete true
 zstyle ':completion:alias-expension:*' completer _expand_alias
 zstyle ':completion:*' menu select
