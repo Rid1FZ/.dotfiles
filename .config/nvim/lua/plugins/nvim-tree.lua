@@ -182,7 +182,10 @@ return {
 				git_clean = false,
 				no_buffer = false,
 				no_bookmark = false,
-				custom = {},
+				custom = {
+					[[^\.null-ls.*$]],
+					[[^\.git$]],
+				},
 				exclude = {},
 			},
 			live_filter = {
