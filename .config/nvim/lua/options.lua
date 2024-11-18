@@ -2,11 +2,29 @@
 -- Options --
 -------------
 vim.g.mapleader = " "
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
+vim.g.background = "dark"
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
+-- vim.opt.expandtab = true
+-- vim.opt.smartindent = true
+-- vim.opt.shiftwidth = 2
+-- vim.opt.tabstop = 2
+vim.opt.breakindent = true
+vim.opt.copyindent = true
+vim.opt.expandtab = true
+vim.opt.preserveindent = true
+vim.opt.shiftround = true
+vim.opt.shiftwidth = 0
+vim.opt.tabstop = 2
+vim.opt.linebreak = true
+
+vim.opt.undofile = true
+vim.opt.writebackup = false
+vim.opt.virtualedit = "block"
+vim.opt.jumpoptions = {}
+vim.opt.smartcase = true
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.swapfile = false
 vim.opt.signcolumn = "yes:2"
 vim.opt.confirm = true
@@ -20,9 +38,6 @@ vim.opt.shortmess = vim.opt.shortmess + {
 }
 vim.wo.number = true
 vim.wo.relativenumber = true
-vim.g.background = "dark"
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
 -------------------------
 -- LSP and Diagnostics --

@@ -36,16 +36,20 @@ vim.api.nvim_create_autocmd("QuitPre", {
 	end,
 })
 
--------------------------------------------------------
--- Open nvim-tree if Neovim is Opened With Directory --
--------------------------------------------------------
+-------------------------------
+-- Open nvim-tree at Startup --
+-------------------------------
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
 	callback = function(data)
-		if not (vim.fn.isdirectory(data.file) == 1) then
+		local isdirectory = (vim.fn.isdirectory(data.file) == 1)
+		local isnoname = data.file == "" and vim.bo[data.buf].buftype == ""
+
+		if not isdirectory and not isnoname then
 			return
+		elseif isdirectory then
+			vim.cmd.cd(data.file)
 		end
 
-		vim.cmd.cd(data.file)
 		require("nvim-tree.api").tree.open({
 			current_window = false,
 		})
