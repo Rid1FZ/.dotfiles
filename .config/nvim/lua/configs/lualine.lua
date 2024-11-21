@@ -183,7 +183,7 @@ ins_right({
 		local buf = vim.api.nvim_get_current_buf()
 		local highlighter = require("vim.treesitter.highlighter")
 		if highlighter.active[buf] then
-			return ""
+			return ""
 		else
 			return ""
 		end
