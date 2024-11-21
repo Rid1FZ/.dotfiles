@@ -34,7 +34,7 @@ vim.opt.shortmess = vim.opt.shortmess + {
 	I = true,
 }
 
-opt.signcolumn = "yes"
+opt.signcolumn = "yes:2"
 opt.splitbelow = true
 opt.splitright = true
 opt.termguicolors = true

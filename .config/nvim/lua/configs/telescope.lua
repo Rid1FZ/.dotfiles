@@ -1,4 +1,9 @@
 return {
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({}),
+		},
+	},
 	defaults = {
 		vimgrep_arguments = {
 			"rg",
@@ -34,7 +39,7 @@ return {
 		generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
 		path_display = { "truncate" },
 		winblend = 0,
-		border = {},
+		border = true,
 		borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 		color_devicons = true,
 		set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
@@ -47,6 +52,4 @@ return {
 			n = { ["q"] = require("telescope.actions").close },
 		},
 	},
-
-	extensions_list = {},
 }
