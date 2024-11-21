@@ -1,15 +1,11 @@
 return {
 	"lukas-reineke/indent-blankline.nvim",
+	event = "User FilePost",
 	main = "ibl",
-	config = function()
-		require("ibl").setup({
-			debounce = 100,
-			whitespace = { highlight = { "Whitespace", "NonText" } },
-			scope = {
-				enabled = true,
-				show_start = false,
-				show_end = false,
-			},
-		})
+	opts = function()
+		return require("configs.indent-blankline")
+	end,
+	config = function(_, opts)
+		require("ibl").setup(opts)
 	end,
 }

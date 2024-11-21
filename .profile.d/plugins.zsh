@@ -8,11 +8,11 @@ __plugins=(
 	"/usr/share/fzf/completion.zsh"
 )
 
-for __plugin in $__plugins; do
+for __plugin in ${__plugins}; do
 	__scripts=(${(@s/:/)__plugin})
 	for __script in ${__scripts[@]}; do
-		if [ -f "$__script" ]; then
-			. "$__script"
+		if [ -f "${__script}" ]; then
+			. "${__script}"
 			break
 		fi
 	done
@@ -43,3 +43,18 @@ if [ -f "${HOME}/.mamba/etc/profile.d/mamba.sh" ]; then
     . "${HOME}/.mamba/etc/profile.d/mamba.sh"
 fi
 # <<< conda initialize <<<
+
+# >>> source plugins from plugins directory >>>
+__plugin_dirs="${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/plugins:${HOME}/.zsh/plugins"
+__dirs=(${(@s/:/)__plugin_dirs})
+
+for __dir in ${__dirs[@]}; do
+  if [[ -d "${__dir}" ]]; then
+    for __plugin in "${__dir}"/**/*.plugin.zsh; do
+      . "${__plugin}"
+    done
+  fi
+done
+
+unset __plugin_dirs __dirs __dir __plugin
+# <<< source plugins from plugins directory <<<

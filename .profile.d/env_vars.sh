@@ -18,6 +18,8 @@ export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgrepr
 case "$(ps -p $$ -o comm=)" in
 "zsh")
 	export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/zsh_history"
+	fpath+=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions")
+	export fpath
 	;;
 "bash")
 	export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"

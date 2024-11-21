@@ -1,4 +1,7 @@
 return {
 	"alexghergh/nvim-tmux-navigation",
-	config = true,
+	lazy = false,
+	config = function()
+		require("nvim-tmux-navigation").setup({})
+	end,
 }

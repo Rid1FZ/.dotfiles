@@ -1,45 +1,16 @@
 return {
-	{
-		"williamboman/mason.nvim",
-		lazy = false,
-		config = function()
-			require("mason").setup({
-				ui = {
-					icons = {
-						package_installed = " ",
-						package_pending = " ",
-						package_uninstalled = " ",
-					},
-				},
-			})
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		lazy = false,
-		opts = {
-			auto_install = true,
-		},
-	},
-	{
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		lazy = false,
-		config = function()
-			require("mason-tool-installer").setup({
-				ensure_installed = {
-					"lua_ls",
-					"stylua",
-					"pyright",
-					"black",
-					"isort",
-					"mypy",
-					"shfmt",
-					"shellcheck",
-					"bashls",
-					"clangd",
-					"clang-format",
-				},
-			})
-		end,
-	},
+	"williamboman/mason.nvim",
+	event = "VimEnter",
+	opts = function()
+		return require("configs.mason")
+	end,
+	config = function(_, opts)
+		require("mason").setup(opts)
+
+		vim.api.nvim_create_user_command("MasonInstallAll", function()
+			if opts.ensure_installed and #opts.ensure_installed > 0 then
+				vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
+			end
+		end, {})
+	end,
 }

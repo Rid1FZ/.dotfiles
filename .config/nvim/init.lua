@@ -1,11 +1,8 @@
------------------
--- Set Options --
------------------
-require("options")
+-- Setup Options and Keymappings
+require("core.options")
+require("utils").load_mappings()
 
---------------------
--- Load Lazy.nvim --
---------------------
+-- Setup Lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -17,11 +14,9 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
-vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins")
 
---------------------------------------
--- Set Keybindings and Autocommands --
---------------------------------------
-require("keybindings")
-require("autocommands")
+vim.opt.rtp:prepend(lazypath)
+require("lazy").setup(require("configs.lazy"))
+
+-- Setup Autocommands
+require("core.autocommands")
