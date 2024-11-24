@@ -44,6 +44,12 @@ require("lspconfig").pyright.setup({
 	on_init = M.on_init,
 })
 
+require("lspconfig").clangd.setup({
+	capabilities = M.capabilities,
+	on_attach = M.on_attach,
+	on_init = M.on_init,
+})
+
 require("lspconfig").lua_ls.setup({
 	on_init = M.on_init,
 	on_attach = M.on_attach,

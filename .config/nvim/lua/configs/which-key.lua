@@ -114,7 +114,7 @@ return {
 	show_help = true,
 	show_keys = true,
 	disable = {
-		ft = { "NvimTree", "mason", "lazy" },
+		ft = {},
 		bt = {},
 	},
 }
