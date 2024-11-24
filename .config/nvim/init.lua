@@ -1,5 +1,5 @@
 -- Setup Options and Keymappings
-require("core.options")
+require("options")
 require("utils").load_mappings()
 
 -- Setup Lazy.nvim
@@ -19,4 +19,4 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(require("configs.lazy"))
 
 -- Setup Autocommands
-require("core.autocommands")
+require("autocommands")

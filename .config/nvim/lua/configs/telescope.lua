@@ -3,11 +3,19 @@ return {
 		["ui-select"] = {
 			require("telescope.themes").get_dropdown({}),
 		},
+		["fzf"] = {
+			fuzzy = true, -- false will only do exact matching
+			override_generic_sorter = true, -- override the generic sorter
+			override_file_sorter = true, -- override the file sorter
+			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+		},
 	},
 	defaults = {
 		vimgrep_arguments = {
 			"rg",
-			"-L",
+			"--no-config",
+			"--hidden",
+			"--follow",
 			"--color=never",
 			"--no-heading",
 			"--with-filename",
@@ -30,13 +38,18 @@ return {
 			vertical = {
 				mirror = false,
 			},
-			width = 0.87,
+			width = 0.90,
 			height = 0.80,
 			preview_cutoff = 120,
 		},
 		file_sorter = require("telescope.sorters").get_fuzzy_file,
 		file_ignore_patterns = { "node_modules" },
 		generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+		pickers = {
+			live_grep = {
+				only_sort_text = true,
+			},
+		},
 		path_display = { "truncate" },
 		winblend = 0,
 		border = true,

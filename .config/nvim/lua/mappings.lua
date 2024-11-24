@@ -1,42 +1,18 @@
 -- n, v, i, t = mode names
+-- group names are defined in configs.which-key
 
 local M = {}
 
 M.general = {
-	i = {
-		-- go to  beginning and end
-		["<C-b>"] = { "<ESC>^i", "Beginning of line" },
-		["<C-e>"] = { "<End>", "End of line" },
-
-		-- navigate within insert mode
-		["<C-h>"] = { "<Left>", "Move left" },
-		["<C-l>"] = { "<Right>", "Move right" },
-		["<C-j>"] = { "<Down>", "Move down" },
-		["<C-k>"] = { "<Up>", "Move up" },
-	},
+	i = {},
 
 	n = {
 		["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
-		-- switch between windows
-		-- ["<C-h>"] = { "<C-w>h", "Window left" },
-		-- ["<C-l>"] = { "<C-w>l", "Window right" },
-		-- ["<C-j>"] = { "<C-w>j", "Window down" },
-		-- ["<C-k>"] = { "<C-w>k", "Window up" },
 
 		["<C-h>"] = { "<Cmd>NvimTmuxNavigateLeft<CR>", "Window left" },
 		["<C-l>"] = { "<Cmd>NvimTmuxNavigateRight<CR>", "Window right" },
-		["<C-j>"] = { "<Cmd>NvimTmuxNavigateUp<CR>", "Window up" },
-		["<C-k>"] = { "<Cmd>NvimTmuxNavigateDown<CR>", "Window down" },
-
-		-- save
-		["<C-s>"] = { "<cmd> w <CR>", "Save file" },
-
-		-- Copy all
-		["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" },
-
-		-- line numbers
-		["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
-		["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
+		["<C-k>"] = { "<Cmd>NvimTmuxNavigateUp<CR>", "Window up" },
+		["<C-j>"] = { "<Cmd>NvimTmuxNavigateDown<CR>", "Window down" },
 
 		-- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
 		-- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -46,16 +22,6 @@ M.general = {
 		["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
 		["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
 		["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-
-		-- new buffer
-		["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
-
-		["<leader>fm"] = {
-			function()
-				vim.lsp.buf.format({ async = true })
-			end,
-			"LSP formatting",
-		},
 	},
 
 	t = {
@@ -80,9 +46,6 @@ M.general = {
 
 M.lspconfig = {
 	plugin = true,
-
-	-- See `<cmd> :help vim.lsp.*` for documentation on any of the below functions
-
 	n = {
 		["gD"] = {
 			function()
@@ -93,7 +56,7 @@ M.lspconfig = {
 
 		["gd"] = {
 			function()
-				vim.lsp.buf.definition()
+				require("telescope.builtin").lsp_definitions()
 			end,
 			"LSP definition",
 		},
@@ -107,7 +70,7 @@ M.lspconfig = {
 
 		["gi"] = {
 			function()
-				vim.lsp.buf.implementation()
+				require("telescope.builtin").lsp_implementations()
 			end,
 			"LSP implementation",
 		},
@@ -119,21 +82,34 @@ M.lspconfig = {
 			"LSP signature help",
 		},
 
-		["<leader>D"] = {
+		["<leader>lf"] = {
 			function()
-				vim.lsp.buf.type_definition()
+				vim.lsp.buf.format({
+					async = false,
+					timeout_ms = 5000,
+					filter = function(client)
+						return client.name == "null-ls"
+					end,
+				})
 			end,
-			"LSP definition type",
+			"LSP formatting",
 		},
 
-		["<leader>ra"] = {
+		["<leader>lD"] = {
+			function()
+				require("telescope.builtin").diagnostics()
+			end,
+			"LSP list all diagnostics",
+		},
+
+		["<leader>lr"] = {
 			function()
 				require("utils.renamer").open()
 			end,
 			"LSP rename",
 		},
 
-		["<leader>ca"] = {
+		["<leader>la"] = {
 			function()
 				vim.lsp.buf.code_action()
 			end,
@@ -142,12 +118,12 @@ M.lspconfig = {
 
 		["gr"] = {
 			function()
-				vim.lsp.buf.references()
+				require("telescope.builtin").lsp_references()
 			end,
 			"LSP references",
 		},
 
-		["<leader>lf"] = {
+		["<leader>ld"] = {
 			function()
 				vim.diagnostic.open_float({ border = "rounded" })
 			end,
@@ -174,31 +150,10 @@ M.lspconfig = {
 			end,
 			"Diagnostic setloclist",
 		},
-
-		["<leader>wa"] = {
-			function()
-				vim.lsp.buf.add_workspace_folder()
-			end,
-			"Add workspace folder",
-		},
-
-		["<leader>wr"] = {
-			function()
-				vim.lsp.buf.remove_workspace_folder()
-			end,
-			"Remove workspace folder",
-		},
-
-		["<leader>wl"] = {
-			function()
-				print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-			end,
-			"List workspace folders",
-		},
 	},
 
 	v = {
-		["<leader>ca"] = {
+		["<leader>la"] = {
 			function()
 				vim.lsp.buf.code_action()
 			end,
@@ -211,11 +166,8 @@ M.nvimtree = {
 	plugin = true,
 
 	n = {
-		-- toggle
-		["<C-n>"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
-
 		-- focus
-		["<leader>e"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+		["<leader>oe"] = { "<cmd> NvimTreeFocus <CR>", "Focus explorer" },
 	},
 }
 
@@ -231,38 +183,6 @@ M.telescope = {
 		["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
 		["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
 		["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
-
-		-- git
-		["<leader>cm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-		["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
-
-		-- pick a hidden term
-		["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
-
-		-- theme switcher
-		["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
-
-		["<leader>ma"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
-	},
-}
-
-M.whichkey = {
-	plugin = true,
-
-	n = {
-		["<leader>wK"] = {
-			function()
-				vim.cmd("WhichKey")
-			end,
-			"Which-key all keymaps",
-		},
-		["<leader>wk"] = {
-			function()
-				local input = vim.fn.input("WhichKey: ")
-				vim.cmd("WhichKey " .. input)
-			end,
-			"Which-key query lookup",
-		},
 	},
 }
 
@@ -300,14 +220,14 @@ M.gitsigns = {
 		},
 
 		-- Actions
-		["<leader>rh"] = {
+		["<leader>gr"] = {
 			function()
 				require("gitsigns").reset_hunk()
 			end,
 			"Reset hunk",
 		},
 
-		["<leader>ph"] = {
+		["<leader>gp"] = {
 			function()
 				require("gitsigns").preview_hunk()
 			end,
@@ -321,12 +241,15 @@ M.gitsigns = {
 			"Blame line",
 		},
 
-		["<leader>td"] = {
+		["<leader>gt"] = {
 			function()
 				require("gitsigns").toggle_deleted()
 			end,
 			"Toggle deleted",
 		},
+
+		["<leader>gm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
+		["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 	},
 }
 

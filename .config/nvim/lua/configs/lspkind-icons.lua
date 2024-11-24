@@ -1,3 +1,5 @@
+-- this is not a plugin
+
 return {
 	Namespace = "󰌗",
 	Text = "󰉿",

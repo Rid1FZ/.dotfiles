@@ -1,7 +1,6 @@
 local opt = vim.opt
 local g = vim.g
 
--------------------------------------- options ------------------------------------------
 opt.laststatus = 3 -- global statusline
 opt.showmode = false
 
@@ -22,11 +21,10 @@ opt.mouse = "a"
 
 -- Numbers
 opt.number = true
-opt.numberwidth = 2
+opt.relativenumber = true
+opt.numberwidth = 3
 opt.ruler = false
-
--- disable nvim intro
-vim.opt.shortmess = vim.opt.shortmess + {
+opt.shortmess = opt.shortmess + {
 	s = true,
 	c = true,
 	F = true,
@@ -44,15 +42,15 @@ opt.wrap = false
 opt.confirm = true
 opt.swapfile = false
 
--- interval for writing swap file to disk, also used by gitsigns
+-- Interval for Writing Swap File to Disk
 opt.updatetime = 250
 
 g.mapleader = " "
 
--- add binaries installed by mason.nvim to path
+-- Add Binaries Installed by mason.nvim to PATH
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
--- add filetypes
+-- Add Filetypes
 vim.filetype.add({
 	extension = {
 		qml = "qml",

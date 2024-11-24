@@ -1,6 +1,6 @@
 return {
 	"alexghergh/nvim-tmux-navigation",
-	lazy = false,
+	event = "VimEnter",
 	config = function()
 		require("nvim-tmux-navigation").setup({})
 	end,

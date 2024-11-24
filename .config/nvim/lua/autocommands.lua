@@ -1,16 +1,17 @@
--- dont list quickfix buffers
+-- Dont List Quickfix Buffers
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "qf",
+	group = vim.api.nvim_create_augroup("QFNoList", { clear = true }),
 	callback = function()
 		vim.opt_local.buflisted = false
 	end,
 })
 
+-- Custom Event
 vim.api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
 	group = vim.api.nvim_create_augroup("CustomFilePost", { clear = true }),
 	callback = function(args)
 		local file = vim.api.nvim_buf_get_name(args.buf)
-		--local buftype = vim.api.nvim_buf_get_option(args.buf, "buftype")
 		local buftype = vim.api.nvim_get_option_value("buftype", { buf = args.buf })
 
 		if not vim.g.ui_entered and args.event == "UIEnter" then
@@ -27,13 +28,16 @@ vim.api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
 				if vim.g.editorconfig then
 					require("editorconfig").config(args.buf)
 				end
-			end, 0)
+			end)
 		end
 	end,
 })
 
+local NvimTreeAugroup = vim.api.nvim_create_augroup("NvimTreeAugroup", { clear = true })
+
 -- Close NvimTree if Last Window
 vim.api.nvim_create_autocmd("QuitPre", {
+	group = NvimTreeAugroup,
 	callback = function()
 		local invalid_win = {}
 		local wins = vim.api.nvim_list_wins()
@@ -54,6 +58,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
 
 -- Open NvimTree for Directories
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
+	group = NvimTreeAugroup,
 	callback = function(data)
 		local isdirectory = (vim.fn.isdirectory(data.file) == 1)
 
@@ -65,5 +70,13 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 		require("nvim-tree.api").tree.open({
 			current_window = false,
 		})
+	end,
+})
+
+-- Highlight Yanked Part
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
 	end,
 })

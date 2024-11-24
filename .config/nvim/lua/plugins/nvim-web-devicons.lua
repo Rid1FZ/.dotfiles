@@ -1,6 +1,7 @@
 return {
 	"nvim-tree/nvim-web-devicons",
+	event = "VimEnter",
 	opts = function()
-		return { override = require("utils.icons.devicons") }
+		return require("configs.nvim-web-devicons")
 	end,
 }

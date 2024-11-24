@@ -17,6 +17,7 @@ return {
 				buffer = bufnr,
 				callback = function()
 					vim.lsp.buf.format({
+						async = false,
 						timeout_ms = 5000,
 						bufnr = bufnr,
 						filter = function(client)

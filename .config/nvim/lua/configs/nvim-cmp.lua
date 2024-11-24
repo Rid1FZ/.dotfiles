@@ -5,7 +5,7 @@ local formatting_style = {
 	fields = { "abbr", "kind", "menu" },
 
 	format = function(_, item)
-		local icons = require("utils.icons.lspkind")
+		local icons = require("configs.lspkind-icons")
 		local icon = icons[item.kind]
 
 		icon = " " .. icon .. " "
