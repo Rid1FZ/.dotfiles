@@ -1,8 +1,14 @@
+;;; init.el --- The init file of Emacs configs -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
 ;; Custom Config Loader
 (defun load-user-file (file)
-  (interactive "f")
-  "Load a file in current user's configuration directory"
-  (load-file (expand-file-name file "~/.config/emacs/configs")))
+  "Load config file from `elisp' directory.
+FILE: the name of file inside `elisp' directory"
+  (load-file (expand-file-name file (concat user-emacs-directory "elisp"))))
 
 ;; Load Options
 (load-user-file "options.el")
@@ -19,10 +25,13 @@
       byte-compile-warnings nil)
 
 (package-initialize)
+
 (unless package-archive-contents
   (package-refresh-contents))
+
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -30,9 +39,13 @@
 (use-package no-littering
   :ensure t)
 
+
 ;; Load Packages
-(mapc 'load-file (file-expand-wildcards "~/.config/emacs/configs/packages/*.el"))
+(mapc 'load-file (file-expand-wildcards (concat user-emacs-directory "elisp/packages/*.el")))
 
 ;; Load Custom Configs
 (load-user-file "keybindings.el")
-(load-user-file "functions.el")
+(load-user-file "hooks.el")
+(load-user-file "utils/updater.el")
+
+;;; init.el ends here

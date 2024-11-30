@@ -1,7 +1,11 @@
 return {
 	filters = {
 		dotfiles = false,
-		exclude = {},
+		custom = {
+			[[^\.git$]],
+			[[^\.null-ls.*]],
+			[[^__pycache__$j]],
+		},
 	},
 	disable_netrw = true,
 	hijack_netrw = true,
@@ -23,7 +27,7 @@ return {
 		preserve_window_proportions = true,
 	},
 	git = {
-		enable = false,
+		enable = true,
 		ignore = true,
 	},
 	filesystem_watchers = {
@@ -51,7 +55,16 @@ return {
 				folder_arrow = false,
 				git = false,
 			},
-
+			web_devicons = {
+				file = {
+					enable = true,
+					color = true,
+				},
+				folder = {
+					enable = false,
+					color = true,
+				},
+			},
 			glyphs = {
 				default = "",
 				symlink = "",

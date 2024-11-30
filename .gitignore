@@ -46,3 +46,4 @@ flycheck_*.el
 /.config/emacs/var/
 /.config/emacs/etc/
 /.config/emacs/tree-sitter/
+/.config/emacs/packages/

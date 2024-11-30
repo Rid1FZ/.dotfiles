@@ -1,3 +1,9 @@
+;;; keybindings.el --- Custom keybindings  -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
 (require 'general)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -5,6 +11,14 @@
 (general-create-definer normal-mode-leader-definer
   :states 'normal
   :prefix "SPC")
+
+(normal-mode-leader-definer
+  "w" '(:ignore t :which-key "Window")
+  "wh" '(evil-window-left :which-key "Focus Left")
+  "wj" '(evil-window-down :which-key "Focus Down")
+  "wk" '(evil-window-up :which-key "Focus Up")
+  "wl" '(evil-window-right :which-key "Focus Right")
+  )
 
 (normal-mode-leader-definer
   "f" '(:ignore t :which-key "Find")
@@ -26,3 +40,5 @@
  "l" '(:ignore t :which-key "LSP")
  "la" '(lsp-execute-code-action :which-key "Code Action")
  "ld" '(lsp-ui-doc-glance :which-key "Documentation"))
+
+;;; keybindings.el ends here
