@@ -18,6 +18,14 @@
  :keymaps 'vterm-mode-map
  "C-w" 'evil-window-map)
 
+(general-define-key
+ :states 'normal
+ "gc" '(comment-line :which-key "Toggle Comment(Line)"))
+
+(general-define-key
+ :states '(visual visual-line visual-block)
+ "gc" '(comment-or-uncomment-region :which-key "Toggle Comment(Region)"))
+
 (normal-mode-leader-definer
   "w" '(evil-window-map :which-key "Window"))
 
