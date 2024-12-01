@@ -46,7 +46,7 @@
   (require 'dired-rainbow)
 
   :custom
-  ((dired-listing-switches "-agho --group-directories-first"))
+  (dired-listing-switches "-go --almost-all --human-readable --group-directories-first")
 
   :config
   (evil-collection-define-key 'normal 'dired-mode-map

@@ -6,7 +6,8 @@
 
 ;; Reset Defaults
 (setq inhibit-startup-message t
-      ring-bell-function 'ignore)
+      ring-bell-function 'ignore
+      initial-scratch-message nil)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -23,6 +24,10 @@
 
 ;; Highlight Current Line
 (global-hl-line-mode)
+
+;; Disable Wrap
+(global-visual-line-mode -1)
+(setq-default truncate-lines t)
 
 ;; Line Numbers
 (column-number-mode)

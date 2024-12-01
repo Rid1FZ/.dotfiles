@@ -33,7 +33,7 @@ bind-key -r -T resize l resize-pane -R 2
 
 # >>> copy mode >>>
 copymode_enabled="! ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf|less|.?top)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf|emacs|less|.?top)(diff)?$'"
 
 bind-key -T prefix v if-shell "$copymode_enabled" 'copy-mode -H'
 bind-key -T copy-mode-vi v send-keys -X begin-selection

@@ -6,19 +6,20 @@
 
 (require 'general)
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (general-create-definer normal-mode-leader-definer
   :states 'normal
   :prefix "SPC")
 
+(general-define-key
+ "<escape>" 'keyboard-escape-quit)
+
+(general-define-key
+ :keymaps 'vterm-mode-map
+ "C-w" 'evil-window-map)
+
 (normal-mode-leader-definer
-  "w" '(:ignore t :which-key "Window")
-  "wh" '(evil-window-left :which-key "Focus Left")
-  "wj" '(evil-window-down :which-key "Focus Down")
-  "wk" '(evil-window-up :which-key "Focus Up")
-  "wl" '(evil-window-right :which-key "Focus Right")
-  )
+  "w" '(evil-window-map :which-key "Window"))
 
 (normal-mode-leader-definer
   "f" '(:ignore t :which-key "Find")
@@ -33,7 +34,9 @@
 (normal-mode-leader-definer
   "o" '(:ignore t :which-key "Open")
   "od" '(dired-jump :which-key "Open Dired")
-  "oe" '(treemacs-select-window :which-key "Open Explorer"))
+  "oe" '(treemacs-select-window :which-key "Open Explorer")
+  "ot" '(vterm-other-window :which-key "Open Vterm(Other Window)")
+  "oT" '(vterm :which-key "Open Vterm(Current Window)"))
 
 (normal-mode-leader-definer
  :keymaps 'lsp-mode-map
