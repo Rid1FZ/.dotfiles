@@ -49,7 +49,7 @@
       (company-etags :with company-yasnippet)
       (company-keywords :with company-yasnippet))
      (company-oddmuse :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
+     (company-dabbrev)))
 
   :config
   (yas-global-mode 1))

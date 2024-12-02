@@ -8,12 +8,7 @@
   :ensure t
 
   :init
-  (add-hook 'vterm-exit-functions
-	    (lambda (_ _)
-	      (let* ((buffer (current-buffer))
-		     (window (get-buffer-window buffer)))
-		(when (not (one-window-p))
-		  (delete-window window))
-		(kill-buffer buffer)))))
+  (add-hook 'vterm-exit-functions (lambda (_ _)
+				    (custom/close-buffer))))
 
 ;;; vterm.el ends here

@@ -13,7 +13,7 @@
   :config
   (setq-default format-all-formatters
 		'(("Python"
-		   (black)
+		   (black "--quiet")
 		   (isort))
 		  ("Shell"
 		   (shfmt "-i" "4" "-ci"))

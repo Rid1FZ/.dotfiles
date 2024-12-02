@@ -4,12 +4,6 @@
 
 ;;; Code:
 
-(defun efs/lsp-mode-setup-breadcrumb ()
-  "Setup breadcrumb for lsp-mode."
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (setq lsp-headerline-breadcrumb-icons-enable t)
-  (lsp-headerline-breadcrumb-mode))
-
 (use-package lsp-mode
   :ensure t
 
@@ -17,7 +11,10 @@
   (lsp lsp-deferred)
 
   :hook
-  (lsp-mode . efs/lsp-mode-setup-breadcrumb)
+  (lsp-mode . (lambda ()
+		(setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+		(setq lsp-headerline-breadcrumb-icons-enable t)
+		(lsp-headerline-breadcrumb-mode)))
 
   :init
   (require 'lsp-ivy)

@@ -11,6 +11,10 @@
   :states 'normal
   :prefix "SPC")
 
+(general-create-definer visual-mode-leader-definer
+  :states '(visual visual-block visual-line)
+  :prefix "SPC")
+
 (general-define-key
  "<escape>" 'keyboard-escape-quit)
 
@@ -47,9 +51,18 @@
   "oT" '(projectile-run-vterm :which-key "Open Vterm(Current Window)"))
 
 (normal-mode-leader-definer
+  "b" '(:ignore t :which-key "Buffer")
+  "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer")
+  "bc" '(custom/close-buffer :which-key "Close Buffer"))
+
+(normal-mode-leader-definer
  :keymaps 'lsp-mode-map
  "l" '(:ignore t :which-key "LSP")
  "la" '(lsp-execute-code-action :which-key "Code Action")
  "ld" '(lsp-ui-doc-glance :which-key "Documentation"))
+
+(visual-mode-leader-definer
+ "b" '(:ignore t :which-key "Buffer")
+ "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer"))
 
 ;;; keybindings.el ends here

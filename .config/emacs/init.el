@@ -46,6 +46,8 @@ FILE: the name of file inside `elisp' directory"
 ;; Load Custom Configs
 (load-user-file "keybindings.el")
 (load-user-file "hooks.el")
-(load-user-file "utils/updater.el")
+
+;; Load Utils
+(mapc 'load-file (file-expand-wildcards (concat user-emacs-directory "elisp/utils/*.el")))
 
 ;;; init.el ends here
