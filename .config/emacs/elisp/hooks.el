@@ -40,4 +40,7 @@
 	    (unless (display-graphics-p)
 	      (xterm-mouse-mode 1))))
 
+;; Format On Save
+(add-hook 'before-save-hook 'format-all-region-or-buffer)
+
 ;;; hooks.el ends here

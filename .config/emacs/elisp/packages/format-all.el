@@ -1,0 +1,24 @@
+;;; format-all.el --- Config For `format-all' package -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(use-package format-all
+  :ensure t
+
+  :hook
+  (prog-mode . format-all-mode)
+
+  :config
+  (setq-default format-all-formatters
+		'(("Python"
+		   (black)
+		   (isort))
+		  ("Shell"
+		   (shfmt "-i" "4" "-ci"))
+		  ("C"
+		   (clang-format)))))
+
+
+;;; format-all.el ends here
