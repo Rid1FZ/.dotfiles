@@ -15,12 +15,12 @@
    (doom-modeline-buffer-file-name-style 'relative-from-project)
    (doom-modeline-highlight-modified-buffer-name t)
    (doom-modeline-buffer-encoding nil)
-   (doom-modeline-modal t)
    (doom-modeline-icon t)
+   (doom-modeline-modal t)
    (doom-modeline-modal-icon nil)
-   (doom-modeline-modal-modern-icon t)
+   (doom-modeline-modal-modern-icon nil)
    (nerd-icons-scale-factor 1.2)
-   (lsp-modeline-code-action-fallback-icon "")))
+   (lsp-modeline-code-action-fallback-icon " ")))
 
 (custom-set-faces
  '(mode-line ((t (:family "JetBrainsMono Nerd Font Propo" :height 125))))

@@ -10,6 +10,9 @@
   :hook
   (prog-mode . format-all-mode)
 
+  :custom
+  (format-all-show-errors "Never")
+
   :config
   (setq-default format-all-formatters
 		'(("Python"

@@ -7,7 +7,8 @@
 ;; Reset Defaults
 (setq inhibit-startup-message t
       ring-bell-function 'ignore
-      initial-scratch-message nil)
+      initial-scratch-message nil
+      inhibit-compacting-font-caches t)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
