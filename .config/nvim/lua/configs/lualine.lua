@@ -76,18 +76,18 @@ ins_left({
 	function()
 		-- return ""
 		local mode_icon = {
-			n = "N",
-			i = "I",
-			v = "V",
-			V = "V",
-			c = "C",
-			s = "S",
-			S = "S",
-			R = "R",
-			Rv = "R",
-			cv = "C",
-			r = "R",
-			t = "T",
+			n = "N",
+			i = "I",
+			v = "V",
+			V = "V",
+			c = "C",
+			s = "S",
+			S = "S",
+			R = "R",
+			Rv = "R",
+			cv = "C",
+			r = "R",
+			t = "T",
 		}
 		return mode_icon[vim.fn.mode()] or "N"
 	end,
