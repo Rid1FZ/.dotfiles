@@ -7,8 +7,9 @@
 ;; Reset Defaults
 (setq inhibit-startup-message t
       ring-bell-function 'ignore
-      initial-scratch-message nil
-      inhibit-compacting-font-caches t)
+      initial-scratch-message ";;; -*- lexical-binding: t -*-"
+      inhibit-compacting-font-caches t
+      case-fold-search nil)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)

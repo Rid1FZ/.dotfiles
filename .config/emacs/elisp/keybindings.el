@@ -53,16 +53,20 @@
 (normal-mode-leader-definer
   "b" '(:ignore t :which-key "Buffer")
   "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer")
-  "bc" '(custom/close-buffer :which-key "Close Buffer"))
+  "bc" '(custom/close-buffer :which-key "Close Buffer")
+  "bC" '(projectile-kill-buffers :which-key "Kill Buffers(Project)")
+  "bw" '(write-file :which-key "Write Buffer to File")
+  "bs" '(save-buffer :which-key "Save Buffer")
+  "bk" '(kill-buffer :which-key "Select and Kill Buffer"))
 
 (normal-mode-leader-definer
- :keymaps 'lsp-mode-map
- "l" '(:ignore t :which-key "LSP")
- "la" '(lsp-execute-code-action :which-key "Code Action")
- "ld" '(lsp-ui-doc-glance :which-key "Documentation"))
+  :keymaps 'lsp-mode-map
+  "l" '(:ignore t :which-key "LSP")
+  "la" '(lsp-execute-code-action :which-key "Code Action")
+  "ld" '(lsp-ui-doc-glance :which-key "Documentation"))
 
 (visual-mode-leader-definer
- "b" '(:ignore t :which-key "Buffer")
- "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer"))
+  "b" '(:ignore t :which-key "Buffer")
+  "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer"))
 
 ;;; keybindings.el ends here

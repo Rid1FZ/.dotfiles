@@ -17,7 +17,7 @@
    ("C-l" . ivy-alt-done)
    ("C-j" . ivy-next-line)
    ("C-k" . ivy-previous-line)
-   ("RET" . ivy-immediate-done)
+   ("RET" . ivy-done)
 
    :map ivy-switch-buffer-map
    ("C-k" . ivy-previous-line)
