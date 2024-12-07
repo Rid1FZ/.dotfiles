@@ -1,50 +1,57 @@
 return {
-	spec = {
-		{ import = "plugins" },
-	},
-	defaults = { lazy = true },
-	install = { colorscheme = { "catppuccin-mocha" } },
+  defaults = { lazy = true, version = nil },
+  install = { colorscheme = { "catppuccin-mocha" } },
+  concurrency = vim.uv.available_parallelism(),
 
-	ui = {
-		icons = {
-			ft = "",
-			lazy = "󰂠 ",
-			loaded = "",
-			not_loaded = "",
-		},
-	},
+  spec = {
+    { import = "plugins" },
+  },
 
-	performance = {
-		rtp = {
-			disabled_plugins = {
-				"2html_plugin",
-				"tohtml",
-				"getscript",
-				"getscriptPlugin",
-				"gzip",
-				"logipat",
-				"netrw",
-				"netrwPlugin",
-				"netrwSettings",
-				"netrwFileHandlers",
-				"matchit",
-				"tar",
-				"tarPlugin",
-				"rrhelper",
-				"spellfile_plugin",
-				"vimball",
-				"vimballPlugin",
-				"zip",
-				"zipPlugin",
-				"tutor",
-				"rplugin",
-				"syntax",
-				"synmenu",
-				"optwin",
-				"compiler",
-				"bugreport",
-				"ftplugin",
-			},
-		},
-	},
+  git = {
+    timeout = 300,
+    url_format = "https://github.com/%s.git",
+  },
+
+  ui = {
+    icons = {
+      ft = "",
+      lazy = "󰂠 ",
+      loaded = "",
+      not_loaded = "",
+    },
+  },
+
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "2html_plugin",
+        "tohtml",
+        "getscript",
+        "getscriptPlugin",
+        "gzip",
+        "logipat",
+        "netrw",
+        "netrwPlugin",
+        "netrwSettings",
+        "netrwFileHandlers",
+        "matchit",
+        "tar",
+        "tarPlugin",
+        "rrhelper",
+        "spellfile_plugin",
+        "vimball",
+        "vimballPlugin",
+        "zip",
+        "zipPlugin",
+        "tutor",
+        "rplugin",
+        "syntax",
+        "synmenu",
+        "optwin",
+        "compiler",
+        "bugreport",
+        "ftplugin",
+      },
+    },
+  },
 }

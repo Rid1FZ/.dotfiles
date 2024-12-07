@@ -4,8 +4,19 @@
 
 ;;; Code:
 
-(add-hook 'python-ts-mode-hook (lambda ()
-				 (setq treesit-font-lock-level 4)))
+;; Set Font Lock Level for TS Modes
+(dolist (mode '(python-ts-mode-hook
+		yaml-ts-mode
+		toml-ts-mode
+		bash-ts-mode
+		c-ts-mode-hook
+		c++-ts-mode-hook
+		c-or-c++-ts-mode-hook))
+  (add-hook mode (lambda () (setq-local treesit-font-lock-level 4))))
+
+;; Set Lexical Binding for Emacs Lisp
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+				  (setq lexical-binding t)))
 
 ;; Disable Line Numbers for Some Modes
 (dolist (mode '(org-mode-hook

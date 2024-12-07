@@ -6,6 +6,9 @@
 
 (use-package yasnippet
   :ensure t
-  :after company-mode)
+  :after company-mode
+
+  :hook
+  (company-mode . yas-global-mode))
 
 ;;; yasnippet.el ends here

@@ -46,6 +46,5 @@ bind-key Space run-shell 'tmux choose-tree -Zwf"##{==:##{session_name},#{session
 bind-key -r H previous-window
 bind-key -r L next-window
 bind-key c new-window -c "#{pane_current_path}"
-bind-key s run-shell "~/.config/tmux/scripts/smart-split"
 bind-key "|" split-pane -h -c "#{pane_current_path}"
 bind-key "_" split-pane -c "#{pane_current_path}"

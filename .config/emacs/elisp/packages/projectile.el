@@ -31,7 +31,7 @@
   (counsel projectile)
 
   :hook
-  (projectile-mode)
+  (projectile-mode . counsel-projectile-mode)
 
   :init
   (require 'counsel))

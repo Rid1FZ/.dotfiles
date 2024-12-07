@@ -1,5 +1,5 @@
 #!/bin/env zsh
-
+#
 # >>> completion >>>
 zmodload zsh/complist
 bindkey -M menuselect '^xg' clear-screen
@@ -45,3 +45,17 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 zstyle ':completion:*' keep-prefix true
 zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
 # <<< completion <<<
+
+# >>> load zsh-autosuggestions >>>
+__zsh_autosuggestion_path="/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+__scripts=(${(@s/:/)__zsh_autosuggestion_path})
+
+for __script in ${__scripts[@]}; do
+  if [ -f "${__script}" ]; then
+    . "${__script}"
+    break
+  fi
+done
+
+unset __zsh_autosuggestion_path __scripts __script
+# <<< load zsh-autosuggestions <<<
