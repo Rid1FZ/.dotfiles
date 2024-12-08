@@ -5,9 +5,10 @@
 ;;; Code:
 
 (defun custom/close-buffer()
+  "Close current buffer and it's window if not last window"
   (interactive)
   (let* ((buffer (current-buffer))
-	 (window (get-buffer-window buffer)))
+         (window (get-buffer-window buffer)))
     (kill-buffer buffer)
     (when (not (one-window-p))
       (delete-window window))))

@@ -28,6 +28,11 @@
 ;; Highlight Current Line
 (global-hl-line-mode)
 
+;; Indentation
+(setq-default indent-tabs-mode nil
+              tab-width 4
+              indent-line-function #'insert-tab)
+
 ;; Disable Wrap
 (global-visual-line-mode -1)
 (setq-default truncate-lines t)
@@ -53,9 +58,9 @@
 ;; Map Modes to Major Modes
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)
-	(c-mode . c-ts-mode)
-	(c++-mode . c++-ts-mode)
-	(c-or-c++-mode . c-or-c++-ts-mode)))
+        (c-mode . c-ts-mode)
+        (c++-mode . c++-ts-mode)
+        (c-or-c++-mode . c-or-c++-ts-mode)))
 
 ;; Autoclose Parens, Quotes, etc...
 (electric-pair-mode t)

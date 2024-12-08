@@ -18,10 +18,8 @@ FILE: the name of file inside `elisp' directory"
 
 ;; Setup Package Manager
 (require 'package)
-(setq package-archives '(
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")
-                         ))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (setq package-native-compile t
       native-comp-async-report-warnings-errors nil

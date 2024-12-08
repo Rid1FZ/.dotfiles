@@ -11,7 +11,7 @@ set-option -g pane-base-index 1
 set-option -g renumber-windows on
 set-option -g default-shell '/usr/bin/zsh'
 set-option -g synchronize-panes off
-set-option -g destroy-unattached on
+set-option -g destroy-unattached off
 set-option -g mouse on
 set-window-option -g mode-keys vi
 set-window-option -g pane-base-index 1
