@@ -8,25 +8,22 @@ local formatting_style = {
         local icons = require("configs.lspkind-icons")
         local icon = icons[item.kind]
 
-        icon = " " .. icon .. " "
         item.kind = string.format("%s", icon)
 
         return item
     end,
 }
 
-local function border(hl_name)
-    return {
-        { "╭", hl_name },
-        { "─", hl_name },
-        { "╮", hl_name },
-        { "│", hl_name },
-        { "╯", hl_name },
-        { "─", hl_name },
-        { "╰", hl_name },
-        { "│", hl_name },
-    }
-end
+local border_chars = {
+    "╭",
+    "─",
+    "╮",
+    "│",
+    "╯",
+    "─",
+    "╰",
+    "│",
+}
 
 local options = {
     completion = {
@@ -34,8 +31,12 @@ local options = {
     },
 
     window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered({
+            border = border_chars,
+        }),
+        documentation = cmp.config.window.bordered({
+            border = border_chars,
+        }),
     },
     snippet = {
         expand = function(args) require("luasnip").lsp_expand(args.body) end,
@@ -59,7 +60,7 @@ local options = {
                 end
             end,
             s = cmp.mapping.confirm({ select = true }),
-            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
         }),
         ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -72,6 +73,7 @@ local options = {
         end, {
             "i",
             "s",
+            "c",
         }),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -84,10 +86,12 @@ local options = {
         end, {
             "i",
             "s",
+            "c",
         }),
     },
     sources = {
         { name = "nvim_lsp" },
+        { name = "lazydev" },
         { name = "luasnip" },
         { name = "buffer" },
         { name = "nvim_lua" },
@@ -95,7 +99,6 @@ local options = {
     },
 }
 
-options.window.completion.border = border("CmpBorder")
 options.window.completion.scrollbar = true
 options.window.documentation.max_height = 5
 options.window.documentation.max_width = 60

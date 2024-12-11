@@ -32,6 +32,7 @@ case "$(ps -p $$ -o comm=)" in
 	;;
 "bash")
 	export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"
+    export HISTCONTROL="ignoreboth"
 	;;
 esac
 # <<< environment variables <<<

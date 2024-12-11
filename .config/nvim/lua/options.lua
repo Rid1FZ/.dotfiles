@@ -30,6 +30,7 @@ opt.shortmess = opt.shortmess + {
     F = true,
     W = true,
     I = true,
+    l = true,
 }
 
 opt.signcolumn = "yes:2"

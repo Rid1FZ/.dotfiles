@@ -22,10 +22,6 @@ M.general = {
         ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-        ["<Leader>ot"] = {
-            function() vim.fn.system({ "tmux", "split", "-h", "-l 40%" }) end,
-            "Open terminal",
-        },
     },
 
     t = {

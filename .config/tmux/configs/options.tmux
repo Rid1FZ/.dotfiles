@@ -13,6 +13,7 @@ set-option -g default-shell '/usr/bin/zsh'
 set-option -g synchronize-panes off
 set-option -g destroy-unattached off
 set-option -g mouse on
+set-option -g popup-border-lines "rounded"
 set-window-option -g mode-keys vi
 set-window-option -g pane-base-index 1
 

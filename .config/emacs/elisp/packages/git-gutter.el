@@ -17,8 +17,8 @@
 
   :config
   (global-git-gutter-mode +1)
-  (set-face-foreground 'git-gutter:modified "#f9e2af") ;; background color
-  (set-face-foreground 'git-gutter:added "#f38ba8")
+  (set-face-foreground 'git-gutter:modified "#f9e2af")
+  (set-face-foreground 'git-gutter:added "#a6e3a1")
   (set-face-foreground 'git-gutter:deleted "#f38ba8"))
 
 ;;; git-gutter.el ends here

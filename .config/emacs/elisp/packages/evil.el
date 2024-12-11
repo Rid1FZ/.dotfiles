@@ -4,10 +4,12 @@
 
 ;;; Code:
 
-(use-package key-chord)
+(use-package key-chord
+  :ensure t)
 
 (use-package evil
   :ensure t
+  :after key-chord
 
   :init
   (setq evil-want-integration t)
@@ -16,12 +18,15 @@
   (setq evil-want-C-i-jump nil)
   (require 'evil-collection)
 
+  :custom
+  (key-chord-two-keys-delay 0.2)
+
   :config
   (evil-mode 1)
-  (setq key-chord-two-keys-delay 0.2)
+  (evil-set-undo-system 'undo-redo)
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state) ;; `jk' to quit insert
   (key-chord-mode 1)
-  ;; Set initial vim-mode for major modes
+  ;; Initial evil state for major modes
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 

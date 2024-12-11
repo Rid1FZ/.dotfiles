@@ -4,7 +4,8 @@ return {
         custom = {
             [[^\.git$]],
             [[^\.null-ls.*]],
-            [[^__pycache__$j]],
+            [[^__pycache__$]],
+            [[^.mypy_cache$]],
         },
     },
     disable_netrw = true,
@@ -42,18 +43,20 @@ return {
         root_folder_label = false,
         highlight_git = false,
         highlight_opened_files = "none",
+        symlink_destination = false,
 
         indent_markers = {
             enable = true,
         },
 
         icons = {
-            symlink_arrow = "  ",
+            symlink_arrow = " ",
+            git_placement = "after",
             show = {
                 file = true,
                 folder = true,
                 folder_arrow = false,
-                git = false,
+                git = true,
             },
             web_devicons = {
                 file = {
@@ -79,12 +82,12 @@ return {
                     arrow_closed = "",
                 },
                 git = {
-                    unstaged = "",
-                    staged = "",
+                    unstaged = "",
+                    staged = "",
                     unmerged = "",
-                    renamed = "",
-                    untracked = "󰓎",
-                    deleted = "",
+                    renamed = "",
+                    untracked = "",
+                    deleted = "",
                     ignored = "",
                 },
             },

@@ -21,7 +21,7 @@ return {
                         async = false,
                         timeout_ms = 5000,
                         bufnr = bufnr,
-                        filter = function(client) return client.name == "null-ls" end,
+                        filter = function(client_) return client_.name == "null-ls" end,
                     })
                 end,
             })

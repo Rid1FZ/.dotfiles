@@ -1,7 +1,19 @@
 return {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
+    keys = { ":" },
     dependencies = {
+        "nvim-telescope/telescope.nvim",
+        {
+            "folke/lazydev.nvim",
+            ft = "lua",
+            opts = {
+                library = {
+                    { path = "luvit-meta/library", words = { "vim%.uv" } },
+                },
+            },
+        },
+        { "Bilal2453/luvit-meta", lazy = true },
         {
             -- snippet plugin
             "L3MON4D3/LuaSnip",
@@ -33,7 +45,15 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
         },
     },
     opts = function() return require("configs.nvim-cmp") end,
+
+    config = function(_, opts)
+        local cmp = require("cmp")
+
+        cmp.setup(opts)
+        cmp.setup.cmdline(":", require("configs.nvim-cmp-cmdline"))
+    end,
 }
