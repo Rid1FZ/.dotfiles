@@ -15,7 +15,9 @@ local function check_triggeredChars(triggerChars)
     local cur_char = cur_line:sub(pos, pos)
 
     for _, char in ipairs(triggerChars) do
-        if cur_char == char or prev_char == char then return true end
+        if cur_char == char or prev_char == char then
+            return true
+        end
     end
 end
 
@@ -29,7 +31,9 @@ M.setup = function(client, bufnr)
         group = group,
         buffer = bufnr,
         callback = function()
-            if check_triggeredChars(triggerChars) then vim.lsp.buf.signature_help() end
+            if check_triggeredChars(triggerChars) then
+                vim.lsp.buf.signature_help()
+            end
         end,
     })
 end

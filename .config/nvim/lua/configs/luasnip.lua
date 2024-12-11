@@ -1,4 +1,6 @@
-return function(opts)
+local M = {}
+
+M.setup = function(opts)
     require("luasnip").config.set_config(opts)
 
     -- vscode format
@@ -24,3 +26,5 @@ return function(opts)
         end,
     })
 end
+
+return M

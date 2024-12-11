@@ -1,57 +1,59 @@
-return {
-    defaults = { lazy = true, version = nil },
-    install = { colorscheme = { "catppuccin-mocha" } },
-    concurrency = vim.uv.available_parallelism(),
+local M = {}
 
-    spec = {
-        { import = "plugins" },
+M.defaults = { lazy = true, version = nil }
+M.install = { colorscheme = { "catppuccin-mocha" } }
+M.concurrency = vim.uv.available_parallelism()
+
+M.spec = {
+    { import = "plugins" },
+}
+
+M.git = {
+    timeout = 300,
+    url_format = "https://github.com/%s.git",
+}
+
+M.ui = {
+    icons = {
+        ft = "",
+        lazy = "󰂠 ",
+        loaded = "",
+        not_loaded = "",
     },
+}
 
-    git = {
-        timeout = 300,
-        url_format = "https://github.com/%s.git",
-    },
-
-    ui = {
-        icons = {
-            ft = "",
-            lazy = "󰂠 ",
-            loaded = "",
-            not_loaded = "",
-        },
-    },
-
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                "2html_plugin",
-                "tohtml",
-                "getscript",
-                "getscriptPlugin",
-                "gzip",
-                "logipat",
-                "netrw",
-                "netrwPlugin",
-                "netrwSettings",
-                "netrwFileHandlers",
-                "matchit",
-                "tar",
-                "tarPlugin",
-                "rrhelper",
-                "spellfile_plugin",
-                "vimball",
-                "vimballPlugin",
-                "zip",
-                "zipPlugin",
-                "tutor",
-                "rplugin",
-                "syntax",
-                "synmenu",
-                "optwin",
-                "compiler",
-                "bugreport",
-                "ftplugin",
-            },
+M.performance = {
+    rtp = {
+        disabled_plugins = {
+            "2html_plugin",
+            "tohtml",
+            "getscript",
+            "getscriptPlugin",
+            "gzip",
+            "logipat",
+            "netrw",
+            "netrwPlugin",
+            "netrwSettings",
+            "netrwFileHandlers",
+            "matchit",
+            "tar",
+            "tarPlugin",
+            "rrhelper",
+            "spellfile_plugin",
+            "vimball",
+            "vimballPlugin",
+            "zip",
+            "zipPlugin",
+            "tutor",
+            "rplugin",
+            "syntax",
+            "synmenu",
+            "optwin",
+            "compiler",
+            "bugreport",
+            "ftplugin",
         },
     },
 }
+
+return M

@@ -5,7 +5,9 @@ local M = {}
 M.load_mappings = function(section, mapping_opt)
     vim.schedule(function()
         local function set_section_map(section_values)
-            if section_values.plugin then return end
+            if section_values.plugin then
+                return
+            end
 
             section_values.plugin = nil
 

@@ -12,8 +12,12 @@ local colors = {
 }
 
 local conditions = {
-    buffer_not_empty = function() return vim.fn.empty(vim.fn.expand("%:t")) ~= 1 end,
-    hide_in_width = function() return vim.fn.winwidth(0) > 80 end,
+    buffer_not_empty = function()
+        return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
+    end,
+    hide_in_width = function()
+        return vim.fn.winwidth(0) > 80
+    end,
     check_git_workspace = function()
         local filepath = vim.fn.expand("%:p:h")
         local gitdir = vim.fn.finddir(".git", filepath .. ";")
@@ -22,7 +26,7 @@ local conditions = {
 }
 
 -- Reset
-local config = {
+local M = {
     options = {
         component_separators = "",
         section_separators = "",
@@ -51,13 +55,19 @@ local config = {
 }
 
 -- Inserts a component in lualine_c at left section
-local function ins_left(component) table.insert(config.sections.lualine_c, component) end
+local function ins_left(component)
+    table.insert(M.sections.lualine_c, component)
+end
 
 -- Inserts a component in lualine_x at right section
-local function ins_right(component) table.insert(config.sections.lualine_x, component) end
+local function ins_right(component)
+    table.insert(M.sections.lualine_x, component)
+end
 
 ins_left({
-    function() return "█" end,
+    function()
+        return "█"
+    end,
     color = { fg = colors.blue },
     padding = { left = 0, right = 1 },
 })
@@ -153,7 +163,9 @@ ins_right({
         local msg = ""
         local buf_ft = vim.bo.filetype
         local clients = vim.lsp.get_clients()
-        if next(clients) == nil then return msg end
+        if next(clients) == nil then
+            return msg
+        end
         for _, client in ipairs(clients) do
             local filetypes = client.config.filetypes
             if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 and client.name ~= "null-ls" then
@@ -171,7 +183,7 @@ ins_right({
         local buf = vim.api.nvim_get_current_buf()
         local highlighter = require("vim.treesitter.highlighter")
         if highlighter.active[buf] then
-            return ""
+            return " "
         else
             return ""
         end
@@ -184,9 +196,11 @@ ins_right({ "location" })
 ins_right({ "progress", color = { fg = colors.fg, gui = "bold" } })
 
 ins_right({
-    function() return "█" end,
+    function()
+        return "█"
+    end,
     color = { fg = colors.blue },
     padding = { left = 1 },
 })
 
-return config
+return M

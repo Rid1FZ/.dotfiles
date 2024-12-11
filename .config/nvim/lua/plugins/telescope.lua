@@ -1,6 +1,8 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
+        cmd = "Telescope",
+        ft = "mason",
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
             "nvim-telescope/telescope-ui-select.nvim",
@@ -9,10 +11,15 @@ return {
                 build = "make",
             },
         },
-        cmd = "Telescope",
-        ft = "mason",
-        init = function() require("utils").load_mappings("telescope") end,
-        opts = function() return require("configs.telescope") end,
+
+        init = function()
+            require("utils").load_mappings("telescope")
+        end,
+
+        opts = function()
+            return require("configs.telescope")
+        end,
+
         config = function(_, opts)
             local telescope = require("telescope")
             telescope.setup(opts)

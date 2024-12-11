@@ -1,5 +1,8 @@
 return {
     "lewis6991/gitsigns.nvim",
     event = "User FilePost",
-    opts = function() return require("configs.gitsigns") end,
+
+    opts = function()
+        return require("configs.gitsigns")
+    end,
 }

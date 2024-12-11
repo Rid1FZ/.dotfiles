@@ -48,27 +48,37 @@ M.lspconfig = {
     plugin = true,
     n = {
         ["gD"] = {
-            function() vim.lsp.buf.declaration() end,
+            function()
+                vim.lsp.buf.declaration()
+            end,
             "LSP declaration",
         },
 
         ["gd"] = {
-            function() require("telescope.builtin").lsp_definitions() end,
+            function()
+                require("telescope.builtin").lsp_definitions()
+            end,
             "LSP definition",
         },
 
         ["K"] = {
-            function() vim.lsp.buf.hover() end,
+            function()
+                vim.lsp.buf.hover()
+            end,
             "LSP hover",
         },
 
         ["gi"] = {
-            function() require("telescope.builtin").lsp_implementations() end,
+            function()
+                require("telescope.builtin").lsp_implementations()
+            end,
             "LSP implementation",
         },
 
         ["<leader>ls"] = {
-            function() vim.lsp.buf.signature_help() end,
+            function()
+                vim.lsp.buf.signature_help()
+            end,
             "LSP signature help",
         },
 
@@ -77,56 +87,76 @@ M.lspconfig = {
                 vim.lsp.buf.format({
                     async = false,
                     timeout_ms = 5000,
-                    filter = function(client) return client.name == "null-ls" end,
+                    filter = function(client)
+                        return client.name == "null-ls"
+                    end,
                 })
             end,
             "LSP formatting",
         },
 
         ["<leader>lD"] = {
-            function() require("telescope.builtin").diagnostics() end,
+            function()
+                require("telescope.builtin").diagnostics()
+            end,
             "LSP list all diagnostics",
         },
 
         ["<leader>lr"] = {
-            function() require("utils.renamer").open() end,
+            function()
+                require("utils.renamer").open()
+            end,
             "LSP rename",
         },
 
         ["<leader>la"] = {
-            function() vim.lsp.buf.code_action() end,
+            function()
+                vim.lsp.buf.code_action()
+            end,
             "LSP code action",
         },
 
         ["gr"] = {
-            function() require("telescope.builtin").lsp_references() end,
+            function()
+                require("telescope.builtin").lsp_references()
+            end,
             "LSP references",
         },
 
         ["<leader>ld"] = {
-            function() vim.diagnostic.open_float({ border = "rounded" }) end,
+            function()
+                vim.diagnostic.open_float({ border = "rounded" })
+            end,
             "Floating diagnostic",
         },
 
         ["[d"] = {
-            function() vim.diagnostic.goto_prev({ float = { border = "rounded" } }) end,
+            function()
+                vim.diagnostic.goto_prev({ float = { border = "rounded" } })
+            end,
             "Goto prev",
         },
 
         ["]d"] = {
-            function() vim.diagnostic.goto_next({ float = { border = "rounded" } }) end,
+            function()
+                vim.diagnostic.goto_next({ float = { border = "rounded" } })
+            end,
             "Goto next",
         },
 
         ["<leader>q"] = {
-            function() vim.diagnostic.setloclist() end,
+            function()
+                vim.diagnostic.setloclist()
+            end,
             "Diagnostic setloclist",
         },
     },
 
     v = {
         ["<leader>la"] = {
-            function() vim.lsp.buf.code_action() end,
+            function()
+                vim.lsp.buf.code_action()
+            end,
             "LSP code action",
         },
     },
@@ -163,8 +193,12 @@ M.gitsigns = {
         -- Navigation through hunks
         ["]c"] = {
             function()
-                if vim.wo.diff then return "]c" end
-                vim.schedule(function() require("gitsigns").next_hunk() end)
+                if vim.wo.diff then
+                    return "]c"
+                end
+                vim.schedule(function()
+                    require("gitsigns").next_hunk()
+                end)
                 return "<Ignore>"
             end,
             "Jump to next hunk",
@@ -173,8 +207,12 @@ M.gitsigns = {
 
         ["[c"] = {
             function()
-                if vim.wo.diff then return "[c" end
-                vim.schedule(function() require("gitsigns").prev_hunk() end)
+                if vim.wo.diff then
+                    return "[c"
+                end
+                vim.schedule(function()
+                    require("gitsigns").prev_hunk()
+                end)
                 return "<Ignore>"
             end,
             "Jump to prev hunk",
@@ -183,22 +221,30 @@ M.gitsigns = {
 
         -- Actions
         ["<leader>gr"] = {
-            function() require("gitsigns").reset_hunk() end,
+            function()
+                require("gitsigns").reset_hunk()
+            end,
             "Reset hunk",
         },
 
         ["<leader>gp"] = {
-            function() require("gitsigns").preview_hunk() end,
+            function()
+                require("gitsigns").preview_hunk()
+            end,
             "Preview hunk",
         },
 
         ["<leader>gb"] = {
-            function() package.loaded.gitsigns.blame_line() end,
+            function()
+                package.loaded.gitsigns.blame_line()
+            end,
             "Blame line",
         },
 
         ["<leader>gt"] = {
-            function() require("gitsigns").toggle_deleted() end,
+            function()
+                require("gitsigns").toggle_deleted()
+            end,
             "Toggle deleted",
         },
 

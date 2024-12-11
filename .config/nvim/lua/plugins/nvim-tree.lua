@@ -1,7 +1,12 @@
 return {
     "nvim-tree/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeOpen" },
-    init = function() require("utils").load_mappings("nvimtree") end,
-    opts = function() return require("configs.nvim-tree") end,
-    config = function(_, opts) require("nvim-tree").setup(opts) end,
+
+    init = function()
+        require("utils").load_mappings("nvimtree")
+    end,
+
+    opts = function()
+        return require("configs.nvim-tree")
+    end,
 }

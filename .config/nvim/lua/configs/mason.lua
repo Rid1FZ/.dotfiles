@@ -1,11 +1,14 @@
-return {
-    PATH = "skip",
-    ui = {
-        icons = {
-            package_pending = " ",
-            package_installed = "󰄳 ",
-            package_uninstalled = " 󰚌",
-        },
+local M = {}
+
+M.PATH = "skip"
+M.max_concurrent_installers = vim.uv.available_parallelism()
+
+M.ui = {
+    icons = {
+        package_pending = " ",
+        package_installed = "󰄳 ",
+        package_uninstalled = " 󰚌",
     },
-    max_concurrent_installers = vim.uv.available_parallelism(),
 }
+
+return M

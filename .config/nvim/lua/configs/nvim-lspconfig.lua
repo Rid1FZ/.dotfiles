@@ -1,5 +1,7 @@
 local M = {}
 local lspconfig = require("lspconfig")
+local win = require("lspconfig.ui.windows")
+local _default_opts = win.default_opts
 
 local function lspSymbol(name, icon)
     local hl = "DiagnosticSign" .. name
@@ -23,9 +25,6 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 })
 
 -- Borders for LspInfo winodw
-local win = require("lspconfig.ui.windows")
-local _default_opts = win.default_opts
-
 win.default_opts = function(options)
     local opts = _default_opts(options)
     opts.border = "single"
@@ -35,7 +34,9 @@ end
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)
     require("utils").load_mappings("lspconfig", { buffer = bufnr })
-    if client.server_capabilities.signatureHelpProvider then require("utils.signature").setup(client) end
+    if client.server_capabilities.signatureHelpProvider then
+        require("utils.signature").setup(client)
+    end
 end
 
 -- disable semantic tokens
