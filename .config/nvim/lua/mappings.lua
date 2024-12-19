@@ -22,11 +22,22 @@ M.general = {
         ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+
+        ["<Leader>ol"] = {
+            function()
+                require("utils.floattui").open("lazygit")
+            end,
+            "Open Lazygit",
+        },
+        ["<Leader>oh"] = {
+            function()
+                require("utils.floattui").open("htop")
+            end,
+            "Open Htop",
+        },
     },
 
-    t = {
-        ["<C-x>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
-    },
+    t = {},
 
     v = {
         ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
