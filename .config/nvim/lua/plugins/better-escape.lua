@@ -1,6 +1,6 @@
 return {
     "max397574/better-escape.nvim",
-    event = "User FilePost",
+    event = "InsertEnter",
 
     opts = function()
         return require("configs.better-escape")
