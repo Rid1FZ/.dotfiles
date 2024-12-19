@@ -34,7 +34,7 @@ return {
     Boolean = "",
     Number = "",
     Null = "󰟢",
-    String = "󰉿",
+    String = "",
     Calendar = "",
     Watch = "󰥔",
     Package = "",
