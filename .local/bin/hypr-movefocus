@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+isfullscreen="$(hyprctl activewindow -j | jq '.["fullscreen"]')"
+nextfocus=""
+
+function usage {
+  echo "usage: _movefocus -l | -r | -u | -d"
+  echo ""
+  echo "OPTIONS:"
+  echo " --help, -h    Display this help message and exit"
+  echo " -l            Move focus to left window"
+  echo " -r            Move focus to right window"
+  echo " -u            Move focus to upper window"
+  echo " -d            Move focus to lower window"
+}
+
+case "$1" in
+  -h | --help ) 
+    usage
+    exit 1
+    ;;
+  -l )
+    nextfocus="l"
+    ;;
+  -r )
+    nextfocus="r"
+    ;;
+  -u )
+    nextfocus="u"
+    ;;
+  -d )
+    nextfocus="d"
+    ;;
+  * )
+    echo "error: invalid option: $1" >&2
+    usage
+    exit 1
+    ;;
+esac
+
+if [[ -z "${nextfocus}" ]]; then
+  echo "error: no option provided" >&2
+  usage
+  exit 1
+elif [[ "${isfullscreen}" = 1 ]]; then
+  notify-send --app-name=Hyprland "Window is maximized" "Current window is maximized. Please tile current window to move focus"
+  exit 1
+else
+  hyprctl dispatch movefocus "${nextfocus}"
+fi
+  

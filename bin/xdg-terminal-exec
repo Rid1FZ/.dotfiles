@@ -1,0 +1,15 @@
+#!/bin/env bash
+
+function __launch_terminal {
+	nohup alacritty --class terminal --title Terminal "$@" &>/dev/null &
+}
+
+if (("$#" == 0)); then
+	__launch_terminal --command tmux new-session
+elif [[ -d "$1" ]]; then
+	__launch_terminal --working-directory "$1"
+else
+	__launch_terminal --command "$@"
+fi
+
+exit

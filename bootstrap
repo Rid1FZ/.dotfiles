@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+
+import argparse
+import enum
+import functools
+import glob
+import os
+import os.path
+import platform
+import shutil
+import subprocess
+from typing import Callable
+
+# fmt: off
+DOTFILES: str = os.environ.get("DOTFILES") or rf"{os.environ["HOME"]}/.dotfiles"
+
+# these paths must be relative to dotfiles directory
+PATHS_TO_COPY: tuple[str, ...] = (
+    ".local/share/applications/*",
+    ".local/share/backgrounds/*"
+)
+
+PATHS_TO_LINK: tuple[str, ...] = (
+    ".zshrc",
+    ".bashrc",
+    ".bash_profile",
+    ".profile.d",
+    ".gitconfig",
+    ".ipython/profile_default/*",
+    ".local/bin/*",
+    ".config/*"
+)
+
+
+
+PACKAGES: dict[str, tuple[str, ...]] = {
+    # Required packages will be installed with optional dependencies
+    'REQUIRED': (
+        "qt6-qtwayland", "qt5-qtwayland", "kvantum", "polkit-kde", "hyprpicker", "tmux", "tar",
+        "hyprland", "sddm", "ripgrep", "plocate", "eza", "fzf", "git", "nodejs", "zsh", "wlogout",
+        "gh", "bat", "feh", "zathura", "zathura-pdf-poppler", "waybar", "symlinks", "trash-cli",
+        "neovim", "fd-find", "exiftool", "zsh-autosuggestions", "zsh-syntax-highlighting", "unzip",
+        "slurp", "grim", "python3-pip", "grimblast", "brave-browser", "kitty", "xdg-desktop-portal-gtk",
+        "xdg-desktop-portal-hyprland", "zip", "dunst", "hyprpaper"
+    ),
+
+    # Development and Theming tools will be installed without optional dependencies
+    'DEVELOPMENT': (
+        "freetype-devel", "cairo-devel", "pango-devel", "wayland-devel", "libxkbcommon-devel",
+        "scdoc", "harfbuzz", "wayland-protocols-devel", "meson", "ninja", "make", "cmake",
+        "clang", "clang-tools-extra",
+    ),
+    'THEMING': (
+        "kvantum-qt5", "lxappearance", "gnome-tweaks", "qt6ct", "qt5ct",
+    ),
+
+    # Groups will be installed using 'dnf5 group install --with-optional ...'
+    'GROUPS': (
+        "multimedia", "fonts", "vlc",
+    ),
+
+    # Commands to build and install any package
+    'BUILD_AND_INSTALL': (
+        # rust tools
+        r"""curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh""",
+
+        # tofi launcher
+        r"""cd /tmp
+        git clone 'https://github.com/philj56/tofi.git'
+        cd /tmp/tofi
+        meson build
+        ninja -C build install""",
+    )
+}
+
+# Commands to add third party repo
+REPOSITORIES: tuple[str, ...] = (
+    # terra repo
+    r"""sudo dnf install --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' terra-release --assumeyes""",
+
+    # rpmfusion repos
+    rf"""sudo dnf install 'https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{platform.freedesktop_os_release()["VERSION_ID"]}.noarch.rpm' 'https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{platform.freedesktop_os_release()["VERSION_ID"]}.noarch.rpm' --assumeyes""",
+
+    # copr repo for hyprland tools
+    r"""sudo dnf copr enable 'solopasha/hyprland' --assumeyes""",
+
+    # brave browser repo
+    r"""sudo dnf config-manager --add-repo 'https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo' --assumeyes
+    sudo rpm --import 'https://brave-browser-rpm-release.s3.brave.com/brave-core.asc'""",
+)
+# fmt: on
+
+
+class LogLevel(enum.Enum):
+    INFO = 0
+    WARNING = 1
+    ERROR = 2
+
+
+def _colorlog(value: str, *, level: LogLevel = LogLevel.INFO) -> None:
+    match level:
+        case LogLevel.INFO:
+            print(f"\033[92m[INFO]:\033[00m {value}")
+
+        case LogLevel.WARNING:
+            print(f"\033[93m[WARNING]:\033[00m {value}")
+
+        case LogLevel.ERROR:
+            print(f"\033[91m[ERROR]:\033[00m {value}")
+
+
+def install_packages() -> None:
+    global REPOSITORIES, PACKAGES
+
+    if platform.freedesktop_os_release()["ID"] != "fedora":
+        _colorlog("not fedora. skipping package installation...", level=LogLevel.ERROR)
+        return
+
+    if not shutil.which("dnf5"):
+        _colorlog("installing dnf5", level=LogLevel.INFO)
+        subprocess.call(["sudo", "dnf", "install", "dnf5", "--assumeyes"])
+
+    _colorlog("installing dnf-plugins-core", level=LogLevel.INFO)
+    subprocess.call(["sudo", "dnf5", "install", "dnf-plugins-core", "--assumeyes"])
+
+    # enable repos
+    _colorlog("enabling third-party repos", level=LogLevel.INFO)
+    for commands in REPOSITORIES:
+        subprocess.run(commands, shell=True)
+
+    # required packages
+    _colorlog("installing required packages", level=LogLevel.INFO)
+    subprocess.call(["sudo", "dnf5", "install", *PACKAGES["REQUIRED"], "--assumeyes"])
+
+    # development and theming tools
+    _colorlog("installing development and theming packages", level=LogLevel.INFO)
+    subprocess.call(
+        [
+            "sudo",
+            "dnf5",
+            "install",
+            "--setopt=install_weak_deps=False",
+            "--assumeyes",
+            *PACKAGES["DEVELOPMENT"],
+            *PACKAGES["THEMING"],
+        ]
+    )
+
+    # groups
+    _colorlog("installing package groups", level=LogLevel.INFO)
+    subprocess.call(
+        [
+            "sudo",
+            "dnf5",
+            "group",
+            "install",
+            "--with-optional",
+            "--assumeyes",
+            *PACKAGES["GROUPS"],
+        ]
+    )
+
+    # extra packages
+    _colorlog("installing extra packages (not from dnf5)", level=LogLevel.INFO)
+    for commands in PACKAGES["BUILD_AND_INSTALL"]:
+        subprocess.run(commands, shell=True)
+
+
+def _setup_config(
+    source: str, callback: Callable[[str, str], None], *, skip_if_available=True
+) -> None:
+    global DOTFILES
+
+    target: str = os.path.join(os.environ["HOME"], source.removeprefix(DOTFILES + "/"))
+
+    if os.path.exists(target):
+        if skip_if_available:
+            _colorlog(f"{target} exists. skipping...", level=LogLevel.WARNING)
+            return
+        else:
+            _colorlog(f"backing up {target} -> {target}.bak", level=LogLevel.INFO)
+            shutil.move(target, f"{target}.bak")
+    else:
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+
+    callback(source, target)
+
+
+def copy_config(path: str, *, skip_if_available=True) -> None:
+    global DOTFILES
+
+    for source in glob.iglob(os.path.join(DOTFILES, path)):
+        _colorlog(f"copying config {source}", level=LogLevel.INFO)
+        _setup_config(source, shutil.copy2, skip_if_available=skip_if_available)
+
+
+def link_config(path: str, *, skip_if_available=True) -> None:
+    global DOTFILES
+    symlink: functools.partial = functools.partial(os.symlink, target_is_directory=True)
+
+    for source in glob.iglob(os.path.join(DOTFILES, path)):
+        _colorlog(f"linking config {source}", level=LogLevel.INFO)
+        _setup_config(source, symlink, skip_if_available=skip_if_available)
+
+
+def main() -> None:
+    global DOTFILES, PATHS_TO_COPY, PATHS_TO_LINK
+
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+        prog="bootstrap",
+        description="install dnf packages and bootstrap configs",
+        epilog="location of dotfiles repo can be changed using the $DOTFILES environment variable",
+    )
+
+    parser.add_argument(
+        "--no-package",
+        action="store_true",
+        help="do not setup third-party repositories and do not install packages",
+    )
+    parser.add_argument(
+        "--no-conf",
+        action="store_true",
+        help="do not link dotfiles",
+    )
+
+    args: argparse.Namespace = parser.parse_args()
+
+    if not args.no_package:
+        install_packages()
+
+    os.makedirs(DOTFILES, exist_ok=True)
+
+    _colorlog(f"cloning .dotfiles repo", level=LogLevel.INFO)
+    subprocess.call(
+        ["git", "clone", r"https://github.com/Rid1FZ/.dotfiles.git", DOTFILES]
+    )
+
+    if not args.no_conf:
+        for path in PATHS_TO_COPY:
+            copy_config(path, skip_if_available=False)
+
+        for path in PATHS_TO_LINK:
+            link_config(path, skip_if_available=False)
+
+
+if __name__ == "__main__":
+    main()

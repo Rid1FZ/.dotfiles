@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+TryExec=xdg-terminal-exec
+Exec=xdg-terminal-exec
+Icon=Terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+
+Name=Terminal
+GenericName=Terminal
+Comment=A fast, cross-platform, OpenGL terminal emulator
+StartupNotify=true
+StartupWMClass=terminal
+X-Desktop-File-Install-Version=0.27

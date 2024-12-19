@@ -1,0 +1,28 @@
+#!/bin/env bash
+
+__mime_type="$(file -b --mime-type --dereference "$1")"
+
+case "${__mime_type}" in
+inode/directory)
+	eza --classify --oneline --all --long --color=always --icons --group-directories-first "$1"
+	;;
+video/* | image/*)
+	exiftool "$1"
+	;;
+text/*)
+	bat --style=changes,numbers,header-filename,grid "$1"
+	;;
+application/*)
+	case "${__mime_type}" in
+	*/pdf)
+		exiftool "$1"
+		;;
+	*/gzip)
+		{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || gunzip -l "$1"
+		;;
+	*/x-xz)
+		{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || xz -l "$1"
+		;;
+	esac
+	;;
+esac

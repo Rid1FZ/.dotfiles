@@ -1,0 +1,5 @@
+[keyboard]
+bindings = [
+  { key = "Space", mods = "Shift|Control", mode = "~Search", action = "ReceiveChar" },
+  { key = "C", mods = "Control|Shift", action = "ReceiveChar" }
+]

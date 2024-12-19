@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+nohup alacritty --title Neovim --class nvim --command nvim "${@}" &

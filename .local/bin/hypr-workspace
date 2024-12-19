@@ -1,0 +1,119 @@
+#!/bin/env bash
+
+__curr_workspace="$(hyprctl activeworkspace -j | jq '.["id"]')"
+__max_hypr_workspaces="${MAX_HYPR_WORKSPACES:-"0"}"
+
+function usage {
+ echo "Usage: workspace [OPTIONS]"
+ echo ""
+ echo "Options:"
+ echo " -h, --help      Display this help message"
+ echo " -n, --next      Next workspace"
+ echo " -p, --prev      Previous workspace"
+ echo " -m, --move      Move current window to next/previous workspace specified by --next or --prev" 
+ echo " -c, --cycle     Cylce through workspaces"
+ echo ""
+ echo "\$MAX_HYPR_WORKSPACES can be used to set the maximum number of workspaces. If it is set to 0, control is handed over to hyprland"
+}
+
+function handle_options {
+  if [[ "$#" = 0 ]]; then
+    echo "error: atleast one option must be specified" >&2
+    echo ""
+    usage
+    exit 1
+  fi 
+  
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      -h | --help ) 
+        usage
+        exit 0
+        ;;
+      -n | --next ) __switch_to="next" ;;
+      -p | --prev ) __switch_to="prev" ;;
+      -m | --move ) __flag_move=true ;;
+      -c | --cycle ) __cycle=true ;;
+      *)
+        echo "error: invalid option: $1" >&2
+        echo ""
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  if [[ -z "${__switch_to}" ]]; then
+    echo "error: specify either --next or --prev"
+    echo ""
+    usage
+  fi
+}
+
+function hyprland_switcher {
+  local __signed
+  case "${__switch_to}" in
+    prev ) __signed=true ;;
+    next ) __signed=false ;;
+  esac
+
+  if [[ "${__flag_move}" = true ]]; then
+    hyprctl dispatch movetoworkspace "$({ ${__signed} && echo r-1; } || echo r+1)"
+  else
+    hyprctl dispatch workspace "$({ ${__signed} && echo r-1; } || echo r+1)"
+  fi
+}
+
+function custom_switcher {
+  local __next_workspace
+  case "${__switch_to}" in
+    prev ) 
+      if [[ "${__curr_workspace}" = 1 ]]; then
+        if [[ "${__cycle}" = true ]]; then
+          __next_workspace="${__max_hypr_workspaces}"
+        else
+          echo "info: first workspace"
+          exit 0
+        fi
+      else
+        __next_workspace="$((__curr_workspace - 1))"
+      fi
+      ;;
+    next )
+      if [[ "${__curr_workspace}" = "${__max_hypr_workspaces}" ]]; then
+        if [[ "${__cycle}" = true ]]; then
+          __next_workspace="1"
+        else
+          echo "info: last workspace"
+          exit 0
+        fi
+      else
+        __next_workspace="$((__curr_workspace + 1))"
+      fi
+      ;;
+  esac
+
+  if [[ "${__flag_move}" = true ]]; then
+    hyprctl dispatch movetoworkspace "${__next_workspace}"
+  else
+    hyprctl dispatch workspace "${__next_workspace}"
+  fi
+}
+
+function main {
+  handle_options "$@"
+  
+  if [[ "${__max_hypr_workspaces}" -lt 0 ]]; then
+    echo "error: invalid value of \$MAX_HYPR_WORKSPACES" >&2
+    echo ''
+    echo "\$MAX_HYPR_WORKSPACES must be an integer greater than or equal to 0"
+    exit 1
+  elif [[ "${__max_hypr_workspaces}" = 0 ]]; then
+    hyprland_switcher
+  else
+    custom_switcher
+  fi
+}
+
+main "$@"
