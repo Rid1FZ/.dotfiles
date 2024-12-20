@@ -1,11 +1,5 @@
 local M = {}
-
-local state = {
-    floating = {
-        buf = -1,
-        win = -1,
-    },
-}
+local tuis = {}
 
 local create_floating_window = function(opts)
     opts = opts or {}
@@ -41,10 +35,10 @@ local create_floating_window = function(opts)
     return { buf = buf, win = win }
 end
 
-local set_autocommands = function(bufnr)
+local set_autocommands = function(buf, win)
     -- Close floating window if process exits
     vim.api.nvim_create_autocmd("TermClose", {
-        buffer = bufnr,
+        buffer = buf,
         group = vim.api.nvim_create_augroup("CloseTerminalBuffer", { clear = true }),
         callback = function()
             vim.cmd([[bdelete]])
@@ -52,27 +46,20 @@ local set_autocommands = function(bufnr)
     })
 end
 
-local set_keymaps = function(bufnr)
-    -- Use <Esc> to hide floating window
-    vim.keymap.set("t", "<Esc>", function()
-        vim.api.nvim_win_hide(state.floating.win)
-    end, {
-        desc = "Hide Floating TUI",
-        buffer = bufnr,
-        noremap = true,
-        silent = true,
-        nowait = true,
-    })
-end
-
 M.open = function(command)
-    if not vim.api.nvim_win_is_valid(state.floating.win) then
-        state.floating = create_floating_window({ buf = state.floating.buf })
-        if vim.bo[state.floating.buf].buftype ~= "terminal" then
+    if tuis[command] == nil then
+        tuis[command] = {
+            buf = -1,
+            win = -1,
+        }
+    end
+
+    if not vim.api.nvim_win_is_valid(tuis[command].win) then
+        tuis[command] = create_floating_window({ buf = tuis[command].buf })
+        if vim.bo[tuis[command].buf].buftype ~= "terminal" then
             vim.cmd.terminal(command)
-            set_autocommands(state.floating.buf)
-            set_keymaps(state.floating.buf)
         end
+        set_autocommands(tuis[command].buf, tuis[command].win)
         vim.cmd([[startinsert]])
     end
 end
