@@ -123,7 +123,9 @@ M.icons = {
 }
 
 M.disable = {
-    ft = {},
+    ft = {
+        "NvimTree",
+    },
     bt = {},
 }
 
