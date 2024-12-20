@@ -70,12 +70,11 @@ M.open = function(command)
         state.floating = create_floating_window({ buf = state.floating.buf })
         if vim.bo[state.floating.buf].buftype ~= "terminal" then
             vim.cmd.terminal(command)
+            set_autocommands(state.floating.buf)
+            set_keymaps(state.floating.buf)
         end
         vim.cmd([[startinsert]])
     end
-
-    set_autocommands(state.floating.buf)
-    set_keymaps(state.floating.buf)
 end
 
 return M
