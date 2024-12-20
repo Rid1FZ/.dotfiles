@@ -50,6 +50,9 @@ opt.pumheight = 10
 -- Interval for Writing Swap File to Disk
 opt.updatetime = 250
 
+-- Disable Right Click Menu
+vim.cmd([[aunmenu PopUp]])
+
 -- Add Binaries Installed by mason.nvim to PATH
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
