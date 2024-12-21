@@ -1,6 +1,4 @@
 local M = {}
-local win = require("lspconfig.ui.windows")
-local default_opts_ = win.default_opts
 
 local function lspSymbol(name, icon)
     local hl = "DiagnosticSign" .. name
@@ -22,13 +20,6 @@ vim.diagnostic.config({
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded",
 })
-
--- Borders for LspInfo window
-win.default_opts = function(options)
-    local opts = default_opts_(options)
-    opts.border = "rounded"
-    return opts
-end
 
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)

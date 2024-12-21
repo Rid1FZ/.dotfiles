@@ -1,5 +1,14 @@
 local lspconfig = require("lspconfig")
 local lsp = require("configs.lsp")
+local win = require("lspconfig.ui.windows")
+local default_opts_ = win.default_opts
+
+-- Borders for LspInfo window
+win.default_opts = function(options)
+    local opts = default_opts_(options)
+    opts.border = "rounded"
+    return opts
+end
 
 lspconfig.pyright.setup({
     capabilities = lsp.capabilities,
