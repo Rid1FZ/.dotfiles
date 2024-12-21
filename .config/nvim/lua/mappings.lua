@@ -95,11 +95,20 @@ M.lspconfig = {
 
         ["<leader>lf"] = {
             function()
+                local providers = {
+                    "null-ls",
+                }
                 vim.lsp.buf.format({
                     async = false,
                     timeout_ms = 5000,
                     filter = function(client)
-                        return client.name == "null-ls"
+                        for _, provider in ipairs(providers) do
+                            if client.name == provider then
+                                print(client.name)
+                                return true
+                            end
+                        end
+                        return false
                     end,
                 })
             end,
