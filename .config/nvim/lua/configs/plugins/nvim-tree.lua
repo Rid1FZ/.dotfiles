@@ -116,7 +116,7 @@ M.renderer = {
             file = true,
             folder = true,
             folder_arrow = false,
-            git = true,
+            git = false,
         },
         web_devicons = {
             file = {
