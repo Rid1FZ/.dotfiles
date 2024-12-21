@@ -12,6 +12,8 @@ local border_chars = {
     "│",
 }
 
+M.preselect = cmp.PreselectMode.None
+
 M.completion = {
     completeopt = "menu,menuone,noselect",
 }
