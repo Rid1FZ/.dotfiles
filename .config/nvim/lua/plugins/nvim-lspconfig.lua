@@ -3,6 +3,6 @@ return {
     event = "User FilePost",
 
     config = function()
-        require("configs.nvim-lspconfig")
+        require("configs.plugins.nvim-lspconfig")
     end,
 }

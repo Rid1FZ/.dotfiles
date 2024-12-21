@@ -18,7 +18,7 @@ return {
     },
 
     opts = function()
-        return require("configs.nvim-cmp")
+        return require("configs.plugins.nvim-cmp")
     end,
 
     config = function(_, opts)
@@ -26,7 +26,7 @@ return {
         local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
         cmp.setup(opts)
-        cmp.setup.cmdline(":", require("configs.nvim-cmp-cmdline"))
+        cmp.setup.cmdline(":", require("configs.plugins.nvim-cmp-cmdline"))
 
         -- setup cmp for autopairs
         require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())

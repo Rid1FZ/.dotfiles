@@ -3,6 +3,6 @@ return {
     event = "VimEnter",
 
     opts = function()
-        return require("configs.nvim-web-devicons")
+        return require("configs.plugins.nvim-web-devicons")
     end,
 }

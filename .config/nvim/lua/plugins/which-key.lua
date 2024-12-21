@@ -3,6 +3,6 @@ return {
     event = "VimEnter",
 
     opts = function()
-        return require("configs.which-key")
+        return require("configs.plugins.which-key")
     end,
 }

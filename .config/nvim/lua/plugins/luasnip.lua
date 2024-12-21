@@ -12,6 +12,6 @@ return {
     },
 
     config = function(_, opts)
-        require("configs.luasnip").setup(opts)
+        require("configs.plugins.luasnip").setup(opts)
     end,
 }

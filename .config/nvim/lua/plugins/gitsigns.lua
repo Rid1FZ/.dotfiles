@@ -3,6 +3,6 @@ return {
     event = "User FilePost",
 
     opts = function()
-        return require("configs.gitsigns")
+        return require("configs.plugins.gitsigns")
     end,
 }

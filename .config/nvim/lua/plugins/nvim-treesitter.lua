@@ -5,7 +5,7 @@ return {
     build = ":TSUpdate",
 
     opts = function()
-        return require("configs.nvim-treesitter")
+        return require("configs.plugins.nvim-treesitter")
     end,
 
     config = function(_, opts)

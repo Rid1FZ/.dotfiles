@@ -17,7 +17,7 @@ return {
         end,
 
         opts = function()
-            return require("configs.telescope")
+            return require("configs.plugins.telescope")
         end,
 
         config = function(_, opts)

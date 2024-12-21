@@ -7,6 +7,6 @@ return {
     end,
 
     opts = function()
-        return require("configs.nvim-tree")
+        return require("configs.plugins.nvim-tree")
     end,
 }

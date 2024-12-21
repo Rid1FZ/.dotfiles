@@ -3,7 +3,7 @@ return {
     cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate", "MasonUninstallAll" },
 
     opts = function()
-        return require("configs.mason")
+        return require("configs.plugins.mason")
     end,
 
     config = function(_, opts)

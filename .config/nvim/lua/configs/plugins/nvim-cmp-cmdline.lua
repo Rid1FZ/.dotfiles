@@ -1,7 +1,7 @@
 local M = {}
 local cmp = require("cmp")
 
-M.mapping = require("configs.nvim-cmp").mapping
+M.mapping = require("configs.plugins.nvim-cmp").mapping
 
 M.matching = {
     disallow_symbol_nonprefix_matching = false,

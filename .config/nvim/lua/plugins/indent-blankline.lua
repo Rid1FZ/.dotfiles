@@ -4,7 +4,7 @@ return {
     main = "ibl",
 
     opts = function()
-        return require("configs.indent-blankline")
+        return require("configs.plugins.indent-blankline")
     end,
 
     config = function(_, opts)

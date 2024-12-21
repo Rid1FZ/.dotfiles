@@ -3,6 +3,6 @@ return {
     event = "User FilePost",
 
     opts = function()
-        return require("configs.none-ls")
+        return require("configs.plugins.none-ls")
     end,
 }

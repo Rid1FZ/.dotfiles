@@ -3,7 +3,7 @@ return {
     event = "User FilePost",
 
     opts = function()
-        return require("configs.nvim-colorizer")
+        return require("configs.plugins.nvim-colorizer")
     end,
 
     config = function(_, opts)

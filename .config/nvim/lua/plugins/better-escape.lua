@@ -3,6 +3,6 @@ return {
     event = "InsertEnter",
 
     opts = function()
-        return require("configs.better-escape")
+        return require("configs.plugins.better-escape")
     end,
 }

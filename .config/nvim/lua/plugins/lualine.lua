@@ -8,6 +8,6 @@ return {
     },
 
     opts = function()
-        return require("configs.lualine")
+        return require("configs.plugins.lualine")
     end,
 }
