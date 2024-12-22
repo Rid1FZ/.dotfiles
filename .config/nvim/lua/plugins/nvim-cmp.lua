@@ -17,15 +17,11 @@ return {
         "hrsh7th/cmp-cmdline",
     },
 
-    opts = function()
-        return require("configs.plugins.nvim-cmp")
-    end,
-
-    config = function(_, opts)
+    config = function()
         local cmp = require("cmp")
         local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
-        cmp.setup(opts)
+        cmp.setup(require("configs.plugins.nvim-cmp"))
         cmp.setup.cmdline(":", require("configs.plugins.nvim-cmp-cmdline"))
 
         -- setup cmp for autopairs
