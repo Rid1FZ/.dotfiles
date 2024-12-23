@@ -41,7 +41,8 @@ local set_autocommands = function(buf, win)
     buffer = buf,
     group = vim.api.nvim_create_augroup("CloseTerminalBuffer", { clear = true }),
     callback = function()
-      vim.cmd([[bdelete]])
+      vim.api.nvim_win_close(win, true)
+      vim.cmd.bwipeout({ buf, bang = true })
     end,
   })
 end
