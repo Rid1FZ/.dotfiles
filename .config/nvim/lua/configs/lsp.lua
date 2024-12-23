@@ -1,25 +1,31 @@
 local M = {}
 
-local function lspSymbol(name, icon)
-  local hl = "DiagnosticSign" .. name
-  vim.fn.sign_define(hl, { text = icon, numhl = hl, texthl = hl })
+M.configure_diagnostics = function()
+    local severity = vim.diagnostic.severity
+
+    vim.diagnostic.config({
+        virtual_text = false,
+        update_in_insert = true,
+        signs = {
+            text = {
+                [severity.ERROR] = "",
+                [severity.WARN] = "",
+                [severity.INFO] = "",
+                [severity.HINT] = "",
+            },
+        },
+        underline = true,
+        float = { border = "single" },
+    })
+
+    -- Default border style
+    local util_open_floating_preview_ = vim.lsp.util.open_floating_preview
+    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.border = "rounded"
+        return util_open_floating_preview_(contents, syntax, opts, ...)
+    end
 end
-
-lspSymbol("Error", "")
-lspSymbol("Info", "")
-lspSymbol("Hint", "")
-lspSymbol("Warn", "")
-
-vim.diagnostic.config({
-  virtual_text = false,
-  signs = true,
-  underline = true,
-  update_in_insert = true,
-})
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded",
-})
 
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)
