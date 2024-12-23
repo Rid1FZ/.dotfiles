@@ -1,7 +1,23 @@
 local M = {}
 local cmp = require("cmp")
 
+M.completion = {
+    completeopt = "menu,menuone",
+}
+
 M.mapping = {
+    ["<C-p>"] = cmp.mapping(function(fallback)
+        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+    end, {
+        "c",
+    }),
+
+    ["<C-n>"] = cmp.mapping(function(fallback)
+        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+    end, {
+        "c",
+    }),
+
     ["<CR>"] = cmp.mapping(function(fallback)
         fallback()
     end, {
@@ -10,17 +26,7 @@ M.mapping = {
 
     ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
-            cmp.select_next_item()
-        else
-            fallback()
-        end
-    end, {
-        "c",
-    }),
-
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-            cmp.select_prev_item()
+            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
         else
             fallback()
         end
