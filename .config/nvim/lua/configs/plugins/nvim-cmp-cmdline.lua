@@ -1,7 +1,33 @@
 local M = {}
 local cmp = require("cmp")
 
-M.mapping = require("configs.plugins.nvim-cmp").mapping
+M.mapping = {
+    ["<CR>"] = cmp.mapping(function(fallback)
+        fallback()
+    end, {
+        "c",
+    }),
+
+    ["<Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+            cmp.select_next_item()
+        else
+            fallback()
+        end
+    end, {
+        "c",
+    }),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+            cmp.select_prev_item()
+        else
+            fallback()
+        end
+    end, {
+        "c",
+    }),
+}
 
 M.matching = {
     disallow_symbol_nonprefix_matching = false,
