@@ -1,17 +1,17 @@
 return {
-  -- snippet plugin
-  "L3MON4D3/LuaSnip",
+    -- snippet plugin
+    "L3MON4D3/LuaSnip",
 
-  dependencies = {
-    "rafamadriz/friendly-snippets",
-  },
+    dependencies = {
+        "rafamadriz/friendly-snippets",
+    },
 
-  opts = {
-    history = true,
-    updateevents = "TextChanged,TextChangedI",
-  },
+    opts = {
+        history = true,
+        updateevents = "TextChanged,TextChangedI",
+    },
 
-  config = function(_, opts)
-    require("configs.plugins.luasnip").setup(opts)
-  end,
+    config = function(_, opts)
+        require("configs.plugins.luasnip").setup(opts)
+    end,
 }

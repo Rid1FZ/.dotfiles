@@ -28,12 +28,12 @@ opt.relativenumber = true
 opt.numberwidth = 3
 opt.ruler = false
 opt.shortmess = opt.shortmess + {
-  s = true,
-  c = true,
-  F = true,
-  W = true,
-  I = true,
-  l = true,
+    s = true,
+    c = true,
+    F = true,
+    W = true,
+    I = true,
+    l = true,
 }
 
 opt.signcolumn = "yes:2"
@@ -58,19 +58,19 @@ vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 -- Add Filetypes
 vim.filetype.add({
-  extension = {
-    qml = "qml",
-    ipy = "python",
-    sh = "bash",
-    bash = "bash",
-  },
-  pattern = {
-    ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
-    [".*/hyperland/.*.conf"] = "hyprlang",
-    ["/home/.*/.config/waybar/config"] = "jsonc",
-    ["/home/.*/.config/zathura/.*"] = "zathurarc",
-    ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
-  },
+    extension = {
+        qml = "qml",
+        ipy = "python",
+        sh = "bash",
+        bash = "bash",
+    },
+    pattern = {
+        ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
+        [".*/hyperland/.*.conf"] = "hyprlang",
+        ["/home/.*/.config/waybar/config"] = "jsonc",
+        ["/home/.*/.config/zathura/.*"] = "zathurarc",
+        ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
+    },
 })
 
 -- register grammers
