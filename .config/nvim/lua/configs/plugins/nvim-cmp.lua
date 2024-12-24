@@ -51,11 +51,23 @@ M.formatting = {
 }
 
 M.mapping = {
-    ["<C-p>"] = cmp.select_prev_item(),
-    ["<C-n>"] = cmp.select_next_item(),
-    ["<C-d>"] = cmp.scroll_docs(-4),
-    ["<C-f>"] = cmp.scroll_docs(4),
-    ["<esc>"] = cmp.close(),
+    ["<C-p>"] = cmp.mapping(function(fallback)
+        cmp.select_prev_item()
+    end, {
+        "i",
+    }),
+
+    ["<C-n>"] = cmp.mapping(function(fallback)
+        cmp.select_next_item()
+    end, {
+        "i",
+    }),
+
+    ["<esc>"] = cmp.mapping(function(fallback)
+        cmp.close()
+    end, {
+        "i",
+    }),
 
     ["<CR>"] = cmp.mapping(function(fallback)
         if cmp.visible() and cmp.get_active_entry() then
