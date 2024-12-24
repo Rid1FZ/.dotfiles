@@ -53,6 +53,7 @@ local set_autocommands = function(buf, win)
         callback = function()
             if vim.api.nvim_win_is_valid(win) then
                 vim.api.nvim_win_set_config(win, get_win_config())
+                vim.api.nvim_win_set_cursor(win, { 1, 0 })
             end
         end,
     })
