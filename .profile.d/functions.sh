@@ -28,7 +28,7 @@ function floc {
 	sudo updatedb
 
 	__plocate_prefix="plocate --ignore-case --regex"
-	__target="$(fzf --disabled --keep-right --ansi --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
+	__target="$(fzf --disabled --keep-right --tmux --ansi --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
 
 	[[ -z "${__target}" ]] && return 1
 
@@ -41,7 +41,7 @@ function ff {
 	__arg="${1:-.}"
 	[[ -d "${__arg}" ]] || return 1
 
-	__path="$(fd -Ha --no-ignore --type symlink --type file --follow ".*" "${__arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
+	__path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | fzf --ansi --keep-right --tmux --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
 	[[ -z "${__path}" ]] && return 1
 
 	open "${__path}"
@@ -53,14 +53,17 @@ function fcd {
 	__arg="${1:-.}"
 	[[ -d "${__arg}" ]] || return 1
 
-	builtin cd -- "$(fd -Ha --no-ignore --type directory --follow ".*" "${__arg}" | fzf --ansi --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')" || return 1
+    __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | fzf --ansi --keep-right --tmux --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
+    [[ -z "${__dir}" ]] || return 1
+    
+    builtin cd -- "${__dir}"
 }
 
 function frg {
 	local __rg_prefix
 
-	__rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case "
-	fzf --disabled --ansi \
+	__rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
+	fzf --disabled --ansi --tmux \
 		--bind "start:reload:${__rg_prefix} {q} ${1:-.}" \
 		--bind "change:reload:sleep 0.1; ${__rg_prefix} {q} || true" \
 		--delimiter : \
