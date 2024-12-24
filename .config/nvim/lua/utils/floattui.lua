@@ -1,14 +1,27 @@
 local M = {}
 local tuis = {}
 
-local create_floating_window = function(opts)
-    opts = opts or {}
-    local width = opts.width or math.floor(vim.o.columns * 0.9)
-    local height = opts.height or math.floor(vim.o.lines * 0.8)
+local get_win_config = function()
+    local width = math.floor(vim.o.columns * 0.9)
+    local height = math.floor(vim.o.lines * 0.8)
 
     -- Calculate the position to center the window
     local col = math.floor((vim.o.columns - width) / 2)
     local row = math.floor((vim.o.lines - (vim.o.cmdheight + 2 + height)) / 2)
+
+    return {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = col,
+        row = row,
+        style = "minimal", -- No borders or extra UI elements
+        border = "rounded",
+    }
+end
+
+local create_floating_window = function(opts)
+    opts = opts or {}
 
     -- Create a buffer
     local buf = nil
@@ -18,19 +31,8 @@ local create_floating_window = function(opts)
         buf = vim.api.nvim_create_buf(false, true) -- No file, scratch buffer
     end
 
-    -- Define window configuration
-    local win_config = {
-        relative = "editor",
-        width = width,
-        height = height,
-        col = col,
-        row = row,
-        style = "minimal", -- No borders or extra UI elements
-        border = "rounded",
-    }
-
     -- Create the floating window
-    local win = vim.api.nvim_open_win(buf, true, win_config)
+    local win = vim.api.nvim_open_win(buf, true, get_win_config())
 
     return { buf = buf, win = win }
 end
@@ -43,6 +45,15 @@ local set_autocommands = function(buf, win)
         callback = function()
             vim.api.nvim_win_close(win, true)
             vim.cmd.bwipeout({ buf, bang = true })
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("VimResized", {
+        group = vim.api.nvim_create_augroup("ResizeTerminalBuffer", {}),
+        callback = function()
+            if vim.api.nvim_win_is_valid(win) then
+                vim.api.nvim_win_set_config(win, get_win_config())
+            end
         end,
     })
 end
