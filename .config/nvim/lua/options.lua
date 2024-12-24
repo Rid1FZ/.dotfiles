@@ -36,7 +36,7 @@ opt.shortmess = opt.shortmess + {
     l = true,
 }
 
-opt.signcolumn = "yes:2"
+opt.signcolumn = "yes:1"
 opt.splitbelow = true
 opt.splitright = true
 opt.termguicolors = true
