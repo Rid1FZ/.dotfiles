@@ -64,7 +64,11 @@ M.mapping = {
     }),
 
     ["<esc>"] = cmp.mapping(function(fallback)
-        cmp.close()
+        if cmp.visible() then
+            cmp.close()
+        else
+            fallback()
+        end
     end, {
         "i",
     }),
