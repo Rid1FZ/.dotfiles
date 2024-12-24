@@ -2,31 +2,53 @@ local M = {}
 local cmp = require("cmp")
 
 M.completion = {
-    completeopt = "menu,menuone",
+    completeopt = "menu,menuone,noselect",
 }
 
 M.mapping = {
     ["<C-p>"] = cmp.mapping(function(fallback)
-        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+        if cmp.visible() then
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+        else
+            fallback()
+        end
     end, {
         "c",
     }),
 
     ["<C-n>"] = cmp.mapping(function(fallback)
-        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        if cmp.visible() then
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        else
+            fallback()
+        end
     end, {
         "c",
     }),
 
     ["<CR>"] = cmp.mapping(function(fallback)
-        fallback()
+        if cmp.visible() and cmp.get_active_entry() then
+            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        else
+            fallback()
+        end
     end, {
         "c",
     }),
 
     ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
-            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        else
+            fallback()
+        end
+    end, {
+        "c",
+    }),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
         else
             fallback()
         end

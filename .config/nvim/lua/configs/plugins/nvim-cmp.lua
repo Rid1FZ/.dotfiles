@@ -52,18 +52,26 @@ M.formatting = {
 
 M.mapping = {
     ["<C-p>"] = cmp.mapping(function(fallback)
-        cmp.select_prev_item()
+        if cmp.visible() then
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+        else
+            fallback()
+        end
     end, {
         "i",
     }),
 
     ["<C-n>"] = cmp.mapping(function(fallback)
-        cmp.select_next_item()
+        if cmp.visible() then
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        else
+            fallback()
+        end
     end, {
         "i",
     }),
 
-    ["<esc>"] = cmp.mapping(function(fallback)
+    ["<Esc>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
             cmp.close()
         else
@@ -84,10 +92,10 @@ M.mapping = {
     }),
 
     ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-            cmp.select_next_item()
-        elseif require("luasnip").expand_or_jumpable() then
+        if require("luasnip").expand_or_jumpable() then
             vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+        elseif cmp.visible() then
+            cmp.select_next_item()
         else
             fallback()
         end
@@ -96,10 +104,10 @@ M.mapping = {
     }),
 
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-            cmp.select_prev_item()
-        elseif require("luasnip").jumpable(-1) then
+        if require("luasnip").jumpable(-1) then
             vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
+        elseif cmp.visible() then
+            cmp.select_prev_item()
         else
             fallback()
         end
