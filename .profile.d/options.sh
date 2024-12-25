@@ -1,5 +1,18 @@
 #!/bin/env bash
 
 # >>> Options >>>
-shopt -s dotglob autocd histappend checkwinsize
+shopt -s autocd \
+    checkjobs \
+    checkwinsize \
+    cmdhist \
+    dotglob \
+    extglob \
+    extquote \
+    failglob \
+    histappend
+
+set emacs \
+    histexpand \
+    nounset \
+    pipefail
 # <<< Options <<<
