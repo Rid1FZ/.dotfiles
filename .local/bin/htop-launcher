@@ -1,3 +1,5 @@
 #!/bin/env bash
 
+set -euo pipefail
+
 nohup alacritty --title Htop --class htop --command htop &

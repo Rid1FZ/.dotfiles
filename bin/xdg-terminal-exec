@@ -1,5 +1,7 @@
 #!/bin/env bash
 
+set -euo pipefail
+
 function __launch_terminal {
 	nohup alacritty --class terminal --title Terminal "$@" &>/dev/null &
 }

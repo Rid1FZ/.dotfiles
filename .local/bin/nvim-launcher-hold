@@ -1,3 +1,5 @@
 #!/bin/env bash
 
+set -euo pipefail
+
 alacritty --title Neovim --class nvim --hold --command nvim "${@}"
