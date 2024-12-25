@@ -17,5 +17,4 @@ alias cdd="cd \$DOTFILES"
 alias cat="bat"
 
 unset eza_cmd leza_cmd
-
 # <<< aliases <<<
