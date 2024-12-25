@@ -75,6 +75,8 @@ M.open = function(command)
         set_autocommands(tuis[command].buf, tuis[command].win)
         vim.cmd([[startinsert]])
     end
+
+    return tuis[command]
 end
 
 return M

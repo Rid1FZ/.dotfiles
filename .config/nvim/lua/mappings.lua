@@ -23,17 +23,23 @@ M.general = {
         ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
 
-        ["<Leader>ol"] = {
-            function()
-                require("utils.floattui").open("lazygit")
-            end,
-            "Open Lazygit",
-        },
         ["<Leader>oh"] = {
             function()
                 require("utils.floattui").open("htop")
             end,
-            "Open Htop",
+            "Open htop",
+        },
+        ["<Leader>ol"] = {
+            function()
+                require("utils.floattui").open("lazygit")
+            end,
+            "Open lazygit",
+        },
+        ["<Leader>ot"] = {
+            function()
+                require("utils.floattui.terminal").open()
+            end,
+            "Open terminal",
         },
     },
 
