@@ -4,7 +4,9 @@ local null_ls = require("null-ls")
 M.sources = {
     -- formatting
     null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.shfmt,
+    null_ls.builtins.formatting.shfmt.with({
+        filetypes = { "bash", "zsh", "sh" },
+    }),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.isort,
     null_ls.builtins.formatting.clang_format,
