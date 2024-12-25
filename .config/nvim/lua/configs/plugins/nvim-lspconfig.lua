@@ -17,7 +17,7 @@ lspconfig.pyright.setup({
     on_attach = lsp.on_attach,
     on_init = lsp.on_init,
     settings = {
-        python = {
+        ["python"] = {
             analysis = {
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
