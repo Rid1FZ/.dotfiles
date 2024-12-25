@@ -1,6 +1,19 @@
 #!/bin/env bash
 
 # >>> functions >>>
+function __fzf {
+	(
+		FZF_DEFAULT_OPTS=" \
+            ${FZF_DEFAULT_OPTS} \
+            --layout=reverse \
+            --tmux \
+            --ansi \
+            --border=rounded"
+
+		fzf "$@"
+	)
+}
+
 function open {
 	case "$(file -b --mime-type --dereference "${1}")" in
 	inode/directory)
@@ -28,7 +41,7 @@ function floc {
 	sudo updatedb
 
 	__plocate_prefix="plocate --ignore-case --regex"
-	__target="$(fzf --layout=reverse --border=rounded --info=default --disabled --keep-right --tmux --ansi --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
+	__target="$(__fzf --disabled --keep-right --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
 
 	[[ -z "${__target}" ]] && return 1
 
@@ -41,7 +54,7 @@ function ff {
 	__arg="${1:-.}"
 	[[ -d "${__arg}" ]] || return 1
 
-	__path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | fzf --layout=reverse --border=rounded --info=default --ansi --keep-right --tmux --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
+	__path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
 	[[ -z "${__path}" ]] && return 1
 
 	open "${__path}"
@@ -53,17 +66,17 @@ function fcd {
 	__arg="${1:-.}"
 	[[ -d "${__arg}" ]] || return 1
 
-    __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | fzf --layout=reverse --border=rounded --info=default --ansi --keep-right --tmux --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
-    [[ -z "${__dir}" ]] || return 1
-    
-    builtin cd -- "${__dir}"
+	__dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --layout=reverse --border=rounded --info=default --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
+	[[ -z "${__dir}" ]] && return 1
+
+	builtin cd -- "${__dir}"
 }
 
 function frg {
 	local __rg_prefix
 
 	__rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
-	fzf --layout=reverse --border=rounded --info=default --disabled --ansi --tmux \
+	__fzf --disabled \
 		--bind "start:reload:${__rg_prefix} {q} ${1:-.}" \
 		--bind "change:reload:sleep 0.1; ${__rg_prefix} {q} || true" \
 		--delimiter : \
@@ -110,14 +123,14 @@ function mkfile {
 
 # for vterm inside emacs
 function vterm_printf {
-    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
-        # Tell tmux to pass the escape sequences through
-        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-    elif [ "${TERM%%-*}" = "screen" ]; then
-        # GNU screen (screen, screen-256color, screen-256color-bce)
-        printf "\eP\e]%s\007\e\\" "$1"
-    else
-        printf "\e]%s\e\\" "$1"
-    fi
+	if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
+		# Tell tmux to pass the escape sequences through
+		printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+	elif [ "${TERM%%-*}" = "screen" ]; then
+		# GNU screen (screen, screen-256color, screen-256color-bce)
+		printf "\eP\e]%s\007\e\\" "$1"
+	else
+		printf "\e]%s\e\\" "$1"
+	fi
 }
 # <<< functions <<<
