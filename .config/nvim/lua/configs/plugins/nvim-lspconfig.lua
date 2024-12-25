@@ -42,6 +42,13 @@ lspconfig.rust_analyzer.setup({
     capabilities = lsp.capabilities,
     on_attach = lsp.on_attach,
     on_init = lsp.on_init,
+    settings = {
+        ["rust_analyzer"] = {
+            cargo = {
+                allFeatures = true,
+            },
+        },
+    },
 })
 
 lspconfig.lua_ls.setup({
