@@ -6,6 +6,7 @@ M.sources = {
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.formatting.shfmt.with({
         filetypes = { "bash", "zsh", "sh" },
+        extra_args = { "--indent", "4", "--case-indent", "--language-dialect", "bash" },
     }),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.isort,
