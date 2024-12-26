@@ -28,11 +28,11 @@ __plugin_dirs="${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/plugins:${HOME}/.zsh/p
 __dirs=(${(@s/:/)__plugin_dirs})
 
 for __dir in ${__dirs[@]}; do
-  if [[ -d "${__dir}" ]]; then
-    for __plugin in "${__dir}"/**/*.plugin.zsh; do
-      . "${__plugin}"
-    done
-  fi
+    if [[ -d "${__dir}" ]]; then
+        for __plugin in "${__dir}"/**/*.plugin.zsh; do
+            . "${__plugin}"
+        done
+    fi
 done
 
 unset __plugin_dirs __dirs __dir __plugin

@@ -6,10 +6,10 @@
 
 # >>> source local configs >>>
 function __source_rc {
-	local rc
-	rc="${1}"
+    local rc
+    rc="${1}"
 
-	source "${HOME}"/.profile.d/"${rc}"
+    source "${HOME}"/.profile.d/"${rc}"
 }
 
 __source_rc "options.sh"

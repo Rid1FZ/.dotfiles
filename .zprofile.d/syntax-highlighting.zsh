@@ -64,10 +64,10 @@ __syntax_highlighter_path="/usr/local/share/zsh-syntax-highlighting/zsh-syntax-h
 __scripts=(${(@s/:/)__syntax_highlighter_path})
 
 for __script in ${__scripts[@]}; do
-  if [ -f "${__script}" ]; then
-    . "${__script}"
-    break
-  fi
+    if [ -f "${__script}" ]; then
+        . "${__script}"
+        break
+    fi
 done
 
 unset __syntax_highlighter_path __scripts __script

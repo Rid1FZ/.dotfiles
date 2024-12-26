@@ -1,5 +1,5 @@
 #!/bin/env zsh
-#
+
 # >>> completion >>>
 zmodload zsh/complist
 bindkey -M menuselect '^xg' clear-screen

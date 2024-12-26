@@ -33,14 +33,14 @@ export FZF_DEFAULT_OPTS=" \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
 case "$(ps -p $$ -o comm=)" in
-"zsh")
-	export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/zsh_history"
-	fpath+=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions")
-	export fpath
-	;;
-"bash")
-	export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"
-	export HISTCONTROL="ignoreboth"
-	;;
+    "zsh")
+        export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/zsh_history"
+        fpath+=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions")
+        export fpath
+        ;;
+    "bash")
+        export HISTFILE="${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"
+        export HISTCONTROL="ignoreboth"
+        ;;
 esac
 # <<< environment variables <<<
