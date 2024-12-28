@@ -20,11 +20,17 @@ M.open = function()
     vim.api.nvim_input("A")
 
     vim.keymap.set({ "i", "n" }, "<Esc>", "<cmd>q<CR>", { buffer = buf })
+    vim.api.nvim_create_autocmd("WinClosed", {
+        group = vim.api.nvim_create_augroup("WipeBufferWhenClosed", { clear = true }),
+        pattern = win,
+        callback = function()
+            vim.cmd.bwipeout({ buf, bang = true })
+        end,
+    })
 
     vim.fn.prompt_setcallback(buf, function(text)
         local newName = vim.trim(text)
         api.nvim_win_close(win, true)
-        vim.cmd.bwipeout({ buf, bang = true })
 
         if #newName > 0 and newName ~= var then
             local params = vim.lsp.util.make_position_params()
