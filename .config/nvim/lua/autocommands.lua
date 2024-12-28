@@ -81,3 +81,24 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.highlight.on_yank()
     end,
 })
+
+local api = require("nvim-tree.api")
+local Event = api.events.Event
+local tree = require("nvim-tree.api").tree
+
+api.events.subscribe(Event.FileRemoved, function(data)
+    local winCount = 0
+    for _, winId in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_config(winId).focusable then
+            winCount = winCount + 1
+        end
+    end
+    if winCount == 2 then
+        vim.defer_fn(function()
+            -- close nvim-tree: will go to the last buffer used before closing
+            tree.toggle({ find_file = true, focus = true })
+            -- re-open nivm-tree
+            tree.toggle({ find_file = true, focus = true })
+        end, 10)
+    end
+end)
