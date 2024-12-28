@@ -130,7 +130,7 @@ M.lspconfig = {
 
         ["<leader>lr"] = {
             function()
-                require("utils.renamer").open()
+                vim.lsp.buf.rename()
             end,
             "LSP rename",
         },
