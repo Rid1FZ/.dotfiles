@@ -2,11 +2,11 @@
 live_config_reload = true
 working_directory = "None"
 import = [
-  "configs/window.toml",
-  "configs/theme.toml",
-  "configs/font.toml",
-  "configs/scrolling.toml",
-  "configs/cursor.toml",
-  #  "configs/terminal.toml",
-  "configs/keybindings.toml",
+    "configs/window.toml",
+    "configs/theme.toml",
+    "configs/font.toml",
+    "configs/scrolling.toml",
+    "configs/cursor.toml",
+    "configs/terminal.toml",
+    "configs/keybindings.toml",
 ]
