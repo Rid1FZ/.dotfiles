@@ -2,19 +2,30 @@ local M = {}
 local null_ls = require("null-ls")
 
 M.sources = {
-    -- formatting
+    -- python
+    null_ls.builtins.formatting.black.with({
+        extra_args = { "--line-length", "120" },
+    }),
+    null_ls.builtins.formatting.isort,
+    null_ls.builtins.diagnostics.mypy,
+
+    -- lua
     null_ls.builtins.formatting.stylua,
+
+    -- bash
     null_ls.builtins.formatting.shfmt.with({
         filetypes = { "bash", "zsh", "sh" },
         extra_args = { "--indent", "4", "--case-indent", "--language-dialect", "bash" },
     }),
-    null_ls.builtins.formatting.black,
-    null_ls.builtins.formatting.isort,
+
+    -- c/c++
     null_ls.builtins.formatting.clang_format,
+
+    -- json/markdown
     null_ls.builtins.formatting.prettier,
+
+    -- rust
     require("none-ls.formatting.rustfmt"),
-    -- diagnostics
-    null_ls.builtins.diagnostics.mypy,
 }
 
 M.on_attach = function(client, bufnr)
