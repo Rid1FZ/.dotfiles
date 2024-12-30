@@ -197,7 +197,12 @@ M.nvimtree = {
 
     n = {
         -- focus
-        ["<leader>oe"] = { "<cmd> NvimTreeFocus <CR>", "Focus explorer" },
+        ["<leader>oe"] = {
+            function()
+                require("nvim-tree.api").tree.focus()
+            end,
+            "Focus explorer",
+        },
     },
 }
 
@@ -206,12 +211,52 @@ M.telescope = {
 
     n = {
         -- find
-        ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
-        ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
-        ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
-        ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
-        ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
-        ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
+        ["<leader>ff"] = {
+            function()
+                require("telescope.builtin").find_files({
+                    follow = true,
+                    hidden = true,
+                })
+            end,
+            "Find files",
+        },
+
+        ["<leader>fa"] = {
+            function()
+                require("telescope.builtin").find_files({
+                    follow = true,
+                    hidden = true,
+                    no_ignore = true,
+                })
+            end,
+            "Find all files",
+        },
+
+        ["<leader>fw"] = {
+            function()
+                require("telescope.builtin").live_grep()
+            end,
+            "Live grep",
+        },
+
+        ["<leader>fb"] = {
+            function()
+                require("telescope.builtin").buffers({
+                    sort_mru = true,
+                    select_current = false,
+                    ignore_current_buffer = true,
+                })
+            end,
+            "Find buffers",
+        },
+
+        ["<leader>fh"] = {
+            function()
+                require("telescope.builtin").help_tags()
+            end,
+            "Help page",
+        },
+
         ["<leader>fo"] = {
             function()
                 require("telescope.builtin").oldfiles()
@@ -271,7 +316,7 @@ M.gitsigns = {
 
         ["<leader>gb"] = {
             function()
-                package.loaded.gitsigns.blame_line()
+                require("gitsigns").blame_line()
             end,
             "Blame line",
         },
@@ -283,8 +328,19 @@ M.gitsigns = {
             "Toggle deleted",
         },
 
-        ["<leader>gm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-        ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+        ["<leader>gm"] = {
+            function()
+                require("telescope.builtin").git_commits()
+            end,
+            "Git commits",
+        },
+
+        ["<leader>gs"] = {
+            function()
+                require("telescope.builtin").git_status()
+            end,
+            "Git status",
+        },
     },
 }
 
