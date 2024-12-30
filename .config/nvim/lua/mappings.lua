@@ -3,6 +3,11 @@
 
 local M = {}
 
+local tbuiltin = require("telescope.builtin")
+local nvim_tree = require("nvim-tree.api").tree
+local gitsigns = require("gitsigns")
+local floattui = require("utils.floattui")
+
 M.general = {
     i = {},
 
@@ -25,13 +30,13 @@ M.general = {
 
         ["<Leader>oh"] = {
             function()
-                require("utils.floattui").open("htop")
+                floattui.open("htop")
             end,
             "Open htop",
         },
         ["<Leader>ol"] = {
             function()
-                require("utils.floattui").open("lazygit")
+                floattui.open("lazygit")
             end,
             "Open lazygit",
         },
@@ -73,7 +78,7 @@ M.lspconfig = {
 
         ["gd"] = {
             function()
-                require("telescope.builtin").lsp_definitions()
+                tbuiltin.lsp_definitions()
             end,
             "LSP definition",
         },
@@ -87,7 +92,7 @@ M.lspconfig = {
 
         ["gi"] = {
             function()
-                require("telescope.builtin").lsp_implementations()
+                tbuiltin.lsp_implementations()
             end,
             "LSP implementation",
         },
@@ -123,7 +128,7 @@ M.lspconfig = {
 
         ["<leader>lD"] = {
             function()
-                require("telescope.builtin").diagnostics()
+                tbuiltin.diagnostics()
             end,
             "LSP list all diagnostics",
         },
@@ -144,7 +149,7 @@ M.lspconfig = {
 
         ["gr"] = {
             function()
-                require("telescope.builtin").lsp_references()
+                tbuiltin.lsp_references()
             end,
             "LSP references",
         },
@@ -199,7 +204,7 @@ M.nvimtree = {
         -- focus
         ["<leader>oe"] = {
             function()
-                require("nvim-tree.api").tree.focus()
+                nvim_tree.focus()
             end,
             "Focus explorer",
         },
@@ -213,7 +218,7 @@ M.telescope = {
         -- find
         ["<leader>ff"] = {
             function()
-                require("telescope.builtin").find_files({
+                tbuiltin.find_files({
                     follow = true,
                     hidden = true,
                 })
@@ -223,7 +228,7 @@ M.telescope = {
 
         ["<leader>fa"] = {
             function()
-                require("telescope.builtin").find_files({
+                tbuiltin.find_files({
                     follow = true,
                     hidden = true,
                     no_ignore = true,
@@ -234,14 +239,14 @@ M.telescope = {
 
         ["<leader>fw"] = {
             function()
-                require("telescope.builtin").live_grep()
+                tbuiltin.live_grep()
             end,
             "Live grep",
         },
 
         ["<leader>fb"] = {
             function()
-                require("telescope.builtin").buffers({
+                tbuiltin.buffers({
                     sort_mru = true,
                     select_current = false,
                     ignore_current_buffer = true,
@@ -252,14 +257,14 @@ M.telescope = {
 
         ["<leader>fh"] = {
             function()
-                require("telescope.builtin").help_tags()
+                tbuiltin.help_tags()
             end,
             "Help page",
         },
 
         ["<leader>fo"] = {
             function()
-                require("telescope.builtin").oldfiles()
+                tbuiltin.oldfiles()
             end,
             "Find oldfiles",
         },
@@ -277,7 +282,7 @@ M.gitsigns = {
                     return "]c"
                 end
                 vim.schedule(function()
-                    require("gitsigns").next_hunk()
+                    gitsigns.next_hunk()
                 end)
                 return "<Ignore>"
             end,
@@ -291,7 +296,7 @@ M.gitsigns = {
                     return "[c"
                 end
                 vim.schedule(function()
-                    require("gitsigns").prev_hunk()
+                    gitsigns.prev_hunk()
                 end)
                 return "<Ignore>"
             end,
@@ -302,42 +307,42 @@ M.gitsigns = {
         -- Actions
         ["<leader>gr"] = {
             function()
-                require("gitsigns").reset_hunk()
+                gitsigns.reset_hunk()
             end,
             "Reset hunk",
         },
 
         ["<leader>gp"] = {
             function()
-                require("gitsigns").preview_hunk()
+                gitsigns.preview_hunk()
             end,
             "Preview hunk",
         },
 
         ["<leader>gb"] = {
             function()
-                require("gitsigns").blame_line()
+                gitsigns.blame_line()
             end,
             "Blame line",
         },
 
         ["<leader>gt"] = {
             function()
-                require("gitsigns").toggle_deleted()
+                gitsigns.toggle_deleted()
             end,
             "Toggle deleted",
         },
 
         ["<leader>gm"] = {
             function()
-                require("telescope.builtin").git_commits()
+                tbuiltin.git_commits()
             end,
             "Git commits",
         },
 
         ["<leader>gs"] = {
             function()
-                require("telescope.builtin").git_status()
+                tbuiltin.git_status()
             end,
             "Git status",
         },
