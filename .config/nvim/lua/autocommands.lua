@@ -1,3 +1,7 @@
+local nvim_tree_api = require("nvim-tree.api")
+local Event = nvim_tree_api.events.Event
+local tree = require("nvim-tree.api").tree
+
 -- Dont List Quickfix Buffers
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "qf",
@@ -82,18 +86,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
-local api = require("nvim-tree.api")
-local Event = api.events.Event
-local tree = require("nvim-tree.api").tree
-
-api.events.subscribe(Event.FileRemoved, function(data)
+-- Do Not Take Full Width When File Is Removed
+nvim_tree_api.events.subscribe(Event.FileRemoved, function(data)
     local winCount = 0
     for _, winId in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_get_config(winId).focusable then
             winCount = winCount + 1
         end
     end
-    if winCount == 2 then
+    if winCount == 2 then -- one is nvim-tree window, another is additional window
         vim.defer_fn(function()
             -- close nvim-tree: will go to the last buffer used before closing
             tree.toggle({ find_file = true, focus = true })
