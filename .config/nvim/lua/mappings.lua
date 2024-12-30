@@ -294,9 +294,9 @@ M.telescope = {
             function()
                 vim.schedule(function()
                     tbuiltin.buffers({
+                        sort_lastused = true,
                         sort_mru = true,
                         select_current = false,
-                        ignore_current_buffer = true,
                     })
                 end)
             end,
