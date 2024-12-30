@@ -30,19 +30,27 @@ M.general = {
 
         ["<Leader>oh"] = {
             function()
-                floattui.open("htop")
+                vim.schedule(function()
+                    floattui.open("htop")
+                end)
             end,
             "Open htop",
         },
+
         ["<Leader>ol"] = {
             function()
-                floattui.open("lazygit")
+                vim.schedule(function()
+                    floattui.open("lazygit")
+                end)
             end,
             "Open lazygit",
         },
+
         ["<Leader>ot"] = {
             function()
-                require("utils.floattui.terminal").open()
+                vim.schedule(function()
+                    require("utils.floattui.terminal").open()
+                end)
             end,
             "Open terminal",
         },
@@ -71,35 +79,45 @@ M.lspconfig = {
     n = {
         ["gD"] = {
             function()
-                vim.lsp.buf.declaration()
+                vim.schedule(function()
+                    vim.lsp.buf.declaration()
+                end)
             end,
             "LSP declaration",
         },
 
         ["gd"] = {
             function()
-                tbuiltin.lsp_definitions()
+                vim.schedule(function()
+                    tbuiltin.lsp_definitions()
+                end)
             end,
             "LSP definition",
         },
 
         ["K"] = {
             function()
-                vim.lsp.buf.hover()
+                vim.schedule(function()
+                    vim.lsp.buf.hover()
+                end)
             end,
             "LSP hover",
         },
 
         ["gi"] = {
             function()
-                tbuiltin.lsp_implementations()
+                vim.schedule(function()
+                    tbuiltin.lsp_implementations()
+                end)
             end,
             "LSP implementation",
         },
 
         ["<leader>ls"] = {
             function()
-                vim.lsp.buf.signature_help()
+                vim.schedule(function()
+                    vim.lsp.buf.signature_help()
+                end)
             end,
             "LSP signature help",
         },
@@ -109,79 +127,97 @@ M.lspconfig = {
                 local providers = {
                     "null-ls",
                 }
-                vim.lsp.buf.format({
-                    async = false,
-                    timeout_ms = 5000,
-                    filter = function(client)
-                        for _, provider in ipairs(providers) do
-                            if client.name == provider then
-                                print(client.name)
-                                return true
+                vim.schedule(function()
+                    vim.lsp.buf.format({
+                        async = false,
+                        timeout_ms = 5000,
+                        filter = function(client)
+                            for _, provider in ipairs(providers) do
+                                if client.name == provider then
+                                    print(client.name)
+                                    return true
+                                end
                             end
-                        end
-                        return false
-                    end,
-                })
+                            return false
+                        end,
+                    })
+                end)
             end,
             "LSP formatting",
         },
 
         ["<leader>lD"] = {
             function()
-                tbuiltin.diagnostics()
+                vim.schedule(function()
+                    tbuiltin.diagnostics()
+                end)
             end,
             "LSP list all diagnostics",
         },
 
         ["<leader>lr"] = {
             function()
-                vim.lsp.buf.rename()
+                vim.schedule(function()
+                    vim.lsp.buf.rename()
+                end)
             end,
             "LSP rename",
         },
 
         ["<leader>la"] = {
             function()
-                vim.lsp.buf.code_action()
+                vim.schedule(function()
+                    vim.lsp.buf.code_action()
+                end)
             end,
             "LSP code action",
         },
 
         ["gr"] = {
             function()
-                tbuiltin.lsp_references()
+                vim.schedule(function()
+                    tbuiltin.lsp_references()
+                end)
             end,
             "LSP references",
         },
 
         ["<leader>ld"] = {
             function()
-                vim.diagnostic.open_float({
-                    border = "rounded",
-                    scope = "cursor",
-                    severity_sort = true,
-                })
+                vim.schedule(function()
+                    vim.diagnostic.open_float({
+                        border = "rounded",
+                        scope = "cursor",
+                        severity_sort = true,
+                    })
+                end)
             end,
             "Floating diagnostic",
         },
 
         ["[d"] = {
             function()
-                vim.diagnostic.goto_prev({ float = { border = "rounded" } })
+                vim.schedule(function()
+                    vim.diagnostic.goto_prev({ float = { border = "rounded" } })
+                end)
             end,
             "Goto prev",
         },
 
         ["]d"] = {
             function()
-                vim.diagnostic.goto_next({ float = { border = "rounded" } })
+                vim.schedule(function()
+                    vim.diagnostic.goto_next({ float = { border = "rounded" } })
+                end)
             end,
             "Goto next",
         },
 
         ["<leader>q"] = {
             function()
-                vim.diagnostic.setloclist()
+                vim.schedule(function()
+                    vim.diagnostic.setloclist()
+                end)
             end,
             "Diagnostic setloclist",
         },
@@ -190,7 +226,9 @@ M.lspconfig = {
     v = {
         ["<leader>la"] = {
             function()
-                vim.lsp.buf.code_action()
+                vim.schedule(function()
+                    vim.lsp.buf.code_action()
+                end)
             end,
             "LSP code action",
         },
@@ -204,7 +242,9 @@ M.nvimtree = {
         -- focus
         ["<leader>oe"] = {
             function()
-                nvim_tree.focus()
+                vim.schedule(function()
+                    nvim_tree.focus()
+                end)
             end,
             "Focus explorer",
         },
@@ -218,53 +258,65 @@ M.telescope = {
         -- find
         ["<leader>ff"] = {
             function()
-                tbuiltin.find_files({
-                    follow = true,
-                    hidden = true,
-                })
+                vim.schedule(function()
+                    tbuiltin.find_files({
+                        follow = true,
+                        hidden = true,
+                    })
+                end)
             end,
             "Find files",
         },
 
         ["<leader>fa"] = {
             function()
-                tbuiltin.find_files({
-                    follow = true,
-                    hidden = true,
-                    no_ignore = true,
-                })
+                vim.schedule(function()
+                    tbuiltin.find_files({
+                        follow = true,
+                        hidden = true,
+                        no_ignore = true,
+                    })
+                end)
             end,
             "Find all files",
         },
 
         ["<leader>fw"] = {
             function()
-                tbuiltin.live_grep()
+                vim.schedule(function()
+                    tbuiltin.live_grep()
+                end)
             end,
             "Live grep",
         },
 
         ["<leader>fb"] = {
             function()
-                tbuiltin.buffers({
-                    sort_mru = true,
-                    select_current = false,
-                    ignore_current_buffer = true,
-                })
+                vim.schedule(function()
+                    tbuiltin.buffers({
+                        sort_mru = true,
+                        select_current = false,
+                        ignore_current_buffer = true,
+                    })
+                end)
             end,
             "Find buffers",
         },
 
         ["<leader>fh"] = {
             function()
-                tbuiltin.help_tags()
+                vim.schedule(function()
+                    tbuiltin.help_tags()
+                end)
             end,
             "Help page",
         },
 
         ["<leader>fo"] = {
             function()
-                tbuiltin.oldfiles()
+                vim.schedule(function()
+                    tbuiltin.oldfiles()
+                end)
             end,
             "Find oldfiles",
         },
@@ -307,42 +359,54 @@ M.gitsigns = {
         -- Actions
         ["<leader>gr"] = {
             function()
-                gitsigns.reset_hunk()
+                vim.schedule(function()
+                    gitsigns.reset_hunk()
+                end)
             end,
             "Reset hunk",
         },
 
         ["<leader>gp"] = {
             function()
-                gitsigns.preview_hunk()
+                vim.schedule(function()
+                    gitsigns.preview_hunk()
+                end)
             end,
             "Preview hunk",
         },
 
         ["<leader>gb"] = {
             function()
-                gitsigns.blame_line()
+                vim.schedule(function()
+                    gitsigns.blame_line()
+                end)
             end,
             "Blame line",
         },
 
         ["<leader>gt"] = {
             function()
-                gitsigns.toggle_deleted()
+                vim.schedule(function()
+                    gitsigns.toggle_deleted()
+                end)
             end,
             "Toggle deleted",
         },
 
         ["<leader>gm"] = {
             function()
-                tbuiltin.git_commits()
+                vim.schedule(function()
+                    tbuiltin.git_commits()
+                end)
             end,
             "Git commits",
         },
 
         ["<leader>gs"] = {
             function()
-                tbuiltin.git_status()
+                vim.schedule(function()
+                    tbuiltin.git_status()
+                end)
             end,
             "Git status",
         },
