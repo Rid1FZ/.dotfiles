@@ -65,14 +65,24 @@ M.defaults = {
 
 M.pickers = {
     buffers = {
+        theme = "ivy",
         sort_lastused = true,
         sort_mru = true,
         select_current = false,
     },
 
     find_files = {
+        theme = "dropdown",
         follow = true,
         hidden = true,
+    },
+
+    oldfiles = {
+        theme = "dropdown",
+    },
+
+    live_grep = {
+        theme = "dropdown",
     },
 }
 
