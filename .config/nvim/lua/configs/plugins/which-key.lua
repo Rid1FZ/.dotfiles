@@ -1,6 +1,6 @@
 local M = {}
 
-M.preset = "classic"
+M.preset = "helix"
 M.notify = true
 M.sort = { "local", "order", "group", "alphanum", "mod" }
 M.expand = 0
