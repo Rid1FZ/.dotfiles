@@ -59,7 +59,12 @@ M.defaults = {
         preview_cutoff = 120,
     },
     mappings = {
-        n = { ["q"] = require("telescope.actions").close },
+        i = {
+            ["<Esc>"] = require("telescope.actions").close,
+        },
+        n = {
+            ["q"] = require("telescope.actions").close,
+        },
     },
 }
 
