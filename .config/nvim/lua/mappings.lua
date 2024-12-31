@@ -7,6 +7,7 @@ local tbuiltin = require("telescope.builtin")
 local nvim_tree = require("nvim-tree.api").tree
 local gitsigns = require("gitsigns")
 local floattui = require("utils.floattui")
+local floatterminal = require("utils.floattui.terminal")
 
 M.general = {
     i = {},
@@ -49,7 +50,7 @@ M.general = {
         ["<Leader>ot"] = {
             function()
                 vim.schedule(function()
-                    require("utils.floattui.terminal").open()
+                    floatterminal.open()
                 end)
             end,
             "Open terminal",
@@ -259,10 +260,7 @@ M.telescope = {
         ["<leader>ff"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.find_files({
-                        follow = true,
-                        hidden = true,
-                    })
+                    tbuiltin.find_files()
                 end)
             end,
             "Find files",
@@ -272,8 +270,6 @@ M.telescope = {
             function()
                 vim.schedule(function()
                     tbuiltin.find_files({
-                        follow = true,
-                        hidden = true,
                         no_ignore = true,
                     })
                 end)
@@ -293,11 +289,7 @@ M.telescope = {
         ["<leader>fb"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.buffers({
-                        sort_lastused = true,
-                        sort_mru = true,
-                        select_current = false,
-                    })
+                    tbuiltin.buffers()
                 end)
             end,
             "Find buffers",

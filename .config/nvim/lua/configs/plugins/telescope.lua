@@ -4,6 +4,7 @@ M.extensions = {
     ["ui-select"] = {
         require("telescope.themes").get_dropdown({}),
     },
+
     ["fzf"] = {
         fuzzy = true, -- false will only do exact matching
         override_generic_sorter = true, -- override the generic sorter
@@ -13,6 +14,26 @@ M.extensions = {
 }
 
 M.defaults = {
+    file_sorter = require("telescope.sorters").get_fuzzy_file,
+    file_ignore_patterns = { "node_modules" },
+    generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+    path_display = { "truncate" },
+    winblend = 0,
+    border = true,
+    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    color_devicons = true,
+    set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+    file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+    grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+    qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+    buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+    prompt_prefix = "   ",
+    selection_caret = "  ",
+    entry_prefix = "  ",
+    initial_mode = "insert",
+    selection_strategy = "reset",
+    sorting_strategy = "ascending",
+    layout_strategy = "horizontal",
     vimgrep_arguments = {
         "rg",
         "--no-config",
@@ -25,13 +46,6 @@ M.defaults = {
         "--column",
         "--smart-case",
     },
-    prompt_prefix = "   ",
-    selection_caret = "  ",
-    entry_prefix = "  ",
-    initial_mode = "insert",
-    selection_strategy = "reset",
-    sorting_strategy = "ascending",
-    layout_strategy = "horizontal",
     layout_config = {
         horizontal = {
             prompt_position = "top",
@@ -44,26 +58,21 @@ M.defaults = {
         height = 0.80,
         preview_cutoff = 120,
     },
-    file_sorter = require("telescope.sorters").get_fuzzy_file,
-    file_ignore_patterns = { "node_modules" },
-    generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-    pickers = {
-        live_grep = {
-            only_sort_text = true,
-        },
-    },
-    path_display = { "truncate" },
-    winblend = 0,
-    border = true,
-    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-    color_devicons = true,
-    set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-    file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-    grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
-    qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-    buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
     mappings = {
         n = { ["q"] = require("telescope.actions").close },
+    },
+}
+
+M.pickers = {
+    buffers = {
+        sort_lastused = true,
+        sort_mru = true,
+        select_current = false,
+    },
+
+    find_files = {
+        follow = true,
+        hidden = true,
     },
 }
 
