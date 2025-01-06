@@ -65,11 +65,17 @@ gui:
 
   spinner:
     frames:
-      - "|"
-      - /
-      - "-"
-      - \
-    rate: 50
+      - "⠋"
+      - "⠙"
+      - "⠹"
+      - "⠸"
+      - "⠼"
+      - "⠴"
+      - "⠦"
+      - "⠧"
+      - "⠇"
+      - "⠏"
+    rate: 100
 
   statusPanelView: dashboard
 
