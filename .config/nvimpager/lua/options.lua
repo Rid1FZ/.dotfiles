@@ -25,15 +25,15 @@ opt.number = false
 opt.relativenumber = false
 opt.ruler = false
 opt.shortmess = opt.shortmess + {
-	s = true,
-	c = true,
-	F = true,
-	W = true,
-	I = true,
-	l = true,
+    s = true,
+    c = true,
+    F = true,
+    W = true,
+    I = true,
+    l = true,
 }
 
-opt.signcolumn = "no"
+opt.signcolumn = "yes:1"
 opt.splitbelow = true
 opt.splitright = true
 opt.termguicolors = true
@@ -46,19 +46,19 @@ vim.cmd([[aunmenu PopUp]])
 
 -- Add Filetypes
 vim.filetype.add({
-	extension = {
-		qml = "qml",
-		ipy = "python",
-		sh = "bash",
-		bash = "bash",
-	},
-	pattern = {
-		["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
-		[".*/hyperland/.*.conf"] = "hyprlang",
-		["/home/.*/.config/waybar/config"] = "jsonc",
-		["/home/.*/.config/zathura/.*"] = "zathurarc",
-		["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
-	},
+    extension = {
+        qml = "qml",
+        ipy = "python",
+        sh = "bash",
+        bash = "bash",
+    },
+    pattern = {
+        ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
+        [".*/hyperland/.*.conf"] = "hyprlang",
+        ["/home/.*/.config/waybar/config"] = "jsonc",
+        ["/home/.*/.config/zathura/.*"] = "zathurarc",
+        ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
+    },
 })
 
 -- register grammers
