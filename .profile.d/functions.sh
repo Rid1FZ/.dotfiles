@@ -2,16 +2,7 @@
 
 # >>> functions >>>
 function __fzf {
-    (
-        FZF_DEFAULT_OPTS=" \
-            ${FZF_DEFAULT_OPTS} \
-            --layout=reverse \
-            --tmux \
-            --ansi \
-            --border=rounded"
-
-        fzf "$@"
-    )
+    fzf --layout=reverse --tmux --border=rounded "$@"
 }
 
 function open {

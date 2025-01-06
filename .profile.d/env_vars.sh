@@ -16,21 +16,7 @@ export BAT_PAGER=""
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgreprc"
 export HISTSIZE=100000
 export SAVEHIST=100000
-export FZF_DEFAULT_OPTS=" \
---layout=default \
---cycle \
---scroll-off=1 \
---no-scrollbar \
---bind='tab:toggle-down,btab:toggle-up' \
---border=none \
---no-separator \
---info=hidden \
---prompt=\" \" \
---pointer=\"\" \
---marker=\" \" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+export FZF_DEFAULT_OPTS_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzfrc"
 
 case "$(ps -p $$ -o comm=)" in
     "zsh")
