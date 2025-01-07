@@ -51,6 +51,12 @@ lspconfig.rust_analyzer.setup({
     },
 })
 
+lspconfig.taplo.setup({
+    capabilities = lsp.capabilities,
+    on_attach = lsp.on_attach,
+    on_init = lsp.on_init,
+})
+
 lspconfig.lua_ls.setup({
     on_init = lsp.on_init,
     on_attach = lsp.on_attach,
