@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
     group = NvimTreeAugroup,
     callback = function(data)
-        if not vim.fn.isdirectory(data.file) == 1 then
+        if vim.fn.isdirectory(data.file) ~= 1 then
             return
         end
 
