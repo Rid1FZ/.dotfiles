@@ -70,7 +70,7 @@ M.defaults = {
 
 M.pickers = {
     buffers = {
-        theme = "ivy",
+        theme = "dropdown",
         sort_lastused = true,
         sort_mru = true,
         select_current = false,
@@ -87,6 +87,10 @@ M.pickers = {
     },
 
     live_grep = {
+        theme = "dropdown",
+    },
+
+    help_tags = {
         theme = "dropdown",
     },
 }
