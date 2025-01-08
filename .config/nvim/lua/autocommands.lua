@@ -1,6 +1,7 @@
 local nvim_tree_api = require("nvim-tree.api")
 local Event = nvim_tree_api.events.Event
 local tree = require("nvim-tree.api").tree
+local tbuiltin = require("telescope.builtin")
 
 -- Dont List Quickfix Buffers
 vim.api.nvim_create_autocmd("FileType", {
@@ -60,20 +61,18 @@ vim.api.nvim_create_autocmd("QuitPre", {
     end,
 })
 
--- Open NvimTree for Directories
+-- Open Telescope Find Files for Directories
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
     group = NvimTreeAugroup,
     callback = function(data)
-        local isdirectory = (vim.fn.isdirectory(data.file) == 1)
-
-        if not isdirectory then
+        if not vim.fn.isdirectory(data.file) == 1 then
             return
         end
+
         vim.cmd("bwipeout")
         vim.cmd.cd(data.file)
-
         vim.schedule(function()
-            require("telescope.builtin").find_files()
+            tbuiltin.find_files()
         end)
     end,
 })
