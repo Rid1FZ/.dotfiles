@@ -72,9 +72,9 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
         vim.cmd("bwipeout")
         vim.cmd.cd(data.file)
 
-        require("nvim-tree.api").tree.open({
-            current_window = false,
-        })
+        vim.schedule(function()
+            require("telescope.builtin").find_files()
+        end)
     end,
 })
 
