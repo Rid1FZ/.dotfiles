@@ -109,7 +109,7 @@ M.trash = {
 }
 
 M.renderer = {
-    root_folder_label = false,
+    root_folder_label = ":~:s?$?/...?",
     highlight_git = true,
     highlight_opened_files = "none",
     symlink_destination = false,
