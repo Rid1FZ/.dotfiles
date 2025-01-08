@@ -2,7 +2,7 @@
 
 # >>> aliases >>>
 eza_cmd="eza --classify --oneline --color=always --icons --group-directories-first"
-leza_cmd="${eza_cmd} --modified --links --group --long --git --git-repos"
+leza_cmd="${eza_cmd} --modified --links --group --long --git --git-repos --header"
 
 alias ls="${eza_cmd}"
 alias la="${eza_cmd} --all"
