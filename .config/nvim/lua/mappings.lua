@@ -3,12 +3,6 @@
 
 local M = {}
 
-local tbuiltin = require("telescope.builtin")
-local nvim_tree = require("nvim-tree.api").tree
-local gitsigns = require("gitsigns")
-local floattui = require("utils.floattui")
-local floatterminal = require("utils.floattui.terminal")
-
 M.general = {
     i = {},
 
@@ -32,7 +26,7 @@ M.general = {
         ["<Leader>oh"] = {
             function()
                 vim.schedule(function()
-                    floattui.open("htop")
+                    require("utils.floattui").open("htop")
                 end)
             end,
             "Open htop",
@@ -41,7 +35,7 @@ M.general = {
         ["<Leader>ol"] = {
             function()
                 vim.schedule(function()
-                    floattui.open("lazygit")
+                    require("utils.floattui").open("lazygit")
                 end)
             end,
             "Open lazygit",
@@ -50,7 +44,7 @@ M.general = {
         ["<Leader>ot"] = {
             function()
                 vim.schedule(function()
-                    floatterminal.open()
+                    require("utils.floattui.terminal").open()
                 end)
             end,
             "Open terminal",
@@ -90,7 +84,7 @@ M.lspconfig = {
         ["gd"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.lsp_definitions()
+                    require("telescope.builtin").lsp_definitions()
                 end)
             end,
             "LSP definition",
@@ -108,7 +102,7 @@ M.lspconfig = {
         ["gi"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.lsp_implementations()
+                    require("telescope.builtin").lsp_implementations()
                 end)
             end,
             "LSP implementation",
@@ -150,7 +144,7 @@ M.lspconfig = {
         ["<leader>lD"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.diagnostics()
+                    require("telescope.builtin").diagnostics()
                 end)
             end,
             "LSP list all diagnostics",
@@ -177,7 +171,7 @@ M.lspconfig = {
         ["gr"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.lsp_references()
+                    require("telescope.builtin").lsp_references()
                 end)
             end,
             "LSP references",
@@ -244,7 +238,7 @@ M.nvimtree = {
         ["<leader>oe"] = {
             function()
                 vim.schedule(function()
-                    nvim_tree.focus()
+                    require("nvim-tree.api").tree.focus()
                 end)
             end,
             "Focus explorer",
@@ -260,7 +254,7 @@ M.telescope = {
         ["<leader>ff"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.find_files()
+                    require("telescope.builtin").find_files()
                 end)
             end,
             "Find files",
@@ -269,7 +263,7 @@ M.telescope = {
         ["<leader>fa"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.find_files({
+                    require("telescope.builtin").find_files({
                         no_ignore = true,
                     })
                 end)
@@ -280,7 +274,7 @@ M.telescope = {
         ["<leader>fw"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.live_grep()
+                    require("telescope.builtin").live_grep()
                 end)
             end,
             "Live grep",
@@ -289,7 +283,7 @@ M.telescope = {
         ["<leader>fb"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.buffers()
+                    require("telescope.builtin").buffers()
                 end)
             end,
             "Find buffers",
@@ -298,7 +292,7 @@ M.telescope = {
         ["<leader>fh"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.help_tags()
+                    require("telescope.builtin").help_tags()
                 end)
             end,
             "Help page",
@@ -307,7 +301,7 @@ M.telescope = {
         ["<leader>fo"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.oldfiles()
+                    require("telescope.builtin").oldfiles()
                 end)
             end,
             "Find oldfiles",
@@ -326,7 +320,7 @@ M.gitsigns = {
                     return "]c"
                 end
                 vim.schedule(function()
-                    gitsigns.next_hunk()
+                    require("gitsigns").next_hunk()
                 end)
                 return "<Ignore>"
             end,
@@ -340,7 +334,7 @@ M.gitsigns = {
                     return "[c"
                 end
                 vim.schedule(function()
-                    gitsigns.prev_hunk()
+                    require("gitsigns").prev_hunk()
                 end)
                 return "<Ignore>"
             end,
@@ -352,7 +346,7 @@ M.gitsigns = {
         ["<leader>gr"] = {
             function()
                 vim.schedule(function()
-                    gitsigns.reset_hunk()
+                    require("gitsigns").reset_hunk()
                 end)
             end,
             "Reset hunk",
@@ -361,7 +355,7 @@ M.gitsigns = {
         ["<leader>gp"] = {
             function()
                 vim.schedule(function()
-                    gitsigns.preview_hunk()
+                    require("gitsigns").preview_hunk()
                 end)
             end,
             "Preview hunk",
@@ -370,7 +364,7 @@ M.gitsigns = {
         ["<leader>gb"] = {
             function()
                 vim.schedule(function()
-                    gitsigns.blame_line()
+                    require("gitsigns").blame_line()
                 end)
             end,
             "Blame line",
@@ -379,7 +373,7 @@ M.gitsigns = {
         ["<leader>gt"] = {
             function()
                 vim.schedule(function()
-                    gitsigns.toggle_deleted()
+                    require("gitsigns").toggle_deleted()
                 end)
             end,
             "Toggle deleted",
@@ -388,7 +382,7 @@ M.gitsigns = {
         ["<leader>gm"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.git_commits()
+                    require("telescope.builtin").git_commits()
                 end)
             end,
             "Git commits",
@@ -397,7 +391,7 @@ M.gitsigns = {
         ["<leader>gs"] = {
             function()
                 vim.schedule(function()
-                    tbuiltin.git_status()
+                    require("telescope.builtin").git_status()
                 end)
             end,
             "Git status",
