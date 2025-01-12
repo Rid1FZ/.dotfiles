@@ -20,6 +20,10 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
         }, true, {})
         vim.fn.getchar()
         os.exit(1)
+    else
+        vim.api.nvim_echo({
+            { "Done..." },
+        }, true, {})
     end
 end
 
