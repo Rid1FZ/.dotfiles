@@ -24,7 +24,7 @@ opt.mouse = "a"
 opt.number = false
 opt.relativenumber = false
 opt.ruler = false
-opt.shortmess = opt.shortmess + {
+opt.shortmess = {
     s = true,
     c = true,
     F = true,
@@ -40,6 +40,14 @@ opt.termguicolors = true
 opt.timeoutlen = 400
 opt.wrap = false
 opt.pumheight = 10
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.api.nvim_create_augroup("SetBufferOptions", { clear = true }),
+    callback = function()
+        vim.opt_local.modifiable = false
+        vim.opt_local.readonly = true
+    end,
+})
 
 -- Disable Right Click Menu
 vim.cmd([[aunmenu PopUp]])
