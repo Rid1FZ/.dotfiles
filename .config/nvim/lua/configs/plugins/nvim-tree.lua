@@ -63,6 +63,11 @@ M.filters = {
     },
 }
 
+M.live_filter = {
+    prefix = "[FILTER]: ",
+    always_show_folders = false,
+}
+
 M.hijack_directories = {
     enable = false,
     auto_open = false,
