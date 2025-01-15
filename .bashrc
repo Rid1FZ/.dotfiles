@@ -13,7 +13,7 @@ function __source_rc {
 }
 
 __source_rc "options.sh"
-__source_rc "env_vars.sh"
+__source_rc "env-vars.sh"
 __source_rc "prompt.sh"
 __source_rc "aliases.sh"
 __source_rc "functions.sh"

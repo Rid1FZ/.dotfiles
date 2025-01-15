@@ -1,1 +1,0 @@
-../.profile.d/env_vars.sh
