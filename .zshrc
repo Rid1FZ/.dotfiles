@@ -14,7 +14,6 @@ function __source_rc {
 
 __source_rc "options.zsh"
 __source_rc "keybindings.zsh"
-__source_rc "vi-mode.zsh"
 __source_rc "completion.zsh"
 __source_rc "syntax-highlighting.zsh"
 __source_rc "env-vars.zsh"

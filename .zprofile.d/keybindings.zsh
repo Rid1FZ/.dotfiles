@@ -1,5 +1,5 @@
 #!/bin/env zsh
 
 # >>> zsh keybindings >>>
-bindkey -v
+bindkey -e
 # <<< zsh keybindings <<<
