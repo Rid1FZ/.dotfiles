@@ -271,7 +271,7 @@ M.telescope = {
             "Find all files",
         },
 
-        ["<leader>fw"] = {
+        ["<leader>fg"] = {
             function()
                 vim.schedule(function()
                     require("telescope.builtin").live_grep()
