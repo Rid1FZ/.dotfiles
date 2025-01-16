@@ -2,7 +2,7 @@
 
 # >>> functions >>>
 function __fzf {
-    fzf --layout=reverse --tmux --border=rounded "$@"
+    fzf --layout=reverse --tmux --border=rounded --height=100% --preview-window 'up,60%,border-rounded,+{2}-5/5' "$@"
 }
 
 function open {
@@ -28,11 +28,8 @@ function open {
 function floc {
     local __plocate_prefix __target
 
-    echo "updating plocate database. password may require..."
-    sudo updatedb
-
     __plocate_prefix="plocate --ignore-case --regex"
-    __target="$(__fzf --disabled --keep-right --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}' --height=100% --preview-window 'right,60%,border-left')"
+    __target="$(__fzf --disabled --keep-right --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}')"
 
     [[ -z "${__target}" ]] && return 1
 
@@ -45,7 +42,7 @@ function ff {
     __arg="${1:-.}"
     [[ -d "${__arg}" ]] || return 1
 
-    __path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --keep-right --height=100% --preview="preview {}" --preview-window 'right,60%,border-left')"
+    __path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --keep-right --preview="preview {}")"
     [[ -z "${__path}" ]] && return 1
 
     open "${__path}"
@@ -57,7 +54,7 @@ function fcd {
     __arg="${1:-.}"
     [[ -d "${__arg}" ]] || return 1
 
-    __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --layout=reverse --border=rounded --info=default --keep-right --height=100% --preview="preview {}" --preview-window 'top,60%,border-bottom')"
+    __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --info=default --keep-right --preview="preview {}")"
     [[ -z "${__dir}" ]] && return 1
 
     builtin cd -- "${__dir}"
@@ -72,8 +69,6 @@ function frg {
         --bind "change:reload:sleep 0.1; ${__rg_prefix} {q} || true" \
         --delimiter : \
         --preview 'bat --color=always {1} --highlight-line {2} --theme="Catppuccin Macchiato"' \
-        --height=100% \
-        --preview-window 'up,60%,border-bottom,+{2}-5/5' \
         --bind 'enter:become(nvim {1} +{2})'
 }
 

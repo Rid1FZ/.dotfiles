@@ -2,29 +2,30 @@
 
 set -euo pipefail
 
-__mime_type="$(file -b --mime-type --dereference "$1")"
+__file_path="$1"
+__mime_type="$(file -b --mime-type --dereference "${__file_path}")"
 
 case "${__mime_type}" in
-inode/directory)
-	eza --classify --oneline --all --long --color=always --icons --group-directories-first "$1"
-	;;
-video/* | image/*)
-	exiftool "$1"
-	;;
-text/*)
-	bat --style=changes,numbers,header-filename,grid "$1"
-	;;
-application/*)
-	case "${__mime_type}" in
-	*/pdf)
-		exiftool "$1"
-		;;
-	*/gzip)
-		{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || gunzip -l "$1"
-		;;
-	*/x-xz)
-		{ [[ "$1" = *.tar* ]] && tar -tvf "$1"; } || xz -l "$1"
-		;;
-	esac
-	;;
+    inode/directory)
+        eza --classify --oneline --all --long --color=always --icons --group-directories-first "${__file_path}"
+        ;;
+    video/* | image/*)
+        exiftool "${__file_path}"
+        ;;
+    text/*)
+        bat --style=changes,numbers "${__file_path}"
+        ;;
+    application/*)
+        case "${__mime_type}" in
+            */pdf)
+                exiftool "${__file_path}"
+                ;;
+            */gzip)
+                { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || gunzip -l "${__file_path}"
+                ;;
+            */x-xz)
+                { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || xz -l "${__file_path}"
+                ;;
+        esac
+        ;;
 esac
