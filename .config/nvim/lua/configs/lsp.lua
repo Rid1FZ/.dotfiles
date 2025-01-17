@@ -1,5 +1,7 @@
 local M = {}
 
+local breadcrumb = require("breadcrumb")
+
 M.configure_diagnostics = function()
     local severity = vim.diagnostic.severity
 
@@ -32,6 +34,9 @@ M.on_attach = function(client, bufnr)
     require("utils").load_mappings("lspconfig", { buffer = bufnr })
     if client.server_capabilities.signatureHelpProvider then
         require("utils.signature").setup(client)
+    end
+    if client.server_capabilities.documentSymbolProvider then
+        breadcrumb.attach(client, bufnr)
     end
 end
 

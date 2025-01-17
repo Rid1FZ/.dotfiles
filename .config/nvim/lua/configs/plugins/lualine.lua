@@ -25,6 +25,14 @@ local conditions = {
     end,
 }
 
+local breadcrumb = function()
+    local breadcrumb_status_ok, breadcrumb = pcall(require, "breadcrumb")
+    if not breadcrumb_status_ok then
+        return
+    end
+    return breadcrumb.get_breadcrumb()
+end
+
 -- Reset
 local M = {
     options = {
@@ -51,6 +59,13 @@ local M = {
         lualine_z = {},
         lualine_c = {},
         lualine_x = {},
+    },
+
+    winbar = {
+        lualine_a = { breadcrumb },
+    },
+    inactive_winbar = {
+        lualine_a = { breadcrumb },
     },
 }
 
