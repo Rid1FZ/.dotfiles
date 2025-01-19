@@ -1,7 +1,5 @@
 local M = {}
 
-local breadcrumb = require("breadcrumb")
-
 M.configure_diagnostics = function()
     local severity = vim.diagnostic.severity
 
