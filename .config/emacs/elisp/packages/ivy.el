@@ -14,7 +14,9 @@
 
    :map ivy-minibuffer-map
    ("TAB" . ivy-alt-done)
-   ("RET" . ivy-immediate-done)
+   ("RET" . ivy-done)
+   ("C-n" . ivy-next-line)
+   ("C-p" . ivy-previous-line)
 
    :map ivy-switch-buffer-map
    ("C-k" . ivy-previous-line)
