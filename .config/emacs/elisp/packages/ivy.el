@@ -31,6 +31,7 @@
 
   :custom
   (ivy-use-selectable-prompt t)
+  (ivy-initial-inputs-alist '())
 
   :config
   (ivy-mode 1))
