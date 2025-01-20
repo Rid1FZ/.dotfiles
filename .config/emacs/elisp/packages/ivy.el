@@ -7,7 +7,9 @@
 (use-package ivy
   :ensure t
   :diminish
-  :after nerd-icons-ivy-rich
+
+  :after
+  (nerd-icons-ivy-rich)
 
   :bind
   (("C-s" . swiper)

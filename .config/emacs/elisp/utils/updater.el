@@ -15,6 +15,6 @@
   (interactive)
   (package-upgrade-all)
   (if (y-or-n-p "recompile all packages?")
-      (native-recompile-packages)))
+      (custom/native-recompile-packages)))
 
 ;;; updater.el ends here

@@ -9,7 +9,9 @@
 
 (use-package evil
   :ensure t
-  :after key-chord
+
+  :after
+  (key-chord)
 
   :init
   (setq evil-want-integration t)
@@ -31,7 +33,8 @@
   (evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-collection
-  :after evil
+  :after
+  (evil)
 
   :init
   (evil-collection-init))

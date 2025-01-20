@@ -15,13 +15,13 @@
 
   :config
   (setq-default format-all-formatters
-		'(("Python"
-		   (black "--quiet")
-		   (isort))
-		  ("Shell"
-		   (shfmt "-i" "4" "-ci"))
-		  ("C"
-		   (clang-format)))))
+                '(("Python"
+                   (black "--quiet")
+                   (isort))
+                  ("Shell"
+                   (shfmt "-i" "4" "-ci"))
+                  ("C"
+                   (clang-format)))))
 
 
 ;;; format-all.el ends here

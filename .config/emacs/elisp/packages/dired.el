@@ -59,7 +59,6 @@
     (dired-rainbow-define fonts "#cdd6f4" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
     (dired-rainbow-define partition "#cba6f7" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
     (dired-rainbow-define vc "#89dceb" ("git" "gitignore" "gitattributes" "gitmodules"))
-    (dired-rainbow-define-chmod executable-unix "#a6e3a1" "-.*x.*")
-    ))
+    (dired-rainbow-define-chmod executable-unix "#a6e3a1" "-.*x.*")))
 
 ;;; dired.el ends here

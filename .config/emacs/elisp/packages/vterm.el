@@ -12,6 +12,6 @@
 
   :init
   (add-hook 'vterm-exit-functions (lambda (&rest _)
-				    (custom/close-buffer))))
+                                    (custom/close-buffer))))
 
 ;;; vterm.el ends here

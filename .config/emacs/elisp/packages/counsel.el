@@ -10,10 +10,6 @@
   :after
   (ivy ivy-rich)
 
-  :init
-  (require 'ivy)
-  (require 'ivy-rich)
-
   :bind
   ("M-x" . counsel-M-x)
   ("C-x b" . counsel-ibuffer)

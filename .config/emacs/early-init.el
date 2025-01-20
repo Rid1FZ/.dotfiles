@@ -14,7 +14,7 @@
 
 ;; Disable Autosave FIles
 (add-hook 'prog-mode-hook (lambda ()
-			    (interactive)
-			    (auto-save-mode -1)))
+                            (interactive)
+                            (auto-save-mode -1)))
 
 ;;; early-init.el ends here

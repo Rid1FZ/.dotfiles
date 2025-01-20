@@ -12,9 +12,9 @@
 
   :hook
   (lsp-mode . (lambda ()
-		(setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-		(setq lsp-headerline-breadcrumb-icons-enable t)
-		(lsp-headerline-breadcrumb-mode)))
+                (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+                (setq lsp-headerline-breadcrumb-icons-enable t)
+                (lsp-headerline-breadcrumb-mode)))
 
   :init
   (require 'lsp-ivy)
@@ -63,8 +63,8 @@
   
   :hook
   (python-ts-mode . (lambda ()
-		      (require 'lsp-pyright)
-		      (lsp-deferred)))
+                      (require 'lsp-pyright)
+                      (lsp-deferred)))
 
   :custom
   (lsp-pyright-langserver-command "basedpyright")) ;; basedpyright/pyright
