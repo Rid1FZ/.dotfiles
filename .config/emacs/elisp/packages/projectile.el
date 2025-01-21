@@ -28,12 +28,11 @@
   :ensure t
 
   :after
-  (counsel projectile)
+  (counsel projectile ivy ivy-rich)
 
   :hook
   (projectile-mode . counsel-projectile-mode)
-
-  :init
-  (require 'counsel))
+  (counsel-projectile-mode . counsel-mode)
+  (counsel-projectile-mode . ivy-mode))
 
 ;;; projectile.el ends here
