@@ -5,6 +5,9 @@
 ;;; Code:
 
 
+;; setting this inside :custom or :init does not work as expected
+(setq dired-listing-switches "-go --almost-all --human-readable --group-directories-first")
+
 (use-package dired
   :ensure nil ; dired is a builtin package. so don't try to install it
 
@@ -16,9 +19,6 @@
   
   :init
   (require 'dired-rainbow)
-
-  :custom
-  (dired-listing-switches "-go --almost-all --human-readable --group-directories-first")
 
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
