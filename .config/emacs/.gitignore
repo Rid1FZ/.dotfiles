@@ -44,3 +44,4 @@ var/
 etc/
 tree-sitter/
 packages/
+!elisp/packages/
