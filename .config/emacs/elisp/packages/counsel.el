@@ -10,6 +10,9 @@
   :after
   (ivy ivy-rich)
 
+  :hook
+  (counsel-mode . ivy-mode)
+
   :bind
   ("M-x" . counsel-M-x)
   ("C-x b" . counsel-ibuffer)
