@@ -36,7 +36,7 @@
 (normal-mode-leader-definer
   "f" '(:ignore t :which-key "Find")
   "ff" '(counsel-find-file :which-key "Find File")
-  "fF" '(counsel-projectile-find-file :which-key "Find File(Project)")
+  "ff" '(projectile-find-file :which-key "Find File(Project)")
   "fg" '(counsel-rg :which-key "rg")
   "fG" '(counsel-projectile-rg :which-key "rg(Project)")
   "fp" '(counsel-projectile-switch-project :which-key "Find Project")
