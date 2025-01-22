@@ -38,6 +38,7 @@
 (setq-default truncate-lines t)
 
 ;; Line Numbers
+(setq display-line-numbers-type 'relative)
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -60,7 +61,8 @@
       '((python-mode . python-ts-mode)
         (c-mode . c-ts-mode)
         (c++-mode . c++-ts-mode)
-        (c-or-c++-mode . c-or-c++-ts-mode)))
+        (c-or-c++-mode . c-or-c++-ts-mode)
+        (sh-mode . bash-ts-mode)))
 
 ;; Autoclose Parens, Quotes, etc...
 (electric-pair-mode t)
