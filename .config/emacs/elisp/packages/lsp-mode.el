@@ -82,4 +82,10 @@
   :hook
   (c-ts-mode . lsp-deferred))
 
+(use-package bash-ts-mode
+  :ensure nil
+
+  :hook
+  (bash-ts-mode . lsp-deferred))
+
 ;;; lsp-mode.el ends here
