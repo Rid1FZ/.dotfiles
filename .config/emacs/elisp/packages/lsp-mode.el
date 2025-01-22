@@ -61,31 +61,7 @@
 (use-package lsp-pyright
   :ensure t
   
-  :hook
-  (python-ts-mode . (lambda ()
-                      (require 'lsp-pyright)
-                      (lsp-deferred)))
-
   :custom
   (lsp-pyright-langserver-command "basedpyright")) ;; basedpyright/pyright
-
-
-(use-package c++-ts-mode
-  :ensure nil
-
-  :hook
-  (c++-ts-mode . lsp-deferred))
-
-(use-package c-ts-mode
-  :ensure nil
-
-  :hook
-  (c-ts-mode . lsp-deferred))
-
-(use-package bash-ts-mode
-  :ensure nil
-
-  :hook
-  (bash-ts-mode . lsp-deferred))
 
 ;;; lsp-mode.el ends here
