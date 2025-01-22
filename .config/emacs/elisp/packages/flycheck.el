@@ -10,8 +10,8 @@
   :after
   (lsp-mode)
 
-  :hook
-  (lsp-mode . global-flycheck-mode))
+  :config
+  (global-flycheck-mode))
 
 (use-package flycheck-pos-tip
   :ensure t
