@@ -1,4 +1,4 @@
-;;; bash-ts-mode.el --- Config For `bash-ts-mode' package -*- lexical-binding: t -*-
+;;; bash-ts-mode.el --- Config For `bash-ts-mode' -*- lexical-binding: t -*-
 
 ;;; Commentary:
 

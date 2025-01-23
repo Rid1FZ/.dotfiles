@@ -1,4 +1,4 @@
-;;; c++-ts-mode.el --- Config For `c++-ts-mode' package -*- lexical-binding: t -*-
+;;; c++-ts-mode.el --- Config For `c++-ts-mode' -*- lexical-binding: t -*-
 
 ;;; Commentary:
 

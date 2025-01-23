@@ -1,4 +1,4 @@
-;;; python-ts-mode.el --- Config For `python-ts-mode' package -*- lexical-binding: t -*-
+;;; python-ts-mode.el --- Config For `python-ts-mode' -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
