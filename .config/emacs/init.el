@@ -46,6 +46,5 @@ FILE: the name of file inside `elisp' directory"
 
 ;; Load Custom Configs
 (load-user-file "keybindings.el")
-(load-user-file "hooks.el")
 
 ;;; init.el ends here

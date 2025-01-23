@@ -39,4 +39,9 @@
   :init
   (evil-collection-init))
 
+;; Disable Evil Mode for Some Modes
+(dolist (mode '(term-mode-hook
+                vterm-mode-hook))
+  (add-hook mode (lambda () (evil-local-mode -1))))
+
 ;;; evil.el ends here
