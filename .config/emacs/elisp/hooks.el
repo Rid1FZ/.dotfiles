@@ -6,9 +6,9 @@
 
 ;; Set Font Lock Level for TS Modes
 (dolist (mode '(python-ts-mode-hook
-                yaml-ts-mode
-                toml-ts-mode
-                bash-ts-mode
+                yaml-ts-mode-hook
+                toml-ts-mode-hook
+                bash-ts-mode-hook
                 c-ts-mode-hook
                 c++-ts-mode-hook
                 c-or-c++-ts-mode-hook))
