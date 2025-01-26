@@ -9,6 +9,6 @@
   :defer t
 
   :config
-  (global-command-log-mode))
+  (global-command-log-mode +1))
 
 ;;; command-log-mode.el ends here

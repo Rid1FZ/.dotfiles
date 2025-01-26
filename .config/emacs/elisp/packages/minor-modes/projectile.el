@@ -2,13 +2,10 @@
 
 ;;; Commentary:
 
-;; This file sets up the `projectile' package and will be sourced from init.el file
-
 ;;; Code:
 
 (use-package projectile
   :ensure t
-  :diminish projectile-mode
   
   :init
   (when (file-directory-p "~/Projects/")
@@ -23,16 +20,5 @@
 
   :bind-keymap
   ("C-c p" . projectile-command-map))
-
-(use-package counsel-projectile
-  :ensure t
-
-  :after
-  (counsel projectile ivy ivy-rich)
-
-  :hook
-  (projectile-mode . counsel-projectile-mode)
-  (counsel-projectile-mode . counsel-mode)
-  (counsel-projectile-mode . ivy-mode))
 
 ;;; projectile.el ends here

@@ -5,12 +5,6 @@
 ;;; Code:
 
 (use-package swiper
-  :ensure t
-
-  :after
-  (ivy ivy-rich)
-
-  :hook
-  (ivy-mode . swiper-mode))
+  :ensure t)
 
 ;;; swiper.el ends here

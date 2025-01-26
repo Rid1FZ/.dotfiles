@@ -40,9 +40,8 @@ FILE: the name of file inside `elisp' directory"
 (use-package no-littering
   :ensure t)
 
-
 ;; Load Packages
-(mapc 'load-file (file-expand-wildcards (concat user-emacs-directory "elisp/packages/*.el")))
+(load-user-file "packages/init.el")
 
 ;; Load Custom Configs
 (load-user-file "keybindings.el")

@@ -11,16 +11,16 @@
   (after-init . doom-modeline-mode)
 
   :custom
-  ((doom-modeline-height 20)
-   (doom-modeline-buffer-file-name-style 'relative-from-project)
-   (doom-modeline-highlight-modified-buffer-name t)
-   (doom-modeline-buffer-encoding nil)
-   (doom-modeline-icon t)
-   (doom-modeline-modal t)
-   (doom-modeline-modal-icon nil)
-   (doom-modeline-modal-modern-icon nil)
-   (nerd-icons-scale-factor 1.2)
-   (lsp-modeline-code-action-fallback-icon " "))
+  (doom-modeline-height 20)
+  (doom-modeline-buffer-file-name-style 'relative-from-project)
+  (doom-modeline-highlight-modified-buffer-name t)
+  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-icon t)
+  (doom-modeline-modal t)
+  (doom-modeline-modal-icon nil)
+  (doom-modeline-modal-modern-icon nil)
+  (nerd-icons-scale-factor 1.2)
+  (lsp-modeline-code-action-fallback-icon " ")
 
   :config
   (custom-set-faces

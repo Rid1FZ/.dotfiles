@@ -9,7 +9,7 @@
   :diminish
 
   :after
-  (nerd-icons-ivy-rich)
+  (nerd-icons-ivy-rich swiper)
 
   :bind
   (("C-s" . swiper)
@@ -35,20 +35,5 @@
 
   :config
   (ivy-mode 1))
-
-(use-package ivy-rich
-  :ensure t
-
-  :after
-  (nerd-icons-ivy-rich)
-
-  :hook
-  (ivy-mode . ivy-rich-mode)
-
-  :init
-  (require 'nerd-icons-ivy-rich)
-
-  :config
-  (ivy-rich-mode 1))
 
 ;;; ivy.el ends here

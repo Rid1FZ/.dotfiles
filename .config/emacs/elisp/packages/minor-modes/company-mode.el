@@ -48,10 +48,7 @@
      (company-gtags :with company-yasnippet)
      (company-etags :with company-yasnippet)
      (company-keywords :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet)))
-
-  :config
-  (yas-global-mode 1))
+     (company-dabbrev :with company-yasnippet))))
 
 
 ;;; company-mode.el ends here

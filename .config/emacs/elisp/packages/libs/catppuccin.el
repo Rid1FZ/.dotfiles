@@ -9,6 +9,7 @@
 
   :custom
   (catppuccin-highlight-matches t)
+  (catppuccin-italic-comments t)
   (catppuccin-flavor 'mocha)
 
   :init

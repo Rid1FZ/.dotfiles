@@ -1,39 +1,8 @@
-;;; dired.el --- Config For `dired' package -*- lexical-binding: t -*-
+;;; dired-rainbow.el --- Config For `dired-rainbow' package -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
 ;;; Code:
-
-
-;; setting this inside :custom or :init does not work as expected
-(setq dired-listing-switches "-go --almost-all --human-readable --group-directories-first")
-
-(use-package dired
-  :ensure nil ; dired is a builtin package. so don't try to install it
-
-  :after
-  (nerd-icons-dired)
-
-  :commands
-  (dired dired-jump)
-  
-  :init
-  (require 'dired-rainbow)
-
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-up-directory
-    "l" 'dired-find-file))
-
-
-(use-package diredfl
-  :ensure t
-
-  :hook
-  (dired-mode . diredfl-global-mode)
-
-  :commands
-  (dired dired-jump))
 
 (use-package dired-rainbow
   :ensure t
@@ -61,4 +30,4 @@
     (dired-rainbow-define vc "#89dceb" ("git" "gitignore" "gitattributes" "gitmodules"))
     (dired-rainbow-define-chmod executable-unix "#a6e3a1" "-.*x.*")))
 
-;;; dired.el ends here
+;;; dired-rainbow.el ends here
