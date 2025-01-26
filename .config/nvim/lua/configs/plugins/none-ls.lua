@@ -26,6 +26,9 @@ M.sources = {
 
     -- rust
     require("none-ls.formatting.rustfmt"),
+
+    -- assembly
+    null_ls.builtins.formatting.asmfmt,
 }
 
 M.on_attach = function(client, bufnr)

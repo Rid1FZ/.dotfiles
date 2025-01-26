@@ -79,3 +79,9 @@ lspconfig.lua_ls.setup({
         },
     },
 })
+
+lspconfig.asm_lsp.setup({
+    on_init = lsp.on_init,
+    on_attach = lsp.on_attach,
+    capabilities = lsp.capabilities,
+})
