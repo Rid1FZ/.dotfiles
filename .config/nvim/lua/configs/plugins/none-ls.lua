@@ -19,7 +19,11 @@ M.sources = {
     }),
 
     -- c/c++
-    null_ls.builtins.formatting.clang_format,
+    null_ls.builtins.formatting.clang_format.with({
+        extra_args = {
+            [[--style={ BasedOnStyle: Google, AlignAfterOpenBracket: Align, AllowShortBlocksOnASingleLine: 'false', AllowShortCaseLabelsOnASingleLine: 'false', AllowShortFunctionsOnASingleLine: InlineOnly, AllowShortIfStatementsOnASingleLine: Always, IndentWidth: '4', SortUsingDeclarations: 'true', SpaceAfterCStyleCast: 'false', SpacesInAngles: 'false', SpacesInParentheses: 'false', SpacesInSquareBrackets: 'true', TabWidth: '4', UseTab: Never }]],
+        },
+    }),
 
     -- json/markdown
     null_ls.builtins.formatting.prettier,

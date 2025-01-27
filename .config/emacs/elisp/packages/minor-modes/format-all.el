@@ -21,7 +21,7 @@
                   ("Shell"
                    (shfmt "-i" "4" "-ci"))
                   ("C"
-                   (clang-format)))))
+                   (clang-format "--style={ BasedOnStyle: Google, AlignAfterOpenBracket: Align, AllowShortBlocksOnASingleLine: 'false', AllowShortCaseLabelsOnASingleLine: 'false', AllowShortFunctionsOnASingleLine: InlineOnly, AllowShortIfStatementsOnASingleLine: Always, IndentWidth: '4', SortUsingDeclarations: 'true', SpaceAfterCStyleCast: 'false', SpacesInAngles: 'false', SpacesInParentheses: 'false', SpacesInSquareBrackets: 'true', TabWidth: '4', UseTab: Never }")))))
 
 
 ;;; format-all.el ends here
