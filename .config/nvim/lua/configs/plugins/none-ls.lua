@@ -18,6 +18,9 @@ M.sources = {
         extra_args = { "--indent", "4", "--case-indent", "--language-dialect", "bash" },
     }),
 
+    -- c/c++
+    null_ls.builtins.formatting.clang_format,
+
     -- json/markdown
     null_ls.builtins.formatting.prettier,
 
