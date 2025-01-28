@@ -12,7 +12,7 @@ alias du="gdu --non-interactive --config-file=\$HOME/.config/gdu/gdu.yaml"
 alias cat="bat"
 alias diff="colordiff"
 alias rg="rg --ignore-case"
-alias tree="eza --classify --color=always --icons --group-directories-first --tree"
+alias tree="${eza_cmd} --tree --ignore-glob=.git --git-ignore"
 alias cdd="cd \$DOTFILES"
 alias cat="bat"
 
