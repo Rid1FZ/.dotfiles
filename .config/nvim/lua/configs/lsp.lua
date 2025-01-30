@@ -33,6 +33,9 @@ M.on_attach = function(client, bufnr)
     if client.server_capabilities.signatureHelpProvider then
         require("utils.signature").setup(client)
     end
+    if client.server_capabilities.documentSymbolProvider then
+        require("breadcrumb").attach(client, bufnr)
+    end
 end
 
 -- disable semantic tokens
