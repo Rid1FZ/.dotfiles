@@ -15,6 +15,7 @@ alias rg="rg --ignore-case"
 alias tree="${eza_cmd} --tree --ignore-glob=.git --git-ignore"
 alias cdd="cd \$DOTFILES"
 alias cat="bat"
+alias emacss="emacs --script"
 
 unset eza_cmd leza_cmd
 # <<< aliases <<<
