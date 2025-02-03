@@ -8,7 +8,7 @@ M.completion = {
 M.mapping = {
     ["<C-p>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
-            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
         else
             fallback()
         end
@@ -18,7 +18,7 @@ M.mapping = {
 
     ["<C-n>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
-            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
         else
             fallback()
         end
