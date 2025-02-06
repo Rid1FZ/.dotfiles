@@ -7,8 +7,12 @@ else
     M[1] = "Rid1FZ/breadcrumb.nvim"
 end
 
-M.config = function()
-    require("breadcrumb").setup({})
+M.opts = function()
+    return require("configs.plugins.breadcrumb")
+end
+
+M.config = function(_, opts)
+    require("breadcrumb").setup(opts)
 end
 
 return M
