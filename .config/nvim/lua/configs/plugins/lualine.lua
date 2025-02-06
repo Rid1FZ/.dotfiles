@@ -66,7 +66,7 @@ local M = {
         lualine_x = {},
     },
     inactive_winbar = {
-        lualine_a = { breadcrumb.get_breadcrumb },
+        lualine_a = { breadcrumb.get_inactive_breadcrumb },
         lualine_b = {},
         lualine_y = {},
         lualine_z = {},
