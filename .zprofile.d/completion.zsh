@@ -52,7 +52,7 @@ __scripts=(${(@s/:/)__zsh_autosuggestion_path})
 
 for __script in ${__scripts[@]}; do
   if [ -f "${__script}" ]; then
-    . "${__script}"
+    source "${__script}"
     break
   fi
 done

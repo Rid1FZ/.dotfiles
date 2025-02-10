@@ -9,7 +9,7 @@ if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
     if [ -f "${HOME}/.mamba/etc/profile.d/conda.sh" ]; then
-        . "${HOME}/.mamba/etc/profile.d/conda.sh"
+        source "${HOME}/.mamba/etc/profile.d/conda.sh"
     else
         export PATH="${HOME}/.mamba/bin:$PATH"
     fi

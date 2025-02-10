@@ -11,7 +11,7 @@ if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
     if [ -f "${HOME}/.mamba/etc/profile.d/conda.sh" ]; then
-        . "${HOME}/.mamba/etc/profile.d/conda.sh"
+        source "${HOME}/.mamba/etc/profile.d/conda.sh"
     else
         export PATH="${HOME}/.mamba/bin:$PATH"
     fi
@@ -19,7 +19,7 @@ fi
 unset __conda_setup
 
 if [ -f "${HOME}/.mamba/etc/profile.d/mamba.sh" ]; then
-    . "${HOME}/.mamba/etc/profile.d/mamba.sh"
+    source "${HOME}/.mamba/etc/profile.d/mamba.sh"
 fi
 # <<< conda initialize <<<
 
@@ -30,7 +30,7 @@ __dirs=(${(@s/:/)__plugin_dirs})
 for __dir in ${__dirs[@]}; do
     if [[ -d "${__dir}" ]]; then
         for __plugin in "${__dir}"/**/*.plugin.zsh; do
-            . "${__plugin}"
+            source "${__plugin}"
         done
     fi
 done

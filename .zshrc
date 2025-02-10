@@ -1,7 +1,7 @@
 #!/bin/env zsh
 
 # >>> source global definitions >>>
-[[ -f "/etc/zshrc" ]] && . "/etc/zshrc"
+[[ -f "/etc/zshrc" ]] && source "/etc/zshrc"
 # <<< source global definitions <<<
 
 # >>> source local configs >>>

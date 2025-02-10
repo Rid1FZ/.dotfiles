@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 # >>> source global definitions >>>
-[[ -f "/etc/bashrc" ]] && . "/etc/bashrc"
+[[ -f "/etc/bashrc" ]] && source "/etc/bashrc"
 # <<< source global definitions <<<
 
 # >>> source local configs >>>

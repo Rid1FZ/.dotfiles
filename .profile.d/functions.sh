@@ -57,7 +57,7 @@ function fcd {
     __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --info=default --keep-right --preview="preview {}")"
     [[ -z "${__dir}" ]] && return 1
 
-    builtin cd -- "${__dir}"
+    builtin cd -- "${__dir}" || return
 }
 
 function frg {
