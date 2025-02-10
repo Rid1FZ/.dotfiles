@@ -19,7 +19,7 @@ function open {
                 echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
                 printf "enter command to open file: "
                 read -r __cmd
-                exec "${__cmd} ${1}"
+                "${__cmd} ${1}"
             }
             ;;
     esac
@@ -57,7 +57,7 @@ function fcd {
     __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --info=default --keep-right --preview="preview {}")"
     [[ -z "${__dir}" ]] && return 1
 
-    builtin cd -- "${__dir}" || return
+    builtin cd -- "${__dir}" || return 1
 }
 
 function frg {
