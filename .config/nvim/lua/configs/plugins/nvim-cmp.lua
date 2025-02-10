@@ -96,7 +96,7 @@ M.mapping = {
         if luasnip.jumpable() then
             luasnip.jump(1)
         elseif cmp.visible() then
-            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
         else
             fallback()
         end
@@ -108,7 +108,7 @@ M.mapping = {
         if luasnip.jumpable() then
             luasnip.jump(-1)
         elseif cmp.visible() then
-            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
         else
             fallback()
         end
