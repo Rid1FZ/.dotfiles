@@ -1,8 +1,9 @@
-#+title: README
+#+title: .dotfiles
 #+author: Ridwan Faiz
 
-* .dotfiles
 This repository contains configs for the tools I use.
+
+* Showcase
 
 ** zsh
 #+CAPTION: zsh prompt
