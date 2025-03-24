@@ -60,6 +60,7 @@ M.matching = {
 M.window = {
     completion = cmp.config.window.bordered({
         border = { "", "", "", "", "", "", "", "" },
+        winhighlight = "Normal:NormalFloat",
     }),
 }
 

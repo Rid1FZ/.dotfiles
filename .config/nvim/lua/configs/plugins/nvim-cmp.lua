@@ -2,16 +2,18 @@ local M = {}
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 
-local border_chars = {
-    "╭",
-    "─",
-    "╮",
-    "│",
-    "╯",
-    "─",
-    "╰",
-    "│",
-}
+-- local border_chars = {
+--     "╭",
+--     "─",
+--     "╮",
+--     "│",
+--     "╯",
+--     "─",
+--     "╰",
+--     "│",
+-- }
+
+local border_chars = { "", "", "", "", "", "", "", "" }
 
 M.preselect = cmp.PreselectMode.None
 
@@ -23,9 +25,11 @@ M.window = {
     completion = cmp.config.window.bordered({
         border = border_chars,
         scrollbar = true,
+        winhighlight = "Normal:NormalFloat",
     }),
     documentation = cmp.config.window.bordered({
         border = border_chars,
+        winhighlight = "Normal:NormalFloat",
         max_height = 5,
         max_width = 60,
     }),
