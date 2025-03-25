@@ -104,13 +104,21 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Disable Search Highlighting for Specific Window
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd("WinEnter", {
     group = vim.api.nvim_create_augroup("DisableSearchHighlighting", { clear = true }),
     callback = function()
         vim.defer_fn(function()
             local opt = vim.opt_local
-            if vim.bo.filetype == "NvimTree" then
-                opt.winhighlight = opt.winhighlight + "Search:None,CurSearch:None,IncSearch:None"
+            local curr_filetype = vim.bo.filetype
+            local disable_filetypes = {
+                "NvimTree",
+            }
+
+            for _, filetype in ipairs(disable_filetypes) do
+                if curr_filetype == filetype then
+                    opt.winhighlight = opt.winhighlight + "Search:None,CurSearch:None,IncSearch:None"
+                    break
+                end
             end
         end, 10)
     end,
