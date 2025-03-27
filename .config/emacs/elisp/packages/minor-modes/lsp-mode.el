@@ -12,7 +12,7 @@
 
   :hook
   (lsp-mode . (lambda ()
-                (setq lsp-headerline-breadcrumb-segments '(file symbols))
+                (setq lsp-headerline-breadcrumb-segments '(project path-up-to-project file symbols))
                 (setq lsp-headerline-breadcrumb-icons-enable t)
                 (lsp-headerline-breadcrumb-mode t)))
 
