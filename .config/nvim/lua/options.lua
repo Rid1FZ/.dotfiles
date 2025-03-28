@@ -2,7 +2,10 @@ local opt = vim.opt
 local g = vim.g
 
 g.mapleader = " "
+g.neovide_cursor_animation_length = 0
+g.neovide_scroll_animation_length = 0
 
+opt.title = true
 opt.laststatus = 3
 opt.showtabline = 0
 opt.showmode = false
