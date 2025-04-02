@@ -1,3 +1,5 @@
+local lsp = require("configs.lsp")
+local server_configs = {}
 local opt = vim.opt
 local g = vim.g
 
@@ -78,3 +80,11 @@ vim.filetype.add({
 
 -- register grammers
 vim.treesitter.language.register("bash", "zsh")
+
+-- enable lsp servers listed in `lsp` directory
+for _, v in ipairs(vim.api.nvim_get_runtime_file("lsp/*", true)) do
+    local name = vim.fn.fnamemodify(v, ":t:r")
+    server_configs[name] = true
+end
+
+vim.lsp.enable(vim.tbl_keys(server_configs))
