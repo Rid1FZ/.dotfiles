@@ -12,7 +12,7 @@ win.default_opts = function(options)
     return opts
 end
 
-lspconfig.pyright.setup({
+lspconfig.basedpyright.setup({
     capabilities = lsp.capabilities,
     on_attach = lsp.on_attach,
     on_init = lsp.on_init,
