@@ -1,7 +1,7 @@
 local M = {}
 
 M.auto_install = true
-M.sync_install = false
+M.sync_install = true
 
 M.indent = { enable = true }
 
