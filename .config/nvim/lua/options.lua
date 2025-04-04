@@ -1,3 +1,5 @@
+local configs = {}
+local lsp = require("configs.lsp")
 local opt = vim.opt
 local g = vim.g
 
@@ -78,3 +80,14 @@ vim.filetype.add({
 
 -- register grammers
 vim.treesitter.language.register("bash", "zsh")
+
+-- confiugre diagnostics
+lsp.configure_diagnostics()
+
+-- enable lsp
+for _, v in ipairs(vim.api.nvim_get_runtime_file("lsp/*", true)) do
+    local name = vim.fn.fnamemodify(v, ":t:r")
+    configs[name] = true
+end
+
+vim.lsp.enable(vim.tbl_keys(configs))
