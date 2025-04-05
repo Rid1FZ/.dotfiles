@@ -42,7 +42,7 @@ M.completion = {
 }
 
 M.sources = {
-    default = { "lsp", "path", "buffer" },
+    default = { "lsp", "snippets", "path", "buffer" },
 }
 
 M.signature = {
@@ -59,8 +59,8 @@ M.keymap = {
     ["<Down>"] = { "select_next", "fallback" },
     ["<C-p>"] = { "select_prev", "fallback" },
     ["<C-n>"] = { "select_next", "fallback" },
-    ["<Tab>"] = { "select_next", "fallback" },
-    ["<S-Tab>"] = { "select_prev", "fallback" },
+    ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+    ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
     ["<CR>"] = { "accept", "fallback" },
 }
 
