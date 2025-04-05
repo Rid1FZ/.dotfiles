@@ -1,0 +1,67 @@
+local M = {}
+
+M.cmdline = {
+    enabled = true,
+}
+
+M.cmdline.keymap = {
+    ["<Tab>"] = { "show_and_insert", "select_next", "fallback" },
+    ["<S-Tab>"] = { "select_next", "fallback" },
+    ["<CR>"] = { "accept_and_enter", "fallback" },
+}
+
+M.completion = {
+    list = {
+        selection = {
+            preselect = false,
+            auto_insert = true,
+        },
+    },
+    menu = {
+        auto_show = true,
+
+        draw = {
+            columns = {
+                { "kind_icon" },
+                { "label" },
+            },
+            padding = { 1, 1 },
+            components = {
+                kind_icon = {
+                    text = function(ctx)
+                        return ctx.kind_icon .. "  " .. ctx.icon_gap
+                    end,
+                },
+            },
+        },
+    },
+    documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 500,
+    },
+}
+
+M.sources = {
+    default = { "lsp", "path", "buffer" },
+}
+
+M.signature = {
+    enabled = false,
+}
+
+M.fuzzy = {
+    implementation = "rust",
+}
+
+M.keymap = {
+    preset = "none",
+    ["<Up>"] = { "select_prev", "fallback" },
+    ["<Down>"] = { "select_next", "fallback" },
+    ["<C-p>"] = { "select_prev", "fallback" },
+    ["<C-n>"] = { "select_next", "fallback" },
+    ["<Tab>"] = { "select_next", "fallback" },
+    ["<S-Tab>"] = { "select_prev", "fallback" },
+    ["<CR>"] = { "accept", "fallback" },
+}
+
+return M
