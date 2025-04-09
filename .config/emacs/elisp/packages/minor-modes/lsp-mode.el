@@ -18,6 +18,8 @@
 
   :init
   (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-headerline-arrow "")
+
 
   :config
   (lsp-enable-which-key-integration t))
