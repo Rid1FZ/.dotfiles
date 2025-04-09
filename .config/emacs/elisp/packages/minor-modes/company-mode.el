@@ -48,7 +48,8 @@
      (company-gtags :with company-yasnippet)
      (company-etags :with company-yasnippet)
      (company-keywords :with company-yasnippet)
-     (company-dabbrev :with company-yasnippet))))
+     (company-dabbrev :with company-yasnippet)
+     (company-anaconda :with company-yasnippet :with company-capf))))
 
 
 ;;; company-mode.el ends here
