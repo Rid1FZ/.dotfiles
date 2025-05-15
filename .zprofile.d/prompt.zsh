@@ -12,7 +12,13 @@ zstyle ':vcs_info:git*' formats " %F{magenta}%b%u%c%f"
 
 function set_prompt {
     PS1=''
-    [[ -n "${CONDA_DEFAULT_ENV}" ]] && PS1+=$'%F{green}(${CONDA_DEFAULT_ENV})%f'
+
+    if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
+        PS1+=$'%F{yellow}${VIRTUAL_ENV_PROMPT}%f'
+    elif [[ -n "${CONDA_DEFAULT_ENV}" ]]; then
+        PS1+=$'%F{green}(${CONDA_DEFAULT_ENV})%f '
+    fi
+
     PS1+='%(?.%F{white}.%F{red})%#%f '
 
     RPS1=''
