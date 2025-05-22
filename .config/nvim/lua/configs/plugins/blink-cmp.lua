@@ -46,7 +46,12 @@ M.sources = {
 }
 
 M.signature = {
-    enabled = false,
+    enabled = true,
+
+    window = {
+        show_documentation = false,
+        border = "rounded",
+    },
 }
 
 M.fuzzy = {
