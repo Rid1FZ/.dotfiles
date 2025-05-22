@@ -16,6 +16,7 @@ alias tree="${eza_cmd} --tree --ignore-glob=.git --git-ignore"
 alias cdd="cd \$DOTFILES"
 alias cat="bat"
 alias emacss="emacs --script"
+alias update-grub="sudo grub2-mkconfig -o /boot/grub2/grub.cfg"
 
 unset eza_cmd leza_cmd
 # <<< aliases <<<
