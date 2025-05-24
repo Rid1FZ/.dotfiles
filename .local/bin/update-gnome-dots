@@ -1,6 +1,10 @@
 #!/bin/env bash
 
-GNOME_CONFIG_PATH="${DOTFILES:-"$HOME"/.dotfiles}/gnome.dconf"
+set -euo pipefail
 
-rm "${GNOME_CONFIG_PATH}"
-dconf dump / >"${GNOME_CONFIG_PATH}"
+GNOME_DOTS_PATH="${DOTFILES:-"$HOME"/.dotfiles}/gnome.dconf"
+
+if [[ -e "${GNOME_DOTS_PATH}" ]]; then
+    rm "${GNOME_DOTS_PATH}"
+    dconf dump / >"${GNOME_DOTS_PATH}"
+fi
