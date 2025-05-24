@@ -1,3 +1,10 @@
+[ca/desrt/dconf-editor]
+saved-pathbar-path='/org/gnome/GWeather4/'
+saved-view='/org/gnome/'
+window-height=500
+window-is-maximized=true
+window-width=540
+
 [org/freedesktop/tracker/miner/files]
 index-recursive-directories=['&DESKTOP', '&DOCUMENTS', '&MUSIC', '&PICTURES', '&VIDEOS', '/home/rid1/Projects']
 index-single-directories=['$HOME', '&DOWNLOAD']
@@ -231,11 +238,6 @@ toggle-quick-settings=@as []
 
 [org/gnome/shell/world-clocks]
 locations=@av []
-
-[org/gnome/software]
-check-timestamp=int64 1747297871
-first-run=false
-update-notification-timestamp=int64 1747297906
 
 [org/gnome/tweaks]
 show-extensions-notice=false
