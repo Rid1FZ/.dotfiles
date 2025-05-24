@@ -1,0 +1,6 @@
+#!/bin/env bash
+
+GNOME_CONFIG_PATH="${DOTFILES:-"$HOME"/.dotfiles}/gnome-settings.dconf"
+
+rm "${GNOME_CONFIG_PATH}"
+dconf dump / >"${GNOME_CONFIG_PATH}"
