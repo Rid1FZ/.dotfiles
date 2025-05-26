@@ -1,6 +1,7 @@
 [ca/desrt/dconf-editor]
-saved-pathbar-path='/org/gnome/GWeather4/'
-saved-view='/org/gnome/'
+saved-pathbar-path='/org/gnome/shell/'
+saved-view='/org/gnome/shell/'
+show-warning=false
 window-height=500
 window-is-maximized=true
 window-width=540
@@ -31,7 +32,7 @@ name='X-GNOME-Shell-System.directory'
 translate=true
 
 [org/gnome/desktop/app-folders/folders/Utilities]
-apps=['org.gnome.Connections.desktop', 'org.gnome.Evince.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop']
+apps=['org.gnome.Connections.desktop', 'org.gnome.Evince.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop', 'ca.desrt.dconf-editor.desktop', 'setroubleshoot.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.tweaks.desktop']
 name='X-GNOME-Shell-Utilities.directory'
 translate=true
 
@@ -70,8 +71,11 @@ icon-theme='Papirus-Dark'
 monospace-font-name='JetBrainsMono Nerd Font Medium 12'
 
 [org/gnome/desktop/notifications]
-application-children=['org-gnome-software']
+application-children=['org-gnome-software', 'org-fontforge-fontforge']
 show-in-lock-screen=false
+
+[org/gnome/desktop/notifications/application/org-fontforge-fontforge]
+application-id='org.fontforge.FontForge.desktop'
 
 [org/gnome/desktop/notifications/application/org-gnome-software]
 application-id='org.gnome.Software.desktop'
@@ -206,7 +210,7 @@ sleep-inactive-ac-type='nothing'
 sleep-inactive-battery-type='nothing'
 
 [org/gnome/shell]
-app-picker-layout=[{'setroubleshoot.desktop': <{'position': <0>}>, 'vlc.desktop': <{'position': <1>}>, 'yelp.desktop': <{'position': <2>}>, 'org.gnome.tweaks.desktop': <{'position': <3>}>, 'com.mattjakeman.ExtensionManager.desktop': <{'position': <4>}>, 'org.gnome.Settings.desktop': <{'position': <5>}>, 'org.gnome.Characters.desktop': <{'position': <6>}>, 'brave-picebhhlijnlefeleilfbanaghjlkkna-Default.desktop': <{'position': <7>}>, 'Utilities': <{'position': <8>}>, 'System': <{'position': <9>}>, '2c05278a-8112-48fe-b783-270b502cdecf': <{'position': <10>}>}]
+app-picker-layout=[{'vlc.desktop': <{'position': <0>}>, 'yelp.desktop': <{'position': <1>}>, 'org.gnome.Settings.desktop': <{'position': <2>}>, 'org.gnome.Characters.desktop': <{'position': <3>}>, 'brave-picebhhlijnlefeleilfbanaghjlkkna-Default.desktop': <{'position': <4>}>, 'Utilities': <{'position': <5>}>, 'System': <{'position': <6>}>, '2c05278a-8112-48fe-b783-270b502cdecf': <{'position': <7>}>, 'org.fontforge.FontForge.desktop': <{'position': <8>}>}]
 command-history=['lg']
 enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'Move_Clock@rmy.pobox.com', 'notification-position@drugo.dev', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com']
 favorite-apps=['org.gnome.Nautilus.desktop', 'Alacritty.desktop', 'nvim.desktop', 'dev.zed.Zed.desktop', 'org.telegram.desktop._94dd5c3b665581fc31bd9da11c7d9655.desktop', 'brave-cadlkienfkclaiaibeoongdcgmdikeeg-Default.desktop', 'brave-browser.desktop']
@@ -219,6 +223,7 @@ current-workspace-only=true
 [org/gnome/shell/extensions/dash-to-dock]
 apply-custom-theme=true
 background-opacity=0.80000000000000004
+click-action='focus-minimize-or-appspread'
 custom-theme-shrink=true
 dash-max-icon-size=48
 dock-fixed=true
