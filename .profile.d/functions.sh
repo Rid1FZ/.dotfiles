@@ -93,20 +93,6 @@ function rm {
     fi
 }
 
-function mkfile {
-    local __file __parent_dir
-
-    (("$#" == 0)) && { echo -e "\033[0;31m[error]\033[0m: please specify at-least one filename..." >&2 && return 1; }
-
-    for __file in "$@"; do
-        __parent_dir="$(realpath --canonicalize-missing --no-symlinks "$(dirname "${__file}")")"
-        if ! { mkdir -p "${__parent_dir}" 2>/dev/null && touch "${__file}" 2>/dev/null; }; then
-            echo -e "\033[0;31m[error]\033[0m: could not create file ${__file}..." >&2
-            continue
-        fi
-    done
-}
-
 # for vterm inside emacs
 function vterm_printf {
     if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
