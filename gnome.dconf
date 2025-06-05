@@ -1,6 +1,6 @@
 [ca/desrt/dconf-editor]
-saved-pathbar-path='/org/gnome/shell/'
-saved-view='/org/gnome/shell/'
+saved-pathbar-path='/org/gnome/shell/extensions/window-list/'
+saved-view='/org/gnome/shell/extensions/'
 show-warning=false
 window-height=500
 window-is-maximized=true
@@ -11,14 +11,14 @@ index-recursive-directories=['&DESKTOP', '&DOCUMENTS', '&MUSIC', '&PICTURES', '&
 index-single-directories=['$HOME', '&DOWNLOAD']
 
 [org/gnome/control-center]
-last-panel='system'
+last-panel='wifi'
 window-state=(980, 640, true)
 
 [org/gnome/desktop/app-folders]
 folder-children=['System', 'Utilities', 'YaST', 'Pardus', '2c05278a-8112-48fe-b783-270b502cdecf']
 
 [org/gnome/desktop/app-folders/folders/2c05278a-8112-48fe-b783-270b502cdecf]
-apps=['libreoffice-calc.desktop', 'libreoffice-impress.desktop', 'libreoffice-writer.desktop', 'libreoffice-math.desktop']
+apps=['libreoffice-calc.desktop', 'libreoffice-impress.desktop', 'libreoffice-writer.desktop', 'libreoffice-math.desktop', 'org.gnome.Papers.desktop']
 name='Office'
 
 [org/gnome/desktop/app-folders/folders/Pardus]
@@ -71,8 +71,11 @@ icon-theme='Papirus-Dark'
 monospace-font-name='JetBrainsMono Nerd Font Medium 12'
 
 [org/gnome/desktop/notifications]
-application-children=['org-gnome-software', 'org-fontforge-fontforge']
+application-children=['org-gnome-software', 'org-fontforge-fontforge', 'brave-browser']
 show-in-lock-screen=false
+
+[org/gnome/desktop/notifications/application/brave-browser]
+application-id='brave-browser.desktop'
 
 [org/gnome/desktop/notifications/application/org-fontforge-fontforge]
 application-id='org.fontforge.FontForge.desktop'
@@ -172,6 +175,22 @@ initial-size=(890, 550)
 initial-size-file-chooser=(890, 550)
 maximized=true
 
+[org/gnome/papers]
+document-directory=@ms nothing
+night-mode=false
+
+[org/gnome/papers/default]
+annot-color='yellow'
+continuous=true
+dual-page=false
+dual-page-odd-left=false
+enable-spellchecking=true
+show-sidebar=true
+sidebar-page='annotations'
+sizing-mode='automatic'
+window-height=733
+window-maximized=true
+
 [org/gnome/portal/filechooser/brave-browser]
 last-folder-path='/home/rid1/.local/share/backgrounds'
 
@@ -180,6 +199,9 @@ last-folder-path='/home/rid1/Projects/makefiles'
 
 [org/gnome/portal/filechooser/org.chromium.Chromium]
 last-folder-path='/home/rid1/Downloads'
+
+[org/gnome/portal/filechooser/org.gnome.Papers]
+last-folder-path='/home/rid1/Documents'
 
 [org/gnome/portal/filechooser/org.gnome.Settings]
 last-folder-path='/home/rid1/Projects'
@@ -210,10 +232,10 @@ sleep-inactive-ac-type='nothing'
 sleep-inactive-battery-type='nothing'
 
 [org/gnome/shell]
-app-picker-layout=[{'vlc.desktop': <{'position': <0>}>, 'yelp.desktop': <{'position': <1>}>, 'org.gnome.Settings.desktop': <{'position': <2>}>, 'org.gnome.Characters.desktop': <{'position': <3>}>, 'brave-picebhhlijnlefeleilfbanaghjlkkna-Default.desktop': <{'position': <4>}>, 'Utilities': <{'position': <5>}>, 'System': <{'position': <6>}>, '2c05278a-8112-48fe-b783-270b502cdecf': <{'position': <7>}>, 'org.fontforge.FontForge.desktop': <{'position': <8>}>}]
+app-picker-layout=[{'vlc.desktop': <{'position': <0>}>, 'codium.desktop': <{'position': <1>}>, 'yelp.desktop': <{'position': <2>}>, 'org.gnome.Settings.desktop': <{'position': <3>}>, 'org.gnome.Characters.desktop': <{'position': <4>}>, 'Utilities': <{'position': <5>}>, 'System': <{'position': <6>}>, '2c05278a-8112-48fe-b783-270b502cdecf': <{'position': <7>}>}]
 command-history=['lg']
-enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'Move_Clock@rmy.pobox.com', 'notification-position@drugo.dev', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com']
-favorite-apps=['org.gnome.Nautilus.desktop', 'Alacritty.desktop', 'nvim.desktop', 'dev.zed.Zed.desktop', 'org.telegram.desktop._94dd5c3b665581fc31bd9da11c7d9655.desktop', 'brave-cadlkienfkclaiaibeoongdcgmdikeeg-Default.desktop', 'brave-browser.desktop']
+enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'Move_Clock@rmy.pobox.com', 'notification-position@drugo.dev', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com', 'gsconnect@andyholmes.github.io', 'ubuntunetspeed@ochi12.github.com', 'netspeed@alynx.one']
+favorite-apps=['org.gnome.Nautilus.desktop', 'Alacritty.desktop', 'nvim.desktop', 'dev.zed.Zed.desktop', 'codium.desktop', 'org.telegram.desktop._94dd5c3b665581fc31bd9da11c7d9655.desktop', 'brave-browser.desktop']
 last-selected-power-profile='performance'
 welcome-dialog-last-shown-version='48.1'
 
