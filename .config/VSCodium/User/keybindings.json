@@ -1,0 +1,87 @@
+[
+    {
+        "key": "a",
+        "command": "explorer.newFile",
+        "when": "filesExplorerFocus && foldersViewVisible && !inputFocus && !explorerResourceReadonly"
+    },
+    {
+        "key": "shift+a",
+        "command": "explorer.newFolder",
+        "when": "filesExplorerFocus && foldersViewVisible && !inputFocus && !explorerResourceReadonly"
+    },
+    {
+        "key": "d",
+        "command": "deleteFile",
+        "when": "filesExplorerFocus && !inputFocus && !explorerResourceReadonly"
+    },
+    {
+        "key": "r",
+        "command": "renameFile",
+        "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+    },
+    {
+        "key": "space e",
+        "command": "workbench.action.closeSidebar",
+        "when": "filesExplorerFocus && foldersViewVisible && !inputFocus"
+    },
+    {
+        "key": "escape",
+        "command": "workbench.action.closeSidebar",
+        "when": "filesExplorerFocus && foldersViewVisible && !inputFocus"
+    },
+    {
+        "key": "space e",
+        "command": "workbench.view.explorer",
+        "when": "!filesExplorerFocus && !inputFocus && viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "space o",
+        "command": "workbench.view.explorer",
+        "when": "!filesExplorerFocus && !inputFocus && viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "space f w",
+        "command": "workbench.action.findInFiles",
+        "when": "!inputFocus"
+    },
+    {
+        "key": "space f f",
+        "command": "workbench.action.quickOpen",
+        "when": "!inputFocus"
+    },
+    {
+        "key": "escape",
+        "command": "workbench.action.closeSidebar",
+        "when": "sideBarVisible && sideBarFocus && searchViewletVisible"
+    },
+    {
+        "key": "escape",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminalIsOpen && terminalFocus"
+    },
+    {
+        "key": "Shift+h",
+        "command": "workbench.action.previousEditor",
+        "when": "!inputFocus"
+    },
+    {
+        "key": "Shift+l",
+        "command": "workbench.action.nextEditor",
+        "when": "!inputFocus"
+    },
+    {
+        "key": "space c",
+        "command": "workbench.action.closeActiveEditor",
+        "when": "!inputFocus"
+    },
+    {
+        "key": "space t",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "!inputFocus && terminal.active"
+    },
+    {
+        "key": "space f b",
+        "command": "workbench.action.openPreviousEditorFromHistory",
+        "when": "!inputFocus"
+    }
+]

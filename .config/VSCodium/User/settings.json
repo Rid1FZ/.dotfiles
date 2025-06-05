@@ -1,0 +1,295 @@
+{
+    "workbench.startupEditor": "none",
+    "editor.fontFamily": "'JetBrainsMono Nerd Font Propo', 'UbuntuMono Nerd Font Propo'",
+    "markdown.math.enabled": true,
+    "markdown.preview.fontFamily": "'Ubuntu Nerd Font Propo'",
+    "editor.fontWeight": "500",
+    "editor.fontLigatures": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "application.shellEnvironmentResolutionTimeout": 60,
+    "editor.fontSize": 16,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.quickSuggestions": {
+        "comments": "on",
+        "strings": "on"
+    },
+    "editor.quickSuggestionsDelay": 0,
+    "editor.suggest.preview": false,
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font Propo",
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.lineHeight": 1.25,
+    "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+    "editor.minimap.enabled": false,
+    "terminal.integrated.inheritEnv": false,
+    "terminal.integrated.gpuAcceleration": "on",
+    "security.workspace.trust.enabled": false,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "editor.formatOnSave": true,
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "editor.cursorBlinking": "solid",
+    "editor.semanticHighlighting.enabled": true,
+    "terminal.integrated.minimumContrastRatio": 1,
+    "window.titleBarStyle": "native",
+    "telemetry.telemetryLevel": "off",
+    "editor.inlineSuggest.showToolbar": "always",
+    "terminal.external.linuxExec": "xdg-terminal-exec",
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.integrated.enablePersistentSessions": false,
+    "explorer.confirmDelete": false,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        },
+        {
+            "before": [
+                "j",
+                "k"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<leader>",
+                "/"
+            ],
+            "commands": [
+                "editor.action.commentLine",
+                "<Esc>"
+            ],
+            "when": "editorTextFocus && !editorReadonly",
+            "silent": true
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<leader>",
+                "w"
+            ],
+            "commands": [
+                "workbench.action.files.save"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "h"
+            ],
+            "commands": [
+                ":nohl"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "g",
+                "d"
+            ],
+            "commands": [
+                "editor.action.revealDefinition"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "t",
+            ],
+            "commands": [
+                "workbench.action.terminal.toggleTerminal"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<s-h>"
+            ],
+            "commands": [
+                "workbench.action.previousEditor"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<s-l>"
+            ],
+            "commands": [
+                "workbench.action.nextEditor"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "f",
+                "f"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "c"
+            ],
+            "commands": [
+                ":q"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "d"
+            ],
+            "commands": [
+                "editor.action.showHover"
+            ],
+            "when": "editorTextFocus",
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "a"
+            ],
+            "commands": [
+                "editor.action.quickFix"
+            ],
+            "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly",
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "e"
+            ],
+            "commands": [
+                "workbench.view.explorer"
+            ],
+            "when": "viewContainer.workbench.view.explorer.enabled",
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "o"
+            ],
+            "commands": [
+                "workbench.view.explorer"
+            ],
+            "when": "viewContainer.workbench.view.explorer.enabled",
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "/"
+            ],
+            "commands": [
+                "editor.action.commentLine"
+            ],
+            "when": "editorTextFocus && !editorReadonly",
+            "silent": true
+        },
+        {
+            "before": [
+                "<leader>",
+                "f",
+                "w"
+            ],
+            "commands": [
+                "workbench.action.findInFiles"
+            ],
+            "when": "editorFocus || editorIsOpen",
+            "silent": true
+        },
+        {
+            "before": [
+                ":"
+            ],
+            "commands": [
+                "workbench.action.showCommands"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "<space>",
+                "f",
+                "b"
+            ],
+            "commands": [
+                "workbench.action.openPreviousEditorFromHistory"
+            ],
+            "silent": true
+        }
+    ],
+    "vim.leader": "<space>",
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-f>": false
+    },
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1
+    },
+    "files.autoSave": "afterDelay",
+    "git.autofetch": true,
+    "workbench.iconTheme": "catppuccin-mocha",
+    "editor.snippetSuggestions": "top",
+    "window.menuBarVisibility": "toggle",
+    "notebook.cellToolbarLocation": {
+        "default": "hidden",
+        "jupyter-notebook": "hidden"
+    },
+    "editor.stickyScroll.scrollWithEditor": false,
+    "editor.stickyScroll.enabled": false,
+    "workbench.tree.enableStickyScroll": false,
+    "workbench.colorTheme": "Catppuccin Mocha",
+    "terminal.integrated.hideOnStartup": "always",
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "terminal.explorerKind": "external",
+    "debug.terminal.clearBeforeReusing": true,
+    "notebook.output.fontFamily": "'JetBrainsMono Nerd Font Propo'",
+    "editor.lineHeight": 2,
+    "editor.stickyScroll.maxLineCount": 1,
+    "notebook.output.scrolling": true,
+    "workbench.editor.empty.hint": "hidden",
+    "notebook.stickyScroll.enabled": true,
+    "notebook.formatOnCellExecution": true,
+    "less.format.spaceAroundSelectorSeparator": true,
+    "python.analysis.autoFormatStrings": true,
+    "notebook.consolidatedRunButton": true,
+    "jupyter.themeMatplotlibPlots": true,
+    "notebook.dragAndDropEnabled": false,
+    "workbench.layoutControl.enabled": false,
+    "window.customTitleBarVisibility": "never",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.showTabs": "none",
+    "breadcrumbs.filePath": "on",
+    "notebook.markup.fontFamily": "'Ubuntu Nerd Font Propo'"
+}
