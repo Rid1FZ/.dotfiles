@@ -46,7 +46,7 @@ M.sources = {
 }
 
 M.signature = {
-    enabled = true,
+    enabled = false,
 
     window = {
         show_documentation = false,
