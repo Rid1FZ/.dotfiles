@@ -1,4 +1,5 @@
-# Ignore everything but config file
-*
+**
+
 !.gitignore
+!profile_default/
 !profile_default/ipython_config.py
