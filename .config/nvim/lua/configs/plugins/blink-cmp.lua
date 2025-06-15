@@ -4,9 +4,31 @@ M.cmdline = {
     enabled = true,
 }
 
+M.cmdline.completion = {
+    list = {
+        selection = {
+            preselect = false,
+            auto_insert = true,
+        },
+    },
+    menu = {
+        auto_show = false,
+        draw = {
+            columns = {
+                { "label" },
+            },
+        },
+    },
+}
+
 M.cmdline.keymap = {
+    preset = "none",
+    ["<Up>"] = { "select_prev", "fallback" },
+    ["<Down>"] = { "select_next", "fallback" },
+    ["<C-p>"] = { "select_prev", "fallback" },
+    ["<C-n>"] = { "select_next", "fallback" },
     ["<Tab>"] = { "show_and_insert", "select_next", "fallback" },
-    ["<S-Tab>"] = { "select_next", "fallback" },
+    ["<S-Tab>"] = { "select_prev", "fallback" },
     ["<CR>"] = { "accept_and_enter", "fallback" },
 }
 
