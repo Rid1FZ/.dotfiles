@@ -23,8 +23,6 @@ M.cmdline.completion = {
 
 M.cmdline.keymap = {
     preset = "none",
-    ["<Up>"] = { "select_prev", "fallback" },
-    ["<Down>"] = { "select_next", "fallback" },
     ["<C-p>"] = { "select_prev", "fallback" },
     ["<C-n>"] = { "select_next", "fallback" },
     ["<Tab>"] = { "show_and_insert", "select_next", "fallback" },
