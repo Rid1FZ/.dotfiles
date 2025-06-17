@@ -1,17 +1,39 @@
-#!/bin/env bash
+#!/usr/bin/env python3
 
-set -euo pipefail
+import subprocess
+import sys
+from pathlib import Path
 
-function __launch_terminal {
-	nohup alacritty --class terminal --title Terminal "$@" &>/dev/null &
-}
 
-if (("$#" == 0)); then
-	__launch_terminal --command tmux new-session
-elif [[ -d "$1" ]]; then
-	__launch_terminal --working-directory "$1"
-else
-	__launch_terminal --command "$@"
-fi
+def launch_terminal(*args: str) -> int:
+    try:
+        return subprocess.run(
+            ["alacritty", "--class", "terminal", "--title", "Terminal", *args],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        ).returncode
 
-exit
+    except KeyboardInterrupt:
+        return 130
+
+
+def main() -> int:
+    exitcode: int = 0
+
+    args = sys.argv[1:]
+
+    if len(args) == 0:
+        exitcode = launch_terminal("--command", "tmux", "new-session") or exitcode
+        return exitcode
+
+    if Path(args[0]).is_dir():
+        exitcode = launch_terminal("--working-directory", args[0]) or exitcode
+        return exitcode
+
+    exitcode = launch_terminal("--command", *args) or exitcode
+    return exitcode
+
+
+if __name__ == "__main__":
+    sys.exit(main())
