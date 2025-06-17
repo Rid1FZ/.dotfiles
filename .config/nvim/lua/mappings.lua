@@ -84,7 +84,7 @@ M.lspconfig = {
         ["gd"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").lsp_definitions()
+                    require("fzf-lua").lsp_definitions()
                 end)
             end,
             "LSP definition",
@@ -102,7 +102,7 @@ M.lspconfig = {
         ["gi"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").lsp_implementations()
+                    require("fzf-lua").lsp_implementations()
                 end)
             end,
             "LSP implementation",
@@ -141,10 +141,23 @@ M.lspconfig = {
             "LSP formatting",
         },
 
+        ["<leader>ld"] = {
+            function()
+                vim.schedule(function()
+                    vim.diagnostic.open_float({
+                        border = "rounded",
+                        scope = "cursor",
+                        severity_sort = true,
+                    })
+                end)
+            end,
+            "Floating diagnostic",
+        },
+
         ["<leader>lD"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").diagnostics()
+                    require("fzf-lua").lsp_workspace_diagnostics()
                 end)
             end,
             "LSP list all diagnostics",
@@ -171,23 +184,10 @@ M.lspconfig = {
         ["gr"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").lsp_references()
+                    require("fzf-lua").lsp_references()
                 end)
             end,
             "LSP references",
-        },
-
-        ["<leader>ld"] = {
-            function()
-                vim.schedule(function()
-                    vim.diagnostic.open_float({
-                        border = "rounded",
-                        scope = "cursor",
-                        severity_sort = true,
-                    })
-                end)
-            end,
-            "Floating diagnostic",
         },
 
         ["[d"] = {
@@ -246,7 +246,7 @@ M.nvimtree = {
     },
 }
 
-M.telescope = {
+M["fzf-lua"] = {
     plugin = true,
 
     n = {
@@ -254,27 +254,16 @@ M.telescope = {
         ["<leader>ff"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").find_files()
+                    require("fzf-lua").files()
                 end)
             end,
             "Find files",
         },
 
-        ["<leader>fa"] = {
-            function()
-                vim.schedule(function()
-                    require("telescope.builtin").find_files({
-                        no_ignore = true,
-                    })
-                end)
-            end,
-            "Find all files",
-        },
-
         ["<leader>fg"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").live_grep()
+                    require("fzf-lua").live_grep()
                 end)
             end,
             "Live grep",
@@ -283,7 +272,7 @@ M.telescope = {
         ["<leader>fb"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").buffers()
+                    require("fzf-lua").buffers()
                 end)
             end,
             "Find buffers",
@@ -292,7 +281,7 @@ M.telescope = {
         ["<leader>fh"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").help_tags()
+                    require("fzf-lua").helptags()
                 end)
             end,
             "Help page",
@@ -301,7 +290,7 @@ M.telescope = {
         ["<leader>fo"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").oldfiles()
+                    require("fzf-lua").oldfiles()
                 end)
             end,
             "Find oldfiles",
@@ -382,7 +371,7 @@ M.gitsigns = {
         ["<leader>gm"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").git_commits()
+                    require("fzf-lua").git_commits()
                 end)
             end,
             "Git commits",
@@ -391,7 +380,7 @@ M.gitsigns = {
         ["<leader>gs"] = {
             function()
                 vim.schedule(function()
-                    require("telescope.builtin").git_status()
+                    require("fzf-lua").git_status()
                 end)
             end,
             "Git status",
