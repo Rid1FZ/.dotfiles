@@ -1,7 +1,7 @@
 local nvim_tree_api = require("nvim-tree.api")
 local Event = nvim_tree_api.events.Event
 local tree = require("nvim-tree.api").tree
-local tbuiltin = require("telescope.builtin")
+local fzflua = require("fzf-lua")
 
 -- Dont List Quickfix Buffers
 vim.api.nvim_create_autocmd("FileType", {
@@ -79,9 +79,9 @@ nvim_tree_api.events.subscribe(Event.FileRemoved, function(data)
     end
 end)
 
--- Open Telescope Find Files for Directories
+-- Open Find Files Prompt for Directories
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
-    group = vim.api.nvim_create_augroup("OpenTelescope", { clear = true }),
+    group = vim.api.nvim_create_augroup("OpenFindFiles", { clear = true }),
     callback = function(data)
         if vim.fn.isdirectory(data.file) ~= 1 then
             return
@@ -90,7 +90,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
         vim.cmd("bwipeout")
         vim.cmd.cd(data.file)
         vim.schedule(function()
-            tbuiltin.find_files()
+            fzflua.files()
         end)
     end,
 })
