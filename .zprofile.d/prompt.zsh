@@ -14,9 +14,9 @@ function set_prompt {
     PS1=''
 
     if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
-        PS1+=$'%F{yellow}${VIRTUAL_ENV_PROMPT}%f'
+        PS1+=$'%F{yellow}(${VIRTUAL_ENV_PROMPT})%f'
     elif [[ -n "${CONDA_DEFAULT_ENV}" ]]; then
-        PS1+=$'%F{green}(${CONDA_DEFAULT_ENV})%f '
+        PS1+=$'%F{green}(${CONDA_DEFAULT_ENV})%f'
     fi
 
     PS1+='%(?.%F{white}.%F{red})%#%f '
