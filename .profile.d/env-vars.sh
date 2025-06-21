@@ -1,18 +1,17 @@
 #!/bin/env bash
 
-function splitvar {
-    # It will reverese the order for later use with `prepend_value` function
-    local string="$1"
-    local separator="$2"
+function reverse_colon_values {
+    string="${1}"
 
-    python3 -c '
-import sys
-string: str = sys.argv[1]
-separator: str = sys.argv[2]
-
-for part in string.split(separator)[::-1]:
-    print(part)
-    ' "${string}" "${separator}"
+    printf '%s\n' "${string}" |
+        sed 's/:/\n/g' |
+        awk '
+    {
+        lines[NR] = $0
+    }
+    END {
+        for (i = NR; i > 0; i--) print lines[i]
+    }'
 }
 
 function prepend_value {
@@ -52,7 +51,7 @@ function set_env {
         if [[ "${varname}" = "${c}" ]]; then
             while IFS= read -r part; do
                 prepend_value "${varname}" "${part}"
-            done <<<"$(splitvar "${value}" ":")"
+            done <<<"$(reverse_colon_values "${value}")"
             return
         fi
     done
@@ -91,5 +90,5 @@ case "$(ps -p $$ -o comm=)" in
         ;;
 esac
 
-unset splitvar prepend_value set_env
+unset reverse_colon_values prepend_value set_env
 # <<< environment variables <<<
