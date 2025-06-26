@@ -2,6 +2,7 @@ local M = {}
 
 M.debounce = 100
 M.whitespace = { highlight = { "Whitespace", "NonText" } }
+M.indent = { char = "│" }
 
 M.exclude = {
     filetypes = {
