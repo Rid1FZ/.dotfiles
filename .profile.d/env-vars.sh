@@ -1,22 +1,19 @@
 #!/bin/env bash
 
 function reverse_colon_values {
-    string="${1}"
+    local string="${1}"
 
-    printf '%s\n' "${string}" |
-        sed 's/:/\n/g' |
-        awk '
-    {
-        lines[NR] = $0
-    }
-    END {
-        for (i = NR; i > 0; i--) print lines[i]
-    }'
+    echo "${string}" |
+        awk -F: '
+            END {
+                for (i=NF; i>0; i--) print $i
+            }
+        '
 }
 
 function prepend_value {
-    local varname="$1"
-    local value="$2"
+    local varname="${1}"
+    local value="${2}"
 
     if ! printenv "${varname}" | grep -qE "(^|:)${value}($|:)"; then
         export "${varname}"="${value}:$(printenv "${varname}")"
@@ -24,37 +21,22 @@ function prepend_value {
 }
 
 function set_env {
-    local varname="$1"
-    local value="$2"
+    local varname="${1}"
+    local value="${2}"
 
-    local -a restricted=(
-        HOME
-        SHELL
-        USER
-        PWD
-        OLDPWD
-        SHLVL
-    )
+    local restricted_vars="HOME:SHELL:USER:PWD:OLDPWD:SHLVL"
+    local csv_vars="PATH:LD_LIBRARY_PATH"
 
-    local -a colon_separeted=(
-        PATH
-        LD_LIBRARY_PATH
-    )
+    if echo "${restricted_vars}" | grep -qE "(^|:)${varname}($|:)"; then
+        return 0
+    fi
 
-    for r in "${restricted[@]}"; do
-        if [[ "${varname}" = "${r}" ]]; then
-            return
-        fi
-    done
-
-    for c in "${colon_separeted[@]}"; do
-        if [[ "${varname}" = "${c}" ]]; then
-            while IFS= read -r part; do
-                prepend_value "${varname}" "${part}"
-            done <<<"$(reverse_colon_values "${value}")"
-            return
-        fi
-    done
+    if echo "${csv_vars}" | grep -qE "(^|:)${varname}($|:)"; then
+        while IFS= read -r part; do
+            prepend_value "${varname}" "${part}"
+        done <<<"$(reverse_colon_values "${value}")"
+        return 0
+    fi
 
     export "${varname}"="${value}"
 }
