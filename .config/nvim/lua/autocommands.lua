@@ -1,6 +1,3 @@
-local nvim_tree_api = require("nvim-tree.api")
-local Event = nvim_tree_api.events.Event
-local tree = require("nvim-tree.api").tree
 local fzflua = require("fzf-lua")
 
 -- Dont List Quickfix Buffers
@@ -37,47 +34,6 @@ vim.api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
         end
     end,
 })
-
-local NvimTreeAugroup = vim.api.nvim_create_augroup("NvimTreeAugroup", { clear = true })
-
--- Close NvimTree if Last Window
-vim.api.nvim_create_autocmd("QuitPre", {
-    group = NvimTreeAugroup,
-    callback = function()
-        local invalid_win = {}
-        local wins = vim.api.nvim_list_wins()
-        for _, w in ipairs(wins) do
-            local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))
-            if bufname:match("NvimTree_") ~= nil then
-                table.insert(invalid_win, w)
-            end
-        end
-        if #invalid_win == #wins - 1 then
-            -- Should quit, so we close all invalid windows.
-            for _, w in ipairs(invalid_win) do
-                vim.api.nvim_win_close(w, true)
-            end
-        end
-    end,
-})
-
--- Do Not Take Full Width When File Is Removed(NvimTree)
-nvim_tree_api.events.subscribe(Event.FileRemoved, function(data)
-    local winCount = 0
-    for _, winId in ipairs(vim.api.nvim_list_wins()) do
-        if vim.api.nvim_win_get_config(winId).focusable then
-            winCount = winCount + 1
-        end
-    end
-    if winCount == 2 then -- one is nvim-tree window, another is additional window
-        vim.defer_fn(function()
-            -- close nvim-tree: will go to the last buffer used before closing
-            tree.toggle({ find_file = true, focus = true })
-            -- re-open nivm-tree
-            tree.toggle({ find_file = true, focus = true })
-        end, 10)
-    end
-end)
 
 -- Open Find Files Prompt for Directories
 vim.api.nvim_create_autocmd({ "VimEnter" }, {

@@ -240,22 +240,6 @@ M.lspconfig = {
     },
 }
 
-M.nvimtree = {
-    plugin = true,
-
-    n = {
-        -- focus
-        ["<leader>oe"] = {
-            function()
-                vim.schedule(function()
-                    require("nvim-tree.api").tree.focus()
-                end)
-            end,
-            "Focus explorer",
-        },
-    },
-}
-
 M["fzf-lua"] = {
     plugin = true,
 
