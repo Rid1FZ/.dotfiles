@@ -15,6 +15,14 @@ opt.showmode = false
 opt.clipboard = "unnamedplus"
 opt.cursorline = true
 
+opt.completeopt = {
+    "fuzzy",
+    "menu",
+    "menuone",
+    "noselect",
+    "preview",
+}
+
 -- Indenting
 opt.expandtab = true
 opt.shiftwidth = 4
