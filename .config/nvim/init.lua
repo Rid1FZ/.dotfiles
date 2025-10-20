@@ -30,5 +30,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(require("configs.lazy"))
 
+-- Setup StatusLine
+require("utils.statusline").setup()
+
 -- Setup Autocommands
 require("autocommands")
