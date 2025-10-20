@@ -1,5 +1,3 @@
-local breadcrumb = require("breadcrumb")
-
 local colors = {
     bg = "#11111b",
     fg = "#cdd6f4",
@@ -59,14 +57,14 @@ local M = {
         lualine_x = {},
     },
     winbar = {
-        lualine_a = { breadcrumb.get_breadcrumb },
+        lualine_a = {},
         lualine_b = {},
         lualine_y = {},
         lualine_z = {},
         lualine_x = {},
     },
     inactive_winbar = {
-        lualine_a = { breadcrumb.get_inactive_breadcrumb },
+        lualine_a = {},
         lualine_b = {},
         lualine_y = {},
         lualine_z = {},

@@ -30,10 +30,6 @@ end
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)
     require("utils").load_mappings("lspconfig", { buffer = bufnr })
-
-    if client.server_capabilities.documentSymbolProvider then
-        require("breadcrumb").attach(client, bufnr)
-    end
 end
 
 -- disable semantic tokens
