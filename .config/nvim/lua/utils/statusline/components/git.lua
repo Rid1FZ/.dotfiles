@@ -1,6 +1,6 @@
 local M = {}
 
-function M.get_gitbranch()
+M.get_gitbranch = function()
     local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
 
     function _G.gitbranch_text()

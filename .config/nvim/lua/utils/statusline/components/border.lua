@@ -1,10 +1,10 @@
 local M = {}
 
-function M.get_left_border()
+M.get_left_border = function()
     return "%#StatusLineBorder#█ "
 end
 
-function M.get_right_border()
+M.get_right_border = function()
     return " %#StatusLineBorder#█"
 end
 

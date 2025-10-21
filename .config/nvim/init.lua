@@ -1,6 +1,14 @@
 -- Setup Options and Keymappings
-require("options")
-require("utils").load_mappings()
+local lspconfig = require("configs.lsp")
+local options = require("options")
+local utils = require("utils")
+local statusline = require("utils.statusline")
+local completions = require("utils.completions")
+
+options.setup()
+lspconfig.configure_diagnostics()
+lspconfig.setup()
+utils.load_mappings()
 
 -- Setup Lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -31,7 +39,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(require("configs.lazy"))
 
 -- Setup StatusLine
-require("utils.statusline").setup()
+statusline.setup()
+completions.setup()
 
 -- Setup Autocommands
 require("autocommands")

@@ -1,6 +1,6 @@
 local M = {}
 
-function M.get_diagnostics()
+M.get_diagnostics = function()
     local count = {}
     local levels = {
         errors = "Error",

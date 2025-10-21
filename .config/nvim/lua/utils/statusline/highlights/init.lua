@@ -1,7 +1,7 @@
 local M = {}
 local colors = require("utils.statusline.highlights.colors")
 
-function M.setup_highlights()
+M.setup_highlights = function()
     -- Default statusline
     vim.api.nvim_set_hl(0, "StatusLine", { bg = colors.bg, fg = colors.fg })
     vim.api.nvim_set_hl(0, "StatusLineNC", { bg = colors.bg, fg = colors.fg })

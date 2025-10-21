@@ -12,7 +12,7 @@ local diagnostics = require("utils.statusline.components.diagnostics")
 local git = require("utils.statusline.components.git")
 local location = require("utils.statusline.components.location")
 
-function Statusline.active()
+Statusline.active = function()
     return table.concat({
         border.get_left_border(),
         "%#StatusLine#",
@@ -30,11 +30,11 @@ function Statusline.active()
     })
 end
 
-function Statusline.inactive()
+Statusline.inactive = function()
     return "%#StatusLineNC# %F"
 end
 
-function M.setup()
+M.setup = function()
     highlights.setup_highlights()
     autocommands.setup_autocommands()
 end

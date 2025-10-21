@@ -1,6 +1,6 @@
 local M = {}
 
-function M.setup_autocommands()
+M.setup_autocommands = function()
     local statusline_group = vim.api.nvim_create_augroup("Statusline", { clear = true })
 
     vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {

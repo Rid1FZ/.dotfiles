@@ -1,6 +1,6 @@
 local M = {}
 
-function M.get_filepath()
+M.get_filepath = function()
     local fpath = vim.fn.fnamemodify(vim.fn.expand("%"), ":~:.:h")
     local fname = vim.fn.expand("%:t")
 
@@ -23,7 +23,7 @@ function M.get_filepath()
     return string.format("%s", fullpath)
 end
 
-function M.get_modified_status()
+M.get_modified_status = function()
     local status = ""
     if vim.bo.modified then
         status = status .. "[+] "

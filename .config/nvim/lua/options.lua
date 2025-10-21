@@ -1,7 +1,9 @@
-local configs = {}
-local lsp = require("configs.lsp")
-local opt = vim.opt
-local g = vim.g
+local M = {}
+
+local opt = {}
+local g = {}
+local filetypes = {}
+local treesitter_langs = {}
 
 g.mapleader = " "
 g.neovide_cursor_animation_length = 0
@@ -70,32 +72,42 @@ vim.cmd([[aunmenu PopUp]])
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 -- Add Filetypes
-vim.filetype.add({
-    extension = {
-        qml = "qml",
-        ipy = "python",
-        sh = "bash",
-        bash = "bash",
-    },
-    pattern = {
-        ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
-        [".*/hyperland/.*.conf"] = "hyprlang",
-        ["/home/.*/.config/waybar/config"] = "jsonc",
-        ["/home/.*/.config/zathura/.*"] = "zathurarc",
-        ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
-    },
-})
+filetypes.extension = {
+    qml = "qml",
+    ipy = "python",
+    sh = "bash",
+    bash = "bash",
+}
+
+filetypes.pattern = {
+    ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
+    [".*/hyperland/.*.conf"] = "hyprlang",
+    ["/home/.*/.config/waybar/config"] = "jsonc",
+    ["/home/.*/.config/zathura/.*"] = "zathurarc",
+    ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
+}
 
 -- register grammers
-vim.treesitter.language.register("bash", "zsh")
+treesitter_langs["bash"] = "zsh"
 
--- confiugre diagnostics
-lsp.configure_diagnostics()
+M.setup = function()
+    -- Set global variables first
+    for global_var, value in pairs(g) do
+        vim.g[global_var] = value
+    end
 
--- enable lsp
-for _, v in ipairs(vim.api.nvim_get_runtime_file("lsp/*", true)) do
-    local name = vim.fn.fnamemodify(v, ":t:r")
-    configs[name] = true
+    -- Set options
+    for option, value in pairs(opt) do
+        vim.opt[option] = value
+    end
+
+    -- Set filetypes
+    vim.filetype.add(filetypes)
+
+    -- Register treesitter grammers
+    for lang, filetype in pairs(treesitter_langs) do
+        vim.treesitter.language.register(lang, filetype)
+    end
 end
 
-vim.lsp.enable(vim.tbl_keys(configs))
+return M
