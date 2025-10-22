@@ -18,6 +18,7 @@ Statusline.active = function()
         "%#StatusLine#",
         mode.get_mode(),
         "%#StatusLine# ",
+        file.get_fileicon(),
         file.get_filepath(),
         file.get_modified_status(),
         "%#StatusLine#",
