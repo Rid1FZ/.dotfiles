@@ -1,9 +1,10 @@
 -- Setup Options and Keymappings
+local completions = require("utils.completions")
+local configs = require("configs")
 local lspconfig = require("configs.lsp")
 local options = require("options")
-local utils = require("utils")
 local statusline = require("utils.statusline")
-local completions = require("utils.completions")
+local utils = require("utils")
 
 options.setup()
 lspconfig.configure_diagnostics()
@@ -43,4 +44,4 @@ statusline.setup()
 completions.setup()
 
 -- Setup Autocommands
-require("autocommands")
+configs.setup_autocommands()
