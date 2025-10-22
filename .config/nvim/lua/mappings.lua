@@ -1,6 +1,3 @@
--- n, v, i, t = mode names
--- group names are defined in configs.which-key
-
 local M = {}
 
 M.general = {
