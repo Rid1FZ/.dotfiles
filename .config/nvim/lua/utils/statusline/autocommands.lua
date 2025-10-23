@@ -14,13 +14,14 @@ end
 
 M.setup_autocommands = function()
     local api = vim.api
+    local opt = vim.opt
     local group = api.nvim_create_augroup("Statusline", { clear = true })
 
     -- When entering a window or buffer, activate statusline
     api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
         group = group,
         callback = function()
-            vim.opt_local.statusline = "%!v:lua.Statusline()"
+            opt.statusline = "%!v:lua.Statusline()"
         end,
     })
 

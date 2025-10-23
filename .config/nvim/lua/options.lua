@@ -1,113 +1,108 @@
 local M = {}
 
-local opt = {}
-local g = {}
-local filetypes = {}
-local treesitter_langs = {}
-
-g.mapleader = " "
-g.neovide_cursor_animation_length = 0
-g.neovide_scroll_animation_length = 0
-
-opt.title = true
-opt.laststatus = 3
-opt.showtabline = 0
-opt.showmode = false
-
-opt.clipboard = "unnamedplus"
-opt.cursorline = true
-
-opt.completeopt = {
-    "fuzzy",
-    "menu",
-    "menuone",
-    "noselect",
-    "preview",
-}
-
--- Indenting
-opt.expandtab = true
-opt.shiftwidth = 4
-opt.smartindent = true
-opt.tabstop = 4
-opt.softtabstop = 4
-
-opt.fillchars = { eob = " " }
-opt.ignorecase = true
-opt.smartcase = true
-opt.mouse = "a"
-
--- Numbers
-opt.number = true
-opt.relativenumber = true
-opt.numberwidth = 3
-opt.ruler = false
-opt.shortmess = {
-    s = true,
-    c = true,
-    F = true,
-    W = true,
-    I = true,
-    l = true,
-}
-
-opt.signcolumn = "yes:1"
-opt.splitbelow = true
-opt.splitright = true
-opt.termguicolors = true
-opt.timeoutlen = 400
-opt.undofile = true
-opt.wrap = false
-opt.confirm = true
-opt.swapfile = false
-opt.pumheight = 10
-
--- Interval for Writing Swap File to Disk
-opt.updatetime = 250
-
--- Disable Right Click Menu
-vim.cmd([[aunmenu PopUp]])
-
--- Add Binaries Installed by mason.nvim to PATH
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
-
--- Add Filetypes
-filetypes.extension = {
-    qml = "qml",
-    ipy = "python",
-    sh = "bash",
-    bash = "bash",
-}
-
-filetypes.pattern = {
-    ["/home/.*/.config/hypr/.*.conf"] = "hyprlang",
-    [".*/hyperland/.*.conf"] = "hyprlang",
-    ["/home/.*/.config/waybar/config"] = "jsonc",
-    ["/home/.*/.config/zathura/.*"] = "zathurarc",
-    ["/home/.*/.config/tmux/configs/.*.tmux"] = "tmux",
-}
-
--- register grammers
-treesitter_langs["bash"] = "zsh"
-
 M.setup = function()
-    -- Set global variables first
-    for global_var, value in pairs(g) do
-        vim.g[global_var] = value
+    -- Local shorthand
+    local opt = vim.opt
+    local g = vim.g
+    local env = vim.env
+
+    --------------------------------------------------------------------
+    -- Global variables
+    --------------------------------------------------------------------
+    g.mapleader = " "
+    g.neovide_cursor_animation_length = 0
+    g.neovide_scroll_animation_length = 0
+
+    --------------------------------------------------------------------
+    -- General options
+    --------------------------------------------------------------------
+    opt.title = true
+    opt.laststatus = 3
+    opt.showtabline = 0
+    opt.showmode = false
+    opt.clipboard = "unnamedplus"
+    opt.cursorline = true
+    opt.termguicolors = true
+    opt.confirm = true
+    opt.wrap = false
+    opt.swapfile = false
+    opt.undofile = true
+    opt.timeoutlen = 400
+    opt.updatetime = 250
+    opt.mouse = "a"
+    opt.signcolumn = "yes:1"
+    opt.splitbelow = true
+    opt.splitright = true
+    opt.number = true
+    opt.relativenumber = true
+    opt.numberwidth = 3
+    opt.ruler = false
+    opt.pumheight = 10
+    opt.ignorecase = true
+    opt.smartcase = true
+    opt.fillchars:append({ eob = " " })
+
+    --------------------------------------------------------------------
+    -- Completion behavior
+    --------------------------------------------------------------------
+    opt.completeopt = { "fuzzy", "menu", "menuone", "noselect", "preview" }
+
+    --------------------------------------------------------------------
+    -- Indentation
+    --------------------------------------------------------------------
+    opt.expandtab = true
+    opt.shiftwidth = 4
+    opt.smartindent = true
+    opt.tabstop = 4
+    opt.softtabstop = 4
+
+    --------------------------------------------------------------------
+    -- Short messages (append instead of overwrite)
+    --------------------------------------------------------------------
+    opt.shortmess:append({
+        s = true,
+        c = true,
+        F = true,
+        W = true,
+        I = true,
+        l = true,
+    })
+
+    --------------------------------------------------------------------
+    -- Disable right-click menu (no-op if unavailable)
+    --------------------------------------------------------------------
+    vim.cmd("aunmenu PopUp")
+
+    --------------------------------------------------------------------
+    -- Environment setup (add mason bins safely)
+    --------------------------------------------------------------------
+    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+    if not env.PATH:find(vim.pesc(mason_bin), 1, true) then
+        env.PATH = mason_bin .. ":" .. env.PATH
     end
 
-    -- Set options
-    for option, value in pairs(opt) do
-        vim.opt[option] = value
-    end
+    --------------------------------------------------------------------
+    -- Filetype detection
+    --------------------------------------------------------------------
+    vim.filetype.add({
+        extension = {
+            qml = "qml",
+            ipy = "python",
+            sh = "bash",
+            bash = "bash",
+        },
+        pattern = {
+            [vim.fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",
+            [vim.fn.expand("$HOME") .. "/.config/waybar/config"] = "jsonc",
+            [vim.fn.expand("$HOME") .. "/.config/zathura/.*"] = "zathurarc",
+            [vim.fn.expand("$HOME") .. "/.config/tmux/configs/.*%.tmux"] = "tmux",
+        },
+    })
 
-    -- Set filetypes
-    vim.filetype.add(filetypes)
-
-    -- Register treesitter grammers
-    for lang, filetype in pairs(treesitter_langs) do
-        vim.treesitter.language.register(lang, filetype)
-    end
+    --------------------------------------------------------------------
+    -- Treesitter language remaps
+    --------------------------------------------------------------------
+    vim.treesitter.language.register("bash", "zsh")
 end
 
 return M
