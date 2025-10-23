@@ -1,8 +1,19 @@
 local M = {}
+
 local project_root_cache = {}
-local filepath_cache = {}
+local file_path_cache = {}
+local file_icon_cache = {}
+local last_icon_color
+
+local api = vim.api
+local fn = vim.fn
+local bo = vim.bo
+local uv = vim.uv
+local fs = vim.fs
 
 local colors = require("utils.statusline.highlights.colors")
+local highlight = require("utils").highlight
+
 local root_markers = {
     ".git",
     ".hg",
@@ -15,106 +26,116 @@ local root_markers = {
 }
 
 local function get_project_root()
-    local bufnr = vim.api.nvim_get_current_buf()
+    local bufnr = api.nvim_get_current_buf()
     if project_root_cache[bufnr] then
         return project_root_cache[bufnr]
     end
 
-    local current_file = vim.fn.expand("%:p")
-    if current_file == "" then
-        project_root_cache[bufnr] = vim.fn.getcwd()
-        return project_root_cache[bufnr]
+    local file = api.nvim_buf_get_name(bufnr)
+    if file == "" then
+        local cwd = uv.cwd()
+        project_root_cache[bufnr] = cwd
+        return cwd
     end
 
-    local current_dir = vim.fn.fnamemodify(current_file, ":h")
-    while current_dir ~= "/" do
-        for _, marker in ipairs(root_markers) do
-            if
-                vim.fn.isdirectory(current_dir .. "/" .. marker) == 1
-                or vim.fn.filereadable(current_dir .. "/" .. marker) == 1
-            then
-                project_root_cache[bufnr] = current_dir
-                return current_dir
-            end
-        end
-        current_dir = vim.fn.fnamemodify(current_dir, ":h")
-    end
+    local found = fs.find(root_markers, { upward = true, path = file })[1]
+    local root = found and fs.dirname(found) or uv.cwd()
 
-    -- Fallback to current working directory
-    project_root_cache[bufnr] = vim.fn.getcwd()
-    return project_root_cache[bufnr]
+    project_root_cache[bufnr] = root
+    return root
 end
 
 M.get_fileicon = function()
+    if bo.buftype ~= "" then
+        return ""
+    end
+
+    local bufnr = api.nvim_get_current_buf()
+    if file_icon_cache[bufnr] then
+        return file_icon_cache[bufnr]
+    end
+
     local ok, devicons = pcall(require, "nvim-web-devicons")
     if not ok then
-        return ""
+        file_icon_cache[bufnr] = ""
+        return file_icon_cache[bufnr]
     end
 
-    local fname = vim.fn.expand("%:t")
-    local extension = vim.fn.expand("%:e")
-
+    local fname = fn.expand("%:t")
     if fname == "" then
-        return ""
+        file_icon_cache[bufnr] = ""
+        return file_icon_cache[bufnr]
     end
 
+    local extension = fn.expand("%:e")
     local icon, icon_color = devicons.get_icon_color(fname, extension, { default = true })
 
     if icon then
-        vim.api.nvim_set_hl(0, "StatusLineFileIcon", { bg = colors.bg, fg = icon_color })
-        return "%#StatusLineFileIcon#" .. icon .. " %#StatusLine#"
+        highlight("StatusLineFileIcon", { bg = colors.bg, fg = icon_color })
+        file_icon_cache[bufnr] = "%#StatusLineFileIcon#" .. icon .. " %#StatusLine#"
+    else
+        file_icon_cache[bufnr] = ""
     end
 
-    return ""
+    return file_icon_cache[bufnr]
 end
 
 M.get_filepath = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    if filepath_cache[bufnr] then
-        return filepath_cache[bufnr]
+    if bo.buftype ~= "" then
+        return ""
     end
 
-    local full_path = vim.fn.expand("%:p")
+    local bufnr = api.nvim_get_current_buf()
+    if file_path_cache[bufnr] then
+        return file_path_cache[bufnr]
+    end
+
+    local full_path = api.nvim_buf_get_name(bufnr)
+    if full_path == "" then
+        return ""
+    end
+
     local root = get_project_root()
-    local fname = vim.fn.expand("%:t")
-
-    if fname == "" then
-        return " "
-    end
-
-    local root_name = vim.fn.fnamemodify(root, ":t")
+    local root_name = fn.fnamemodify(root, ":t")
     local relative_path = full_path:gsub("^" .. vim.pesc(root) .. "/", "")
 
-    local fdir = vim.fn.fnamemodify(relative_path, ":h")
-
-    local fullpath = ""
-    if fdir == "" or fdir == "." then
-        fullpath = fname
+    local display_path
+    if relative_path == "" then
+        display_path = root_name
     else
-        fullpath = root_name .. "/" .. relative_path
+        display_path = root_name .. "/" .. relative_path
     end
 
-    -- If longer than 64, truncate from left with ...
-    if #fullpath > 64 then
-        fullpath = "..." .. string.sub(fullpath, -(64 - 3))
+    local len = #display_path
+    if len > 64 then
+        display_path = "..." .. display_path:sub(len - 61)
     end
 
-    filepath_cache[bufnr] = string.format("%s ", fullpath)
-    return filepath_cache[bufnr]
+    file_path_cache[bufnr] = display_path
+    return display_path
 end
 
 M.get_modified_status = function()
-    local status = ""
-    if vim.bo.modified then
-        status = status .. "[+] "
+    if bo.buftype ~= "" then
+        return ""
     end
-    if vim.bo.readonly or not vim.bo.modifiable then
-        status = status .. "[-] "
+
+    local s = ""
+    if bo.modified then
+        s = s .. "[+] "
     end
-    if status ~= "" then
-        return status
+    if bo.readonly or not bo.modifiable then
+        s = s .. "[-] "
     end
-    return "    "
+    return #s > 0 and s or "   "
 end
+
+api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufDelete" }, {
+    callback = function(args)
+        project_root_cache[args.buf] = nil
+        file_path_cache[args.buf] = nil
+        file_icon_cache[args.buf] = nil
+    end,
+})
 
 return M

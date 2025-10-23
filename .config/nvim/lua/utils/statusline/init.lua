@@ -1,7 +1,5 @@
 local M = {}
 
-_G.Statusline = {}
-
 local highlights = require("utils.statusline.highlights")
 local autocommands = require("utils.statusline.autocommands")
 
@@ -12,7 +10,7 @@ local diagnostics = require("utils.statusline.components.diagnostics")
 local git = require("utils.statusline.components.git")
 local location = require("utils.statusline.components.location")
 
-Statusline.active = function()
+_G.Statusline = function()
     return table.concat({
         border.get_left_border(),
         "%#StatusLine#",
@@ -29,10 +27,6 @@ Statusline.active = function()
         location.get_location(),
         border.get_right_border(),
     })
-end
-
-Statusline.inactive = function()
-    return "%#StatusLineNC# %F"
 end
 
 M.setup = function()

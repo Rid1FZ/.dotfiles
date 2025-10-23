@@ -1,30 +1,34 @@
 local M = {}
 
+local timer = vim.uv.new_timer()
+local function safe_redraw()
+    timer:stop()
+    timer:start(
+        50,
+        0,
+        vim.schedule_wrap(function()
+            vim.cmd("redrawstatus")
+        end)
+    )
+end
+
 M.setup_autocommands = function()
-    local statusline_group = vim.api.nvim_create_augroup("Statusline", { clear = true })
+    local api = vim.api
+    local group = api.nvim_create_augroup("Statusline", { clear = true })
 
-    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-        pattern = "*",
-        group = statusline_group,
+    -- When entering a window or buffer, activate statusline
+    api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+        group = group,
         callback = function()
-            vim.opt_local.statusline = "%!v:lua.Statusline.active()"
-            vim.cmd.redrawstatus()
+            vim.opt_local.statusline = "%!v:lua.Statusline()"
         end,
     })
 
-    vim.api.nvim_create_autocmd({ "ModeChanged", "DiagnosticChanged" }, {
-        pattern = "*",
-        group = statusline_group,
+    -- Refresh diagnostics or mode change instantly, without flicker
+    api.nvim_create_autocmd({ "ModeChanged", "DiagnosticChanged" }, {
+        group = group,
         callback = function()
-            vim.cmd.redrawstatus()
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-        pattern = "*",
-        group = statusline_group,
-        callback = function()
-            vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
+            safe_redraw()
         end,
     })
 end

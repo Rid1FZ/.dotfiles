@@ -1,37 +1,52 @@
 local M = {}
 
+local diagnostic = vim.diagnostic
+local tbl_count = vim.tbl_count
+
+local severity = {
+    errors = diagnostic.severity.ERROR,
+    warnings = diagnostic.severity.WARN,
+    info = diagnostic.severity.INFO,
+    hints = diagnostic.severity.HINT,
+}
+
+local symbols = {
+    errors = "",
+    warnings = "",
+    info = "",
+    hints = "",
+}
+
+local highlights = {
+    errors = "DiagnosticSignError",
+    warnings = "DiagnosticSignWarn",
+    info = "DiagnosticSignInfo",
+    hints = "DiagnosticSignHint",
+}
+
 M.get_diagnostics = function()
-    local count = {}
-    local levels = {
-        errors = "Error",
-        warnings = "Warn",
-        info = "Info",
-        hints = "Hint",
-    }
-
-    for k, level in pairs(levels) do
-        count[k] = vim.tbl_count(vim.diagnostic.get(0, { severity = level }))
+    if vim.bo.buftype ~= "" then
+        return ""
     end
 
-    local errors = ""
-    local warnings = ""
-    local hints = ""
-    local info = ""
+    local bufnr = 0
+    local result = {}
+    local total = 0
 
-    if count["errors"] ~= 0 then
-        errors = " %#LspDiagnosticsSignError# " .. count["errors"]
-    end
-    if count["warnings"] ~= 0 then
-        warnings = " %#LspDiagnosticsSignWarning# " .. count["warnings"]
-    end
-    if count["hints"] ~= 0 then
-        hints = " %#LspDiagnosticsSignHint# " .. count["hints"]
-    end
-    if count["info"] ~= 0 then
-        info = " %#LspDiagnosticsSignInformation# " .. count["info"]
+    for key, sev in pairs(severity) do
+        local n = tbl_count(diagnostic.get(bufnr, { severity = sev }))
+        if n > 0 then
+            total = total + n
+            result[#result + 1] = string.format("%%#%s#%s %d", highlights[key], symbols[key], n)
+        end
     end
 
-    return errors .. warnings .. hints .. info .. "%#StatusLine#"
+    if total == 0 then
+        return ""
+    end
+
+    result[#result + 1] = "%#StatusLine#"
+    return table.concat(result, " ")
 end
 
 return M
