@@ -1,8 +1,8 @@
-local opt = vim.opt_local
+local opt_local = vim.opt_local
 
 if vim.bo.buftype == "nofile" then
-    opt.number = true
-    opt.relativenumber = false
-    opt.cursorline = false
-    opt.signcolumn = "no"
+    opt_local.number = true
+    opt_local.relativenumber = false
+    opt_local.cursorline = false
+    opt_local.signcolumn = "no"
 end
