@@ -18,15 +18,21 @@ utils.load_mappings()
 -- Bootstrap Lazy.nvim safely
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local uv = vim.uv
+local log_levels = vim.log.levels
 
 if not uv.fs_stat(lazypath) then
-    local repo = "https://github.com/folke/lazy.nvim.git"
-    vim.notify("Bootstrapping lazy.nvim...", vim.log.levels.INFO)
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    vim.notify("Bootstrapping lazy.nvim...", log_levels.INFO)
 
-    local ok = os.execute(string.format("git clone --filter=blob:none --branch=stable %s %s", repo, lazypath))
-    if ok ~= 0 then
-        vim.notify("Failed to clone lazy.nvim! Please check your internet connection.", vim.log.levels.ERROR)
-        return
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+
+    if vim.v.shell_error ~= 0 then
+        vim.notify(string.format("Failed to load lazy.nvim:\n\n%s", out), log_levels.ERROR)
+        vim.notify("Press any key to continue...", log_levels.INFO)
+        vim.fn.getchar()
+        os.exit(1)
+    else
+        vim.notify("Done...", log_levels.INFO)
     end
 end
 
