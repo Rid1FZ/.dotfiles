@@ -57,7 +57,7 @@ M.setup = function()
     opt.softtabstop = 4
 
     --------------------------------------------------------------------
-    -- Short messages (append instead of overwrite)
+    -- Short messages
     --------------------------------------------------------------------
     opt.shortmess:append({
         s = true,
@@ -69,12 +69,12 @@ M.setup = function()
     })
 
     --------------------------------------------------------------------
-    -- Disable right-click menu (no-op if unavailable)
+    -- Disable right-click menu
     --------------------------------------------------------------------
     vim.cmd("aunmenu PopUp")
 
     --------------------------------------------------------------------
-    -- Environment setup (add mason bins safely)
+    -- Environment setup
     --------------------------------------------------------------------
     local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
     if not env.PATH:find(vim.pesc(mason_bin), 1, true) then

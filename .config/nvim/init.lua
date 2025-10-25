@@ -11,11 +11,19 @@ local lspconfig = require("configs.lsp")
 local completions = require("utils.completions")
 local statusline = require("utils.statusline")
 
--- Setup options and mappings
+--------------------------------------------------------------------
+-- Setup options
+--------------------------------------------------------------------
 options.setup()
+
+--------------------------------------------------------------------
+-- Setup keymappings
+--------------------------------------------------------------------
 utils.load_mappings()
 
--- Bootstrap Lazy.nvim safely
+--------------------------------------------------------------------
+-- Bootstrap lazy.nvim
+--------------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local uv = vim.uv
 local log_levels = vim.log.levels
@@ -41,18 +49,27 @@ vim.opt.rtp:prepend(lazypath)
 -- Load plugins
 require("lazy").setup(require("configs.lazy"))
 
--- Setup diagnostics and LSP
+--------------------------------------------------------------------
+-- Setup lsp and diagnostics
+--------------------------------------------------------------------
 lspconfig.configure_diagnostics()
 lspconfig.setup()
 
--- Setup completions (after LSP to attach properly)
+--------------------------------------------------------------------
+-- Setup autocompletion
+--------------------------------------------------------------------
 pcall(completions.setup)
 
--- Setup statusline (isolated in case of FZF memory leak)
+--------------------------------------------------------------------
+-- Setup statusline
+--------------------------------------------------------------------
 local ok_status, err = pcall(statusline.setup)
 if not ok_status then
     vim.notify("Statusline setup failed: " .. tostring(err), vim.log.levels.WARN)
 end
 
--- Setup autocommands last
+--------------------------------------------------------------------
+-- Setup autocommands
+--------------------------------------------------------------------
 pcall(configs.setup_autocommands)
+pcall(configs.setup_custom_events)

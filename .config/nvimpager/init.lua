@@ -1,90 +1,44 @@
--- Setup Options
-require("options")
+local options = require("options")
+local mappings = require("mappings")
+local configs = require("configs")
 
--- Setup Lazy.nvim
+--------------------------------------------------------------------
+-- Setup options
+--------------------------------------------------------------------
+options.setup()
+
+--------------------------------------------------------------------
+-- Setup lazy.nvim
+--------------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+local uv = vim.uv
+local log_levels = vim.log.levels
 
-    vim.api.nvim_echo({
-        { "*** Bootstrapping lazy.nvim... ***" },
-    }, true, {})
+if not uv.fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    vim.notify("Bootstrapping lazy.nvim...", log_levels.INFO)
+
     local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 
     if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out, "WarningMsg" },
-            { "\nPress any key to exit..." },
-        }, true, {})
+        vim.notify(string.format("Failed to load lazy.nvim:\n\n%s", out), log_levels.ERROR)
+        vim.notify("Press any key to continue...", log_levels.INFO)
         vim.fn.getchar()
         os.exit(1)
     else
-        vim.api.nvim_echo({
-            { "Done..." },
-        }, true, {})
+        vim.notify("Done...", log_levels.INFO)
     end
 end
 
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup({
-    defaults = { lazy = true, version = nil },
-    install = { colorscheme = { "catppuccin-mocha" } },
-    concurrency = vim.uv.available_parallelism(),
+require("lazy").setup(require("configs.lazy"))
 
-    spec = {
-        { import = "plugins" },
-    },
+--------------------------------------------------------------------
+-- Setup autocommands
+--------------------------------------------------------------------
+pcall(configs.setup_autocommands)
 
-    git = {
-        timeout = 300,
-        url_format = "https://github.com/%s.git",
-    },
-
-    ui = {
-        icons = {
-            ft = "",
-            lazy = "󰂠 ",
-            loaded = "",
-            not_loaded = "",
-        },
-    },
-
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                "2html_plugin",
-                "tohtml",
-                "getscript",
-                "getscriptPlugin",
-                "gzip",
-                "logipat",
-                "netrw",
-                "netrwPlugin",
-                "netrwSettings",
-                "netrwFileHandlers",
-                "matchit",
-                "tar",
-                "tarPlugin",
-                "rrhelper",
-                "spellfile_plugin",
-                "vimball",
-                "vimballPlugin",
-                "zip",
-                "zipPlugin",
-                "tutor",
-                "rplugin",
-                "syntax",
-                "synmenu",
-                "optwin",
-                "compiler",
-                "bugreport",
-                "ftplugin",
-            },
-        },
-    },
-})
-
--- Setup Autocommands
-require("autocommands")
-require("mappings")
+--------------------------------------------------------------------
+-- Setup keymappings
+--------------------------------------------------------------------
+mappings.setup()

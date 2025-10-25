@@ -3,27 +3,7 @@ return {
     event = "VeryLazy",
     main = "ibl",
 
-    opts = {
-        debounce = 100,
-        whitespace = { highlight = { "Whitespace", "NonText" } },
-
-        exclude = {
-            filetypes = {
-                "help",
-                "terminal",
-                "lazy",
-                "",
-            },
-            buftypes = { "terminal" },
-        },
-
-        scope = {
-            enabled = false,
-            show_start = false,
-            show_end = false,
-        },
-    },
-
+    opts = require("configs.plugins.indent-blankline"),
     config = function(_, opts)
         require("ibl").setup(opts)
     end,

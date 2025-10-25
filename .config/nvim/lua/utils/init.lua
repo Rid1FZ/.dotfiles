@@ -6,10 +6,16 @@ local api = vim.api
 local log_levels = vim.log.levels
 local notify = vim.notify
 
+--------------------------------------------------------------------
+-- Set highlighting
+--------------------------------------------------------------------
 M.highlight = function(name, val)
     api.nvim_set_hl(0, name, val)
 end
 
+--------------------------------------------------------------------
+-- Start treesitter for current buffer
+--------------------------------------------------------------------
 M.start_treesitter = function()
     local filetype = vim.bo.filetype
     local nvim_treesitter = require("nvim-treesitter")
@@ -17,7 +23,6 @@ M.start_treesitter = function()
 
     if not parser_available then
         if not contains(nvim_treesitter.get_available(), filetype) then
-            notify(string.format("no treesitter parser found for '%s'...", filetype))
             return
         end
 
@@ -30,6 +35,9 @@ M.start_treesitter = function()
     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
 
+--------------------------------------------------------------------
+-- Load keymappings for specific plugin
+--------------------------------------------------------------------
 M.load_mappings = function(section, mapping_opt)
     vim.schedule(function()
         local function set_section_map(section_values)

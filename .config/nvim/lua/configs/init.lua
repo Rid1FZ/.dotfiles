@@ -1,43 +1,40 @@
 local M = {}
 
-M.setup_autocommands = function()
-    local ok_fzf, fzflua = pcall(require, "fzf-lua")
+local utils = require("utils")
 
+local api = vim.api
+local g = vim.g
+
+M.setup_custom_events = function()
+    --------------------------------------------------------------------
+    -- All augroups
+    --------------------------------------------------------------------
     local groups = {
-        qf = vim.api.nvim_create_augroup("QFNoList", { clear = true }),
-        file_post = vim.api.nvim_create_augroup("CustomFilePost", { clear = true }),
-        open_find = vim.api.nvim_create_augroup("OpenFindFiles", { clear = true }),
-        yank = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
-        disable_search = vim.api.nvim_create_augroup("DisableSearchHighlighting", { clear = true }),
+        file_post = api.nvim_create_augroup("CustomFilePost", { clear = true }),
     }
 
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "qf",
-        group = groups.qf,
-        callback = function()
-            vim.opt_local.buflisted = false
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
+    --------------------------------------------------------------------
+    -- Triggered when file is opened
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
         group = groups.file_post,
         callback = function(args)
             local file = vim.api.nvim_buf_get_name(args.buf)
             local buftype = vim.bo[args.buf].buftype
 
             -- Mark UI as entered
-            if not vim.g.ui_entered and args.event == "UIEnter" then
-                vim.g.ui_entered = true
+            if not g.ui_entered and args.event == "UIEnter" then
+                g.ui_entered = true
             end
 
-            if file ~= "" and buftype ~= "nofile" and vim.g.ui_entered then
-                vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
-                vim.api.nvim_del_augroup_by_id(groups.file_post)
+            if file ~= "" and buftype ~= "nofile" and g.ui_entered then
+                api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
+                api.nvim_del_augroup_by_id(groups.file_post)
 
                 vim.schedule(function()
-                    vim.api.nvim_exec_autocmds("FileType", {})
+                    api.nvim_exec_autocmds("FileType", {})
 
-                    if vim.g.editorconfig then
+                    if g.editorconfig then
                         local ok, editorconfig = pcall(require, "editorconfig")
                         if ok then
                             editorconfig.config(args.buf)
@@ -47,8 +44,37 @@ M.setup_autocommands = function()
             end
         end,
     })
+end
 
-    vim.api.nvim_create_autocmd("VimEnter", {
+M.setup_autocommands = function()
+    local ok_fzf, fzflua = pcall(require, "fzf-lua")
+
+    --------------------------------------------------------------------
+    -- All augroups
+    --------------------------------------------------------------------
+    local groups = {
+        qf = api.nvim_create_augroup("QFNoList", { clear = true }),
+        open_find = api.nvim_create_augroup("OpenFindFiles", { clear = true }),
+        yank = api.nvim_create_augroup("HighlightYank", { clear = true }),
+        disable_search = api.nvim_create_augroup("DisableSearchHighlighting", { clear = true }),
+        start_treesitter = api.nvim_create_augroup("StartTreesitter", { clear = true }),
+    }
+
+    --------------------------------------------------------------------
+    -- Hide quickfix from buffer list
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("FileType", {
+        pattern = "qf",
+        group = groups.qf,
+        callback = function()
+            vim.opt_local.buflisted = false
+        end,
+    })
+
+    --------------------------------------------------------------------
+    -- Open file search when vim is opened with directory
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("VimEnter", {
         group = groups.open_find,
         callback = function(data)
             if vim.fn.isdirectory(data.file) ~= 1 or not ok_fzf then
@@ -63,14 +89,20 @@ M.setup_autocommands = function()
         end,
     })
 
-    vim.api.nvim_create_autocmd("TextYankPost", {
+    --------------------------------------------------------------------
+    -- Highlight yanked part
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("TextYankPost", {
         group = groups.yank,
         callback = function()
             vim.highlight.on_yank({ timeout = 150 })
         end,
     })
 
-    vim.api.nvim_create_autocmd("WinEnter", {
+    --------------------------------------------------------------------
+    -- Disable search highlighting for specific buffers
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("WinEnter", {
         group = groups.disable_search,
         callback = function()
             vim.defer_fn(function()
@@ -87,6 +119,16 @@ M.setup_autocommands = function()
                     end
                 end
             end, 10)
+        end,
+    })
+
+    --------------------------------------------------------------------
+    -- Start treesitter when a file is opened
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("FileType", {
+        group = groups.start_treesitter,
+        callback = function()
+            utils.start_treesitter()
         end,
     })
 end
