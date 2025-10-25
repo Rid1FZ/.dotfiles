@@ -15,9 +15,14 @@ M.start_treesitter = function()
     local nvim_treesitter = require("nvim-treesitter")
     local parser_available, _ = pcall(vim.treesitter.get_parser) -- NOTE: change this in Neovim 0.12
 
-    if not parser_available and contains(nvim_treesitter.get_available(), filetype) then
+    if not parser_available then
+        if not contains(nvim_treesitter.get_available(), filetype) then
+            notify(string.format("no treesitter parser found for '%s'...", filetype))
+            return
+        end
+
         notify(string.format("installing '%s' treesitter parser...", filetype), log_levels.INFO)
-        nvim_treesitter.install(filetype):wait(300000)
+        nvim_treesitter.install(filetype):wait(30000)
     end
 
     vim.treesitter.start()
