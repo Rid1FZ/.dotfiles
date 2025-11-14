@@ -66,7 +66,19 @@ M.general = {
     },
 }
 
-M.lspconfig = {
+M.completion = {
+    plugin = true,
+    i = {
+        ["<C-n>"] = {
+            function()
+                vim.lsp.completion.get()
+            end,
+            "Trigger completion",
+        },
+    },
+}
+
+M.lsp = {
     plugin = true,
     n = {
         ["gD"] = {

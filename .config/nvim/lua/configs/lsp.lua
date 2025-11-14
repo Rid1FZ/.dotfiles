@@ -29,7 +29,7 @@ end
 
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)
-    require("utils").load_mappings("lspconfig", { buffer = bufnr })
+    require("utils").load_mappings("lsp", { buffer = bufnr })
 end
 
 -- disable semantic tokens

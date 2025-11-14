@@ -19,26 +19,32 @@ M.setup = function()
                 return
             end
 
-            if client:supports_method("textDocument/completion") then
-                -- Set a more reasonable list of trigger characters
-                local default_triggers = client.server_capabilities.completionProvider
-                        and client.server_capabilities.completionProvider.triggerCharacters
-                    or {}
+            if not client:supports_method("textDocument/completion") then
+                return
+            end
 
-                -- Extend trigger characters for common cases
-                local extra_triggers = { ".", ":", ">", "<", "'", '"', "/", "\\" }
+            -- Set a more reasonable list of trigger characters
+            local default_triggers
+            if client.server_capabilities.completionProvider then
+                default_triggers = client.server_capabilities.completionProvider.triggerCharacters
+            else
+                default_triggers = {}
+            end
 
-                -- Merge and deduplicate triggers
-                local merged = vim.list_extend(extra_triggers, default_triggers)
+            -- Extend trigger characters for common cases
+            local extra_triggers = { ".", ":", ">", "<", "'", '"', "/", "\\" }
 
-                client.server_capabilities.completionProvider.triggerCharacters = merged
+            -- Merge and deduplicate triggers
+            local merged = vim.list_extend(extra_triggers, default_triggers)
 
-                -- Enable autotrigger safely
-                if vim.lsp.completion and vim.lsp.completion.enable then
-                    vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                else
-                    vim.notify("LSP completion API not available in this Neovim version", vim.log.levels.WARN)
-                end
+            client.server_capabilities.completionProvider.triggerCharacters = merged
+
+            -- Enable autotrigger safely
+            if vim.lsp.completion and vim.lsp.completion.enable then
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                require("utils").load_mappings("completion", { buffer = bufnr })
+            else
+                vim.notify("LSP completion API not available in this Neovim version", vim.log.levels.WARN)
             end
         end,
     })

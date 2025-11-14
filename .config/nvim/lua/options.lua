@@ -45,7 +45,7 @@ M.setup = function()
     --------------------------------------------------------------------
     -- Completion behavior
     --------------------------------------------------------------------
-    opt.completeopt = { "fuzzy", "menu", "menuone", "noselect", "preview" }
+    opt.completeopt = { "fuzzy", "menu", "menuone", "noselect" }
 
     --------------------------------------------------------------------
     -- Indentation
