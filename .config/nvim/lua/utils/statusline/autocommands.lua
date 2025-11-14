@@ -1,17 +1,5 @@
 local M = {}
 
-local timer = vim.uv.new_timer()
-local function safe_redraw()
-    timer:stop()
-    timer:start(
-        50,
-        0,
-        vim.schedule_wrap(function()
-            vim.cmd("redrawstatus")
-        end)
-    )
-end
-
 M.setup_autocommands = function()
     local api = vim.api
     local opt = vim.opt
@@ -26,10 +14,12 @@ M.setup_autocommands = function()
     })
 
     -- Refresh diagnostics or mode change instantly, without flicker
-    api.nvim_create_autocmd({ "ModeChanged", "DiagnosticChanged" }, {
+    api.nvim_create_autocmd({ "ModeChanged" }, {
         group = group,
         callback = function()
-            safe_redraw()
+            vim.defer_fn(function()
+                vim.cmd("redrawstatus")
+            end, 10)
         end,
     })
 end
