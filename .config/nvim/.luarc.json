@@ -1,5 +1,0 @@
-{
-  "workspace.checkThirdParty": "Disable",
-  "diagnostics.disable": ["undefined-field", "different-requires"],
-  "diagnostics.globals": ["vim"]
-}

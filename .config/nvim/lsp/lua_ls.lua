@@ -1,8 +1,43 @@
 local lsp = require("configs.lsp")
 
+local function get_plugins()
+    local plugins = {}
+
+    if not package.loaded.lazy then
+        return plugins
+    end
+
+    local ok, lazy_config = pcall(require, "lazy.core.config")
+    if not ok then
+        return plugins
+    end
+
+    for _, plugin in pairs(lazy_config.plugins) do
+        if plugin.dir then
+            table.insert(plugins, plugin.dir)
+        end
+    end
+
+    return plugins
+end
+
+local function build_library()
+    local library = {}
+
+    library[vim.env.VIMRUNTIME .. "/lua"] = true
+    library[vim.fn.stdpath("config") .. "/lua"] = true
+
+    local plugins = get_plugins()
+    for _, plugin_path in ipairs(plugins) do
+        library[plugin_path .. "/lua"] = true
+    end
+
+    return library
+end
+
 return {
     cmd = { "lua-language-server" },
-    root_markers = { ".git" },
+    root_markers = { ".git", ".luarc.json", ".luarc.jsonc", ".luacheckrc", "stylua.toml" },
     filetypes = { "lua" },
     on_init = lsp.on_init,
     on_attach = lsp.on_attach,
@@ -10,17 +45,29 @@ return {
 
     settings = {
         Lua = {
+            runtime = {
+                version = "LuaJIT",
+                path = {
+                    "?.lua",
+                    "?/init.lua",
+                },
+            },
             diagnostics = {
-                globals = { "vim" },
+                globals = {
+                    "vim",
+                },
+                disable = {
+                    "missing-fields",
+                },
             },
             workspace = {
-                library = {
-                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                    [vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
-                },
+                library = build_library(),
+                checkThirdParty = false,
                 maxPreload = 100000,
-                preloadFileSize = 10000,
+                preloadFileSize = 100000,
+            },
+            telemetry = {
+                enable = false,
             },
         },
     },
