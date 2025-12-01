@@ -1,5 +1,9 @@
 local M = {}
 
+local lsp = vim.lsp
+local api = vim.api
+local fn = vim.fn
+
 M.configure_diagnostics = function()
     local severity = vim.diagnostic.severity
 
@@ -19,8 +23,8 @@ M.configure_diagnostics = function()
     })
 
     -- Default border style
-    local util_open_floating_preview_ = vim.lsp.util.open_floating_preview
-    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    local util_open_floating_preview_ = lsp.util.open_floating_preview
+    function lsp.util.open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
         opts.border = "rounded"
         return util_open_floating_preview_(contents, syntax, opts, ...)
@@ -39,7 +43,7 @@ M.on_init = function(client, _)
     end
 end
 
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
+M.capabilities = lsp.protocol.make_client_capabilities()
 
 M.capabilities.textDocument.completion.completionItem = {
     documentationFormat = { "markdown", "plaintext" },
@@ -63,12 +67,12 @@ M.setup = function()
     local configs = {}
 
     -- enable lsp
-    for _, v in ipairs(vim.api.nvim_get_runtime_file("lsp/*", true)) do
-        local name = vim.fn.fnamemodify(v, ":t:r")
+    for _, v in ipairs(api.nvim_get_runtime_file("lsp/*", true)) do
+        local name = fn.fnamemodify(v, ":t:r")
         configs[name] = true
     end
 
-    vim.lsp.enable(vim.tbl_keys(configs))
+    lsp.enable(vim.tbl_keys(configs))
 end
 
 return M

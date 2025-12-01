@@ -1,8 +1,9 @@
 local M = {}
 
+--------------------------------------------------------------------
+-- General Mappings
+--------------------------------------------------------------------
 M.general = {
-    i = {},
-
     n = {
         ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
 
@@ -48,8 +49,6 @@ M.general = {
         },
     },
 
-    t = {},
-
     v = {
         ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
         ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
@@ -65,6 +64,10 @@ M.general = {
         ["p"] = { 'p:let @+=@0<CR>:let @"=@0<CR>', "Dont copy replaced text", opts = { silent = true } },
     },
 }
+
+--------------------------------------------------------------------
+-- Plugin/Config specific mappings
+--------------------------------------------------------------------
 
 M.completion = {
     plugin = true,
