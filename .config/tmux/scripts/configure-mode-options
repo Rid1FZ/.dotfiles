@@ -23,7 +23,7 @@ function main {
             set_mode_options '#a6e3a1' ''
             ;;
         tree-mode)
-            set_mode_options '#f9e2af' '󰺔'
+            set_mode_options '#f9e2af' ''
             ;;
         buffer-mode)
             set_mode_options '#f9e2af' ''
