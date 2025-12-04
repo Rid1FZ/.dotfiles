@@ -90,19 +90,14 @@ M.setup = function()
             ipy = "python",
             sh = "bash",
             bash = "bash",
+            tmux = "tmux",
         },
         pattern = {
             [vim.fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",
             [vim.fn.expand("$HOME") .. "/.config/waybar/config"] = "jsonc",
             [vim.fn.expand("$HOME") .. "/.config/zathura/.*"] = "zathurarc",
-            [vim.fn.expand("$HOME") .. "/.config/tmux/configs/.*%.tmux"] = "tmux",
         },
     })
-
-    --------------------------------------------------------------------
-    -- Treesitter language remaps
-    --------------------------------------------------------------------
-    vim.treesitter.language.register("bash", "zsh")
 end
 
 return M
