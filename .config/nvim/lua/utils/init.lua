@@ -2,9 +2,12 @@ local M = {}
 
 local merge_tb = vim.tbl_deep_extend
 local contains = vim.tbl_contains
+local wo = vim.wo
+local bo = vim.bo
 local api = vim.api
 local log_levels = vim.log.levels
 local notify = vim.notify
+local treesitter = vim.treesitter
 
 --------------------------------------------------------------------
 -- Set highlighting
@@ -17,7 +20,7 @@ end
 -- Start treesitter for current buffer
 --------------------------------------------------------------------
 M.start_treesitter = function()
-    local filetype = vim.bo.filetype
+    local filetype = bo.filetype
     local nvim_treesitter = require("nvim-treesitter")
     local parser_available, _ = pcall(vim.treesitter.get_parser) -- NOTE: change this in Neovim 0.12
 
@@ -30,9 +33,9 @@ M.start_treesitter = function()
         nvim_treesitter.install(filetype):wait(30000)
     end
 
-    vim.treesitter.start()
-    vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    treesitter.start()
+    wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
 
 --------------------------------------------------------------------
