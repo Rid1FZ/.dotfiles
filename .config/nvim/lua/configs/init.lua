@@ -4,6 +4,10 @@ local utils = require("utils")
 
 local api = vim.api
 local g = vim.g
+local cmd = vim.cmd
+local schedule = vim.schedule
+local defer_fn = vim.defer_fn
+local fn = vim.fn
 
 M.setup_custom_events = function()
     --------------------------------------------------------------------
@@ -19,7 +23,7 @@ M.setup_custom_events = function()
     api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
         group = groups.file_post,
         callback = function(args)
-            local file = vim.api.nvim_buf_get_name(args.buf)
+            local file = api.nvim_buf_get_name(args.buf)
             local buftype = vim.bo[args.buf].buftype
 
             -- Mark UI as entered
@@ -31,7 +35,7 @@ M.setup_custom_events = function()
                 api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
                 api.nvim_del_augroup_by_id(groups.file_post)
 
-                vim.schedule(function()
+                schedule(function()
                     api.nvim_exec_autocmds("FileType", {})
 
                     if g.editorconfig then
@@ -48,6 +52,12 @@ end
 
 M.setup_autocommands = function()
     local ok_fzf, fzflua = pcall(require, "fzf-lua")
+    local ok_nvim_tree_api, nvim_tree_api = pcall(require, "nvim-tree.api")
+
+    if ok_nvim_tree_api then
+        local Event = nvim_tree_api.events.Event
+        local tree = nvim_tree_api.tree
+    end
 
     --------------------------------------------------------------------
     -- All augroups
@@ -58,7 +68,57 @@ M.setup_autocommands = function()
         yank = api.nvim_create_augroup("HighlightYank", { clear = true }),
         disable_search = api.nvim_create_augroup("DisableSearchHighlighting", { clear = true }),
         start_treesitter = api.nvim_create_augroup("StartTreesitter", { clear = true }),
+        nvim_tree = api.nvim_create_augroup("NvimTreeAugroup", { clear = true }),
     }
+
+    --------------------------------------------------------------------
+    -- Close NvimTree if Last Window
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("QuitPre", {
+        group = groups.nvim_tree,
+        callback = function()
+            local invalid_win = {}
+            local wins = api.nvim_list_wins()
+
+            for _, w in ipairs(wins) do
+                local bufname = api.nvim_buf_get_name(api.nvim_win_get_buf(w))
+                if bufname:match("NvimTree_") ~= nil then
+                    table.insert(invalid_win, w)
+                end
+            end
+
+            if #invalid_win == #wins - 1 then
+                -- Should quit, so we close all invalid windows.
+                for _, w in ipairs(invalid_win) do
+                    api.nvim_win_close(w, true)
+                end
+            end
+        end,
+    })
+
+    --------------------------------------------------------------------
+    -- Do Not Take Full Width When File Is Removed (NvimTree)
+    --------------------------------------------------------------------
+    if ok_nvim_tree_api then
+        nvim_tree_api.events.subscribe(Event.FileRemoved, function(data)
+            local winCount = 0
+
+            for _, winId in ipairs(api.nvim_list_wins()) do
+                if api.nvim_win_get_config(winId).focusable then
+                    winCount = winCount + 1
+                end
+            end
+
+            if winCount == 2 then -- one is nvim-tree window, another is additional window
+                defer_fn(function()
+                    -- close nvim-tree: will go to the last buffer used before closing
+                    tree.toggle({ find_file = true, focus = true })
+                    -- re-open nivm-tree
+                    tree.toggle({ find_file = true, focus = true })
+                end, 10)
+            end
+        end)
+    end
 
     --------------------------------------------------------------------
     -- Hide quickfix from buffer list
@@ -77,13 +137,13 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("VimEnter", {
         group = groups.open_find,
         callback = function(data)
-            if vim.fn.isdirectory(data.file) ~= 1 or not ok_fzf then
+            if fn.isdirectory(data.file) ~= 1 or not ok_fzf then
                 return
             end
 
-            vim.cmd("bwipeout")
-            vim.cmd.cd(data.file)
-            vim.schedule(function()
+            cmd("bwipeout")
+            cmd.cd(data.file)
+            schedule(function()
                 fzflua.files()
             end)
         end,
@@ -105,7 +165,7 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("WinEnter", {
         group = groups.disable_search,
         callback = function()
-            vim.defer_fn(function()
+            defer_fn(function()
                 local opt = vim.opt_local
                 local curr_buftype = vim.bo.buftype
                 local disabled_bufs = {

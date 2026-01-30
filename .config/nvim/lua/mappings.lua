@@ -1,5 +1,9 @@
 local M = {}
 
+local schedule = vim.schedule
+local lsp = vim.lsp
+local diagnostic = vim.diagnostic
+
 --------------------------------------------------------------------
 -- General Mappings
 --------------------------------------------------------------------
@@ -23,7 +27,7 @@ M.general = {
 
         ["<Leader>oh"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("utils.floattui").open("htop")
                 end)
             end,
@@ -32,7 +36,7 @@ M.general = {
 
         ["<Leader>ol"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("utils.floattui").open("lazygit")
                 end)
             end,
@@ -41,7 +45,7 @@ M.general = {
 
         ["<Leader>ot"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("utils.floattui.terminal").open()
                 end)
             end,
@@ -74,7 +78,7 @@ M.completion = {
     i = {
         ["<C-n>"] = {
             function()
-                vim.lsp.completion.get()
+                lsp.completion.get()
             end,
             "Trigger completion",
         },
@@ -86,8 +90,8 @@ M.lsp = {
     n = {
         ["gD"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.declaration()
+                schedule(function()
+                    lsp.buf.declaration()
                 end)
             end,
             "LSP declaration",
@@ -95,7 +99,7 @@ M.lsp = {
 
         ["gd"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").lsp_definitions()
                 end)
             end,
@@ -104,8 +108,8 @@ M.lsp = {
 
         ["K"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.hover()
+                schedule(function()
+                    lsp.buf.hover()
                 end)
             end,
             "LSP hover",
@@ -113,7 +117,7 @@ M.lsp = {
 
         ["gi"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").lsp_implementations()
                 end)
             end,
@@ -122,8 +126,8 @@ M.lsp = {
 
         ["<leader>ls"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.signature_help()
+                schedule(function()
+                    lsp.buf.signature_help()
                 end)
             end,
             "LSP signature help",
@@ -134,8 +138,8 @@ M.lsp = {
                 local providers = {
                     "null-ls",
                 }
-                vim.schedule(function()
-                    vim.lsp.buf.format({
+                schedule(function()
+                    lsp.buf.format({
                         async = false,
                         timeout_ms = 5000,
                         filter = function(client)
@@ -155,8 +159,8 @@ M.lsp = {
 
         ["<leader>ld"] = {
             function()
-                vim.schedule(function()
-                    vim.diagnostic.open_float({
+                schedule(function()
+                    diagnostic.open_float({
                         border = "rounded",
                         scope = "cursor",
                         severity_sort = true,
@@ -168,7 +172,7 @@ M.lsp = {
 
         ["<leader>lD"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").lsp_workspace_diagnostics()
                 end)
             end,
@@ -177,8 +181,8 @@ M.lsp = {
 
         ["<leader>lr"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.rename()
+                schedule(function()
+                    lsp.buf.rename()
                 end)
             end,
             "LSP rename",
@@ -186,8 +190,8 @@ M.lsp = {
 
         ["<leader>la"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.code_action()
+                schedule(function()
+                    lsp.buf.code_action()
                 end)
             end,
             "LSP code action",
@@ -195,7 +199,7 @@ M.lsp = {
 
         ["gr"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").lsp_references()
                 end)
             end,
@@ -204,8 +208,8 @@ M.lsp = {
 
         ["[d"] = {
             function()
-                vim.schedule(function()
-                    vim.diagnostic.jump({
+                schedule(function()
+                    diagnostic.jump({
                         count = -1,
                         float = {
                             border = "rounded",
@@ -218,8 +222,8 @@ M.lsp = {
 
         ["]d"] = {
             function()
-                vim.schedule(function()
-                    vim.diagnostic.jump({
+                schedule(function()
+                    diagnostic.jump({
                         count = 1,
                         float = {
                             border = "rounded",
@@ -232,8 +236,8 @@ M.lsp = {
 
         ["<leader>q"] = {
             function()
-                vim.schedule(function()
-                    vim.diagnostic.setloclist()
+                schedule(function()
+                    diagnostic.setloclist()
                 end)
             end,
             "Diagnostic setloclist",
@@ -243,11 +247,27 @@ M.lsp = {
     v = {
         ["<leader>la"] = {
             function()
-                vim.schedule(function()
-                    vim.lsp.buf.code_action()
+                schedule(function()
+                    lsp.buf.code_action()
                 end)
             end,
             "LSP code action",
+        },
+    },
+}
+
+M.nvimtree = {
+    plugin = true,
+
+    n = {
+        -- focus
+        ["<leader>oe"] = {
+            function()
+                schedule(function()
+                    require("nvim-tree.api").tree.focus()
+                end)
+            end,
+            "Focus explorer",
         },
     },
 }
@@ -259,7 +279,7 @@ M["fzf-lua"] = {
         -- find
         ["<leader>ff"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").files()
                 end)
             end,
@@ -268,7 +288,7 @@ M["fzf-lua"] = {
 
         ["<leader>fg"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").live_grep()
                 end)
             end,
@@ -277,7 +297,7 @@ M["fzf-lua"] = {
 
         ["<leader>fb"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").buffers()
                 end)
             end,
@@ -286,7 +306,7 @@ M["fzf-lua"] = {
 
         ["<leader>fh"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").helptags()
                 end)
             end,
@@ -295,7 +315,7 @@ M["fzf-lua"] = {
 
         ["<leader>fo"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").oldfiles()
                 end)
             end,
@@ -314,7 +334,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "]c"
                 end
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").next_hunk()
                 end)
                 return "<Ignore>"
@@ -328,7 +348,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "[c"
                 end
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").prev_hunk()
                 end)
                 return "<Ignore>"
@@ -340,7 +360,7 @@ M.gitsigns = {
         -- Actions
         ["<leader>gr"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").reset_hunk()
                 end)
             end,
@@ -349,7 +369,7 @@ M.gitsigns = {
 
         ["<leader>gp"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").preview_hunk()
                 end)
             end,
@@ -358,7 +378,7 @@ M.gitsigns = {
 
         ["<leader>gb"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").blame_line()
                 end)
             end,
@@ -367,7 +387,7 @@ M.gitsigns = {
 
         ["<leader>gt"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("gitsigns").toggle_deleted()
                 end)
             end,
@@ -376,7 +396,7 @@ M.gitsigns = {
 
         ["<leader>gm"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").git_commits()
                 end)
             end,
@@ -385,7 +405,7 @@ M.gitsigns = {
 
         ["<leader>gs"] = {
             function()
-                vim.schedule(function()
+                schedule(function()
                     require("fzf-lua").git_status()
                 end)
             end,
