@@ -47,7 +47,6 @@ set_env DOTFILES "${HOME}/.dotfiles"
 set_env VISUAL "nvim"
 set_env EDITOR "${VISUAL}"
 set_env SUDO_EDITOR "${VISUAL}"
-set_env JAVA_HOME "/usr/java/latest"
 set_env MAMBA_NO_BANNER "1"
 set_env MANROFFOPT "-c"
 set_env PAGER "less"
@@ -58,7 +57,14 @@ set_env RIPGREP_CONFIG_PATH "${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgrep
 set_env HISTSIZE "100000"
 set_env SAVEHIST "100000"
 set_env FZF_DEFAULT_OPTS_FILE "${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzfrc"
-set_env PATH "${HOME}/.cargo/bin:${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+
+# Android
+set_env JAVA_HOME "/usr/lib/jvm/jre-21-openjdk"
+set_env ANDROID_HOME "${HOME}/Android"
+set_env ANDROID_SDK_ROOT "${HOME}/Android"
+
+set_env PATH "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${HOME}/.cargo/bin:${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+set_env LD_LIBRARY_PATH "${ANDROID_SDK_ROOT}/cmdline-tools/latest/lib:${ANDROID_SDK_ROOT}/platform-tools"
 
 case "$(ps -p $$ -o comm=)" in
     "zsh")
