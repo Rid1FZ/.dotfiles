@@ -11,6 +11,11 @@ local lspconfig = require("configs.lsp")
 local completions = require("utils.completions")
 local statusline = require("utils.statusline")
 
+local notify = vim.notify
+local log_levels = vim.log.levels
+local uv = vim.uv
+local fn = vim.fn
+
 --------------------------------------------------------------------
 -- Setup options
 --------------------------------------------------------------------
@@ -24,23 +29,21 @@ utils.load_mappings()
 --------------------------------------------------------------------
 -- Bootstrap lazy.nvim
 --------------------------------------------------------------------
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-local uv = vim.uv
-local log_levels = vim.log.levels
+local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not uv.fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    vim.notify("Bootstrapping lazy.nvim...", log_levels.INFO)
+    notify("Bootstrapping lazy.nvim...", log_levels.INFO)
 
-    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    local out = fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 
     if vim.v.shell_error ~= 0 then
-        vim.notify(string.format("Failed to load lazy.nvim:\n\n%s", out), log_levels.ERROR)
-        vim.notify("Press any key to continue...", log_levels.INFO)
-        vim.fn.getchar()
+        notify(string.format("Failed to load lazy.nvim:\n\n%s", out), log_levels.ERROR)
+        notify("Press any key to continue...", log_levels.INFO)
+        fn.getchar()
         os.exit(1)
     else
-        vim.notify("Done...", log_levels.INFO)
+        notify("Done...", log_levels.INFO)
     end
 end
 
@@ -65,7 +68,7 @@ pcall(completions.setup)
 --------------------------------------------------------------------
 local ok_status, err = pcall(statusline.setup)
 if not ok_status then
-    vim.notify("Statusline setup failed: " .. tostring(err), vim.log.levels.WARN)
+    notify("Statusline setup failed: " .. tostring(err), log_levels.WARN)
 end
 
 --------------------------------------------------------------------

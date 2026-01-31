@@ -24,12 +24,12 @@ end
 local function build_library()
     local library = {}
 
-    library[vim.env.VIMRUNTIME .. "/lua"] = true
-    library[vim.fn.stdpath("config") .. "/lua"] = true
+    library[vim.env.VIMRUNTIME] = true
+    library[vim.fn.stdpath("config")] = true
 
     local plugins = get_plugins()
     for _, plugin_path in ipairs(plugins) do
-        library[plugin_path .. "/lua"] = true
+        library[plugin_path] = true
     end
 
     return library
@@ -37,7 +37,7 @@ end
 
 return {
     cmd = { "lua-language-server" },
-    root_markers = { ".git", ".luarc.json", ".luarc.jsonc", ".luacheckrc", "stylua.toml" },
+    root_markers = { ".luarc.json", ".luarc.jsonc", ".luacheckrc", "stylua.toml", ".git" },
     filetypes = { "lua" },
     on_init = lsp.on_init,
     on_attach = lsp.on_attach,
@@ -48,8 +48,8 @@ return {
             runtime = {
                 version = "LuaJIT",
                 path = {
-                    "?.lua",
-                    "?/init.lua",
+                    "lua/?.lua",
+                    "lua/?/init.lua",
                 },
             },
             diagnostics = {
