@@ -13,8 +13,8 @@ M.setup_autocommands = function()
         end,
     })
 
-    -- Refresh diagnostics or mode change instantly, without flicker
-    api.nvim_create_autocmd({ "ModeChanged" }, {
+    -- Refresh  instantly, without flicker
+    api.nvim_create_autocmd({ "ModeChanged", "VimResized", "WinResized" }, {
         group = group,
         callback = function()
             vim.defer_fn(function()
