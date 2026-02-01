@@ -115,7 +115,7 @@ M.trash = {
 
 M.renderer = {
     root_folder_label = false,
-    highlight_git = true,
+    highlight_git = false,
     highlight_opened_files = "none",
     symlink_destination = false,
 
