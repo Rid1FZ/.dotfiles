@@ -74,5 +74,5 @@ end
 --------------------------------------------------------------------
 -- Setup autocommands
 --------------------------------------------------------------------
-pcall(configs.setup_autocommands)
 pcall(configs.setup_custom_events)
+pcall(configs.setup_autocommands)

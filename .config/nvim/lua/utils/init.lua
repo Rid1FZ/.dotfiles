@@ -22,7 +22,7 @@ end
 M.start_treesitter = function()
     local filetype = bo.filetype
     local nvim_treesitter = require("nvim-treesitter")
-    local parser_available, _ = pcall(vim.treesitter.get_parser) -- NOTE: change this in Neovim 0.12
+    local parser_available, _ = pcall(treesitter.get_parser, 0) -- NOTE: change this in Neovim 0.12
 
     if not parser_available then
         if not contains(nvim_treesitter.get_available(), filetype) then

@@ -54,9 +54,10 @@ M.setup_autocommands = function()
     local ok_fzf, fzflua = pcall(require, "fzf-lua")
     local ok_nvim_tree_api, nvim_tree_api = pcall(require, "nvim-tree.api")
 
+    local tree = nil
+
     if ok_nvim_tree_api then
-        local Event = nvim_tree_api.events.Event
-        local tree = nvim_tree_api.tree
+        tree = nvim_tree_api.tree
     end
 
     --------------------------------------------------------------------
@@ -97,28 +98,39 @@ M.setup_autocommands = function()
     })
 
     --------------------------------------------------------------------
-    -- Do Not Take Full Width When File Is Removed (NvimTree)
+    -- Make :bd and :q behave as usual when tree is visible (NvimTree)
     --------------------------------------------------------------------
-    if ok_nvim_tree_api then
-        nvim_tree_api.events.subscribe(Event.FileRemoved, function(data)
-            local winCount = 0
+    api.nvim_create_autocmd({ "BufEnter", "QuitPre" }, {
+        group = groups.nvim_tree,
+        nested = false,
+        callback = function(e)
+            if not tree then
+                return
+            elseif not tree.is_visible() then
+                return
+            end
 
+            local winCount = 0
             for _, winId in ipairs(api.nvim_list_wins()) do
                 if api.nvim_win_get_config(winId).focusable then
                     winCount = winCount + 1
                 end
             end
 
-            if winCount == 2 then -- one is nvim-tree window, another is additional window
+            -- We want to quit and only one window besides tree is left
+            if e.event == "QuitPre" and winCount == 2 then
+                api.nvim_cmd({ cmd = "qall" }, {})
+            end
+
+            if e.event == "BufEnter" and winCount == 1 then
+                -- Required to avoid "Vim:E444: Cannot close last window"
                 defer_fn(function()
-                    -- close nvim-tree: will go to the last buffer used before closing
                     tree.toggle({ find_file = true, focus = true })
-                    -- re-open nivm-tree
-                    tree.toggle({ find_file = true, focus = true })
+                    tree.toggle({ find_file = true, focus = false })
                 end, 10)
             end
-        end)
-    end
+        end,
+    })
 
     --------------------------------------------------------------------
     -- Hide quickfix from buffer list
