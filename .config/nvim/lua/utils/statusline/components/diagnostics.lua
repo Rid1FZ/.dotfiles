@@ -1,7 +1,11 @@
 local M = {}
 
+local api = vim.api
+local bo = vim.bo -- always use the index form: bo[something]
 local diagnostic = vim.diagnostic
 local tbl_count = vim.tbl_count
+local format = string.format
+local concat = table.concat
 
 local severity = {
     errors = diagnostic.severity.ERROR,
@@ -25,11 +29,12 @@ local highlights = {
 }
 
 M.get_diagnostics = function()
-    if vim.bo.buftype ~= "" then
+    local bufnr = api.nvim_get_current_buf()
+
+    if bo[bufnr].buftype ~= "" then
         return ""
     end
 
-    local bufnr = 0
     local result = {}
     local total = 0
 
@@ -37,7 +42,7 @@ M.get_diagnostics = function()
         local n = tbl_count(diagnostic.get(bufnr, { severity = sev }))
         if n > 0 then
             total = total + n
-            result[#result + 1] = string.format("%%#%s#%s %d", highlights[key], symbols[key], n)
+            result[#result + 1] = format("%%#%s#%s %d", highlights[key], symbols[key], n)
         end
     end
 
@@ -46,7 +51,7 @@ M.get_diagnostics = function()
     end
 
     result[#result + 1] = "%#StatusLine#"
-    return table.concat(result, " ")
+    return concat(result, " ")
 end
 
 return M

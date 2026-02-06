@@ -1,5 +1,8 @@
 local M = {}
 
+local api = vim.api
+local format = string.format
+
 local modes = {
     ["n"] = "N",
     ["no"] = "N",
@@ -24,7 +27,7 @@ local modes = {
 }
 
 local function update_mode_colors()
-    local current_mode = vim.api.nvim_get_mode().mode
+    local current_mode = api.nvim_get_mode().mode
     local mode_color = "%#StatuslineAccent#"
 
     if current_mode == "n" then
@@ -45,8 +48,8 @@ local function update_mode_colors()
 end
 
 function M.get_mode()
-    local current_mode = vim.api.nvim_get_mode().mode
-    return string.format("%s %s ", update_mode_colors(), modes[current_mode])
+    local current_mode = api.nvim_get_mode().mode
+    return format("%s %s ", update_mode_colors(), modes[current_mode])
 end
 
 return M

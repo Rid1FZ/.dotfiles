@@ -1,6 +1,7 @@
 local opt_local = vim.opt_local
+local bo = vim.bo -- always use the index form: bo[something]
 
-if vim.bo.buftype == "nofile" then
+if bo["buftype"] == "nofile" then
     opt_local.number = true
     opt_local.relativenumber = false
     opt_local.cursorline = false

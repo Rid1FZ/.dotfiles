@@ -2,12 +2,17 @@ local M = {}
 
 local fn = vim.fn
 local api = vim.api
+local bo = vim.bo -- always use the index form: bo[something]
+local format = string.format
+local floor = math.floor
 
 local last_branch = ""
 local last_cwd = ""
 
 local function get_branch()
-    if vim.bo.buftype ~= "" then
+    local bufnr = api.nvim_get_current_buf()
+
+    if bo[bufnr].buftype ~= "" then
         return ""
     end
 
@@ -34,11 +39,11 @@ M.get_gitbranch = function()
 
     if branch == "" then
         return " "
-    elseif (#branch + 2) > math.floor(win_width * 0.15) then
-        return string.format("%%#StatusLineGitBranch#%%#StatusLine#  ")
+    elseif (#branch + 2) > floor(win_width * 0.15) then
+        return format("%%#StatusLineGitBranch#%%#StatusLine#  ")
     end
 
-    return string.format("%%#StatusLineGitBranch# %s%%#StatusLine#  ", branch)
+    return format("%%#StatusLineGitBranch# %s%%#StatusLine#  ", branch)
 end
 
 return M

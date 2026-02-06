@@ -2,20 +2,25 @@ local M = {}
 
 local highlights = require("utils.completions.highlights")
 
+local api = vim.api
+local bo = vim.bo -- always use the index form: bo[something]
+local lsp = vim.lsp
+local notify = vim.notify
+
 M.setup = function()
     -- Setup highlights
     highlights.setup_highlights()
 
-    local group = vim.api.nvim_create_augroup("CompletionsSetup", { clear = true })
+    local group = api.nvim_create_augroup("CompletionsSetup", { clear = true })
 
-    vim.api.nvim_create_autocmd("LspAttach", {
+    api.nvim_create_autocmd("LspAttach", {
         group = group,
         callback = function(args)
-            local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+            local client = assert(lsp.get_client_by_id(args.data.client_id))
             local bufnr = args.buf
 
             -- Skip buffers where completions are irrelevant
-            if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "" then
+            if bo[bufnr].buftype ~= "" or bo[bufnr].filetype == "" then
                 return
             end
 
@@ -40,11 +45,11 @@ M.setup = function()
             client.server_capabilities.completionProvider.triggerCharacters = merged
 
             -- Enable autotrigger safely
-            if vim.lsp.completion and vim.lsp.completion.enable then
-                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+            if lsp.completion and lsp.completion.enable then
+                lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
                 require("utils").load_mappings("completion", { buffer = bufnr })
             else
-                vim.notify("LSP completion API not available in this Neovim version", vim.log.levels.WARN)
+                notify("LSP completion API not available in this Neovim version", vim.log.levels.WARN)
             end
         end,
     })

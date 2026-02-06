@@ -1,5 +1,9 @@
 local M = {}
+
 local floattui = require("utils.floattui")
+
+local api = vim.api
+local keymap = vim.keymap
 
 local function opts(buf)
     return {
@@ -11,8 +15,8 @@ local function opts(buf)
 end
 
 local set_keymappings = function(buf, win)
-    vim.keymap.set("t", "<Esc><Esc>", function()
-        vim.api.nvim_win_close(win, true)
+    keymap.set("t", "<Esc><Esc>", function()
+        api.nvim_win_close(win, true)
     end, opts(buf))
 end
 

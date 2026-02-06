@@ -1,8 +1,11 @@
 local M = {}
 
+local api = vim.api
+local opt = vim.opt
+local cmd = vim.cmd
+local defer_fn = vim.defer_fn
+
 M.setup_autocommands = function()
-    local api = vim.api
-    local opt = vim.opt
     local group = api.nvim_create_augroup("Statusline", { clear = true })
 
     -- When entering a window or buffer, activate statusline
@@ -17,8 +20,8 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd({ "ModeChanged", "VimResized", "WinResized" }, {
         group = group,
         callback = function()
-            vim.defer_fn(function()
-                vim.cmd("redrawstatus")
+            defer_fn(function()
+                cmd.redrawstatus()
             end, 10)
         end,
     })

@@ -1,6 +1,9 @@
 local M = {}
 local null_ls = require("null-ls")
 
+local api = vim.api
+local lsp = vim.lsp
+
 M.sources = {
     -- python
     null_ls.builtins.formatting.black,
@@ -34,10 +37,10 @@ M.sources = {
 
 M.on_attach = function(client, bufnr)
     if client.supports_method("textDocument/formatting") then
-        vim.api.nvim_create_autocmd("BufWritePre", {
+        api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
             callback = function()
-                vim.lsp.buf.format({
+                lsp.buf.format({
                     async = false,
                     timeout_ms = 5000,
                     bufnr = bufnr,

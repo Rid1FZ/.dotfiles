@@ -6,7 +6,7 @@ local file_icon_cache = {}
 
 local api = vim.api
 local fn = vim.fn
-local bo = vim.bo
+local bo = vim.bo -- always use the index form: bo[something]
 local uv = vim.uv
 local fs = vim.fs
 
@@ -45,11 +45,12 @@ local function get_project_root()
 end
 
 M.get_fileicon = function()
-    if bo.buftype ~= "" then
+    local bufnr = api.nvim_get_current_buf()
+
+    if bo[bufnr].buftype ~= "" then
         return ""
     end
 
-    local bufnr = api.nvim_get_current_buf()
     if file_icon_cache[bufnr] then
         return file_icon_cache[bufnr]
     end
@@ -80,11 +81,12 @@ M.get_fileicon = function()
 end
 
 M.get_filepath = function()
-    if bo.buftype ~= "" then
+    local bufnr = api.nvim_get_current_buf()
+
+    if bo[bufnr].buftype ~= "" then
         return ""
     end
 
-    local bufnr = api.nvim_get_current_buf()
     local win_width = api.nvim_win_get_width(0)
 
     -- Setup the cache
@@ -144,15 +146,17 @@ M.get_filepath = function()
 end
 
 M.get_modified_status = function()
-    if bo.buftype ~= "" then
+    local bufnr = api.nvim_get_current_buf()
+
+    if bo[bufnr].buftype ~= "" then
         return ""
     end
 
     local s = ""
-    if bo.modified then
+    if bo[bufnr].modified then
         s = s .. "[+] "
     end
-    if bo.readonly or not bo.modifiable then
+    if bo[bufnr].readonly or not bo[bufnr].modifiable then
         s = s .. "[-] "
     end
     return #s > 0 and s or "   "

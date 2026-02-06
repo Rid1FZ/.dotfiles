@@ -2,12 +2,15 @@ local M = {}
 
 local merge_tb = vim.tbl_deep_extend
 local contains = vim.tbl_contains
-local wo = vim.wo
-local bo = vim.bo
+local wo = vim.wo -- always use the index form: wo[something]
+local bo = vim.bo -- always use the index form: bo[something]
 local api = vim.api
 local log_levels = vim.log.levels
 local notify = vim.notify
 local treesitter = vim.treesitter
+local keymap = vim.keymap
+local schedule = vim.schedule
+local format = string.format
 
 --------------------------------------------------------------------
 -- Set highlighting
@@ -19,8 +22,8 @@ end
 --------------------------------------------------------------------
 -- Start treesitter for current buffer
 --------------------------------------------------------------------
-M.start_treesitter = function()
-    local filetype = bo.filetype
+M.start_treesitter = function(bufnr)
+    local filetype = bo[bufnr].filetype
     local nvim_treesitter = require("nvim-treesitter")
     local parser_available, _ = pcall(treesitter.get_parser, 0) -- NOTE: change this in Neovim 0.12
 
@@ -29,20 +32,20 @@ M.start_treesitter = function()
             return
         end
 
-        notify(string.format("installing '%s' treesitter parser...", filetype), log_levels.INFO)
+        notify(format("installing '%s' treesitter parser...", filetype), log_levels.INFO)
         nvim_treesitter.install(filetype):wait(30000)
     end
 
-    treesitter.start()
-    wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    treesitter.start(bufnr)
+    wo["foldexpr"] = "v:lua.vim.treesitter.foldexpr()"
+    bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
 
 --------------------------------------------------------------------
 -- Load keymappings for specific plugin
 --------------------------------------------------------------------
 M.load_mappings = function(section, mapping_opt)
-    vim.schedule(function()
+    schedule(function()
         local function set_section_map(section_values)
             if section_values.plugin then
                 return
@@ -59,7 +62,7 @@ M.load_mappings = function(section, mapping_opt)
                     mapping_info.opts, opts.mode = nil, nil
                     opts.desc = mapping_info[2]
 
-                    vim.keymap.set(mode, keybind, mapping_info[1], opts)
+                    keymap.set(mode, keybind, mapping_info[1], opts)
                 end
             end
         end

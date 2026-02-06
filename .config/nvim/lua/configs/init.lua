@@ -2,6 +2,8 @@ local M = {}
 
 local utils = require("utils")
 
+local opt_local = vim.opt_local
+local bo = vim.bo -- always use the index form: bo[something]
 local api = vim.api
 local g = vim.g
 local cmd = vim.cmd
@@ -24,7 +26,7 @@ M.setup_custom_events = function()
         group = groups.file_post,
         callback = function(args)
             local file = api.nvim_buf_get_name(args.buf)
-            local buftype = vim.bo[args.buf].buftype
+            local buftype = bo[args.buf].buftype
 
             -- Mark UI as entered
             if not g.ui_entered and args.event == "UIEnter" then
@@ -139,7 +141,7 @@ M.setup_autocommands = function()
         pattern = "qf",
         group = groups.qf,
         callback = function()
-            vim.opt_local.buflisted = false
+            opt_local["buflisted"] = false
         end,
     })
 
@@ -176,17 +178,17 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("WinEnter", {
         group = groups.disable_search,
-        callback = function()
+        callback = function(args)
             defer_fn(function()
-                local opt = vim.opt_local
-                local curr_buftype = vim.bo.buftype
+                local curr_buftype = bo[args.buf].buftype
                 local disabled_bufs = {
                     "terminal",
                 }
 
                 for _, buftype in ipairs(disabled_bufs) do
                     if curr_buftype == buftype then
-                        opt.winhighlight = opt.winhighlight + "Search:None,CurSearch:None,IncSearch:None"
+                        opt_local["winhighlight"] = opt_local["winhighlight"]
+                            + "Search:None,CurSearch:None,IncSearch:None"
                         break
                     end
                 end
@@ -199,8 +201,8 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("FileType", {
         group = groups.start_treesitter,
-        callback = function()
-            utils.start_treesitter()
+        callback = function(args)
+            utils.start_treesitter(args.buf)
         end,
     })
 end
