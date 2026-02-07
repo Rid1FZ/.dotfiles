@@ -285,7 +285,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "]c"
                 end
-                require("gitsigns").next_hunk()
+                require("gitsigns").nav_hunk("next")
                 return "<Ignore>"
             end,
             "Jump to next hunk",
@@ -297,7 +297,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "[c"
                 end
-                require("gitsigns").prev_hunk()
+                require("gitsigns").nav_hunk("prev")
                 return "<Ignore>"
             end,
             "Jump to prev hunk",
@@ -328,7 +328,7 @@ M.gitsigns = {
 
         ["<leader>gt"] = {
             function()
-                require("gitsigns").toggle_deleted()
+                require("gitsigns").preview_hunk_inline()
             end,
             "Toggle deleted",
         },
