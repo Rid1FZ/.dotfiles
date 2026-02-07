@@ -178,9 +178,10 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("WinEnter", {
         group = groups.disable_search,
-        callback = function(args)
+        callback = function()
             defer_fn(function()
-                local curr_buftype = bo[args.buf].buftype
+                local bufnr = api.nvim_get_current_buf()
+                local curr_buftype = bo[bufnr].buftype
                 local disabled_bufs = {
                     "terminal",
                 }
@@ -202,7 +203,9 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("FileType", {
         group = groups.start_treesitter,
         callback = function(args)
-            utils.start_treesitter(args.buf)
+            local curr_win = api.nvim_get_current_win()
+
+            utils.start_treesitter(args.buf, curr_win)
         end,
     })
 end

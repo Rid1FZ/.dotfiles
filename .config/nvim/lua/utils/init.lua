@@ -22,7 +22,7 @@ end
 --------------------------------------------------------------------
 -- Start treesitter for current buffer
 --------------------------------------------------------------------
-M.start_treesitter = function(bufnr)
+M.start_treesitter = function(bufnr, winnr)
     local filetype = bo[bufnr].filetype
     local nvim_treesitter = require("nvim-treesitter")
     local parser_available, _ = pcall(treesitter.get_parser, 0) -- NOTE: change this in Neovim 0.12
@@ -37,7 +37,7 @@ M.start_treesitter = function(bufnr)
     end
 
     treesitter.start(bufnr)
-    wo["foldexpr"] = "v:lua.vim.treesitter.foldexpr()"
+    wo[winnr].foldexpr = "v:lua.vim.treesitter.foldexpr()"
     bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
 

@@ -1,6 +1,5 @@
 local M = {}
 
-local schedule = vim.schedule
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
@@ -27,27 +26,21 @@ M.general = {
 
         ["<Leader>oh"] = {
             function()
-                schedule(function()
-                    require("utils.floattui").open("htop")
-                end)
+                require("utils.floattui").open("htop")
             end,
             "Open htop",
         },
 
         ["<Leader>ol"] = {
             function()
-                schedule(function()
-                    require("utils.floattui").open("lazygit")
-                end)
+                require("utils.floattui").open("lazygit")
             end,
             "Open lazygit",
         },
 
         ["<Leader>ot"] = {
             function()
-                schedule(function()
-                    require("utils.floattui.terminal").open()
-                end)
+                require("utils.floattui.terminal").open()
             end,
             "Open terminal",
         },
@@ -90,45 +83,35 @@ M.lsp = {
     n = {
         ["gD"] = {
             function()
-                schedule(function()
-                    lsp.buf.declaration()
-                end)
+                lsp.buf.declaration()
             end,
             "LSP declaration",
         },
 
         ["gd"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").lsp_definitions()
-                end)
+                require("fzf-lua").lsp_definitions()
             end,
             "LSP definition",
         },
 
         ["K"] = {
             function()
-                schedule(function()
-                    lsp.buf.hover()
-                end)
+                lsp.buf.hover()
             end,
             "LSP hover",
         },
 
         ["gi"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").lsp_implementations()
-                end)
+                require("fzf-lua").lsp_implementations()
             end,
             "LSP implementation",
         },
 
         ["<leader>ls"] = {
             function()
-                schedule(function()
-                    lsp.buf.signature_help()
-                end)
+                lsp.buf.signature_help()
             end,
             "LSP signature help",
         },
@@ -138,107 +121,89 @@ M.lsp = {
                 local providers = {
                     "null-ls",
                 }
-                schedule(function()
-                    lsp.buf.format({
-                        async = false,
-                        timeout_ms = 5000,
-                        filter = function(client)
-                            for _, provider in ipairs(providers) do
-                                if client.name == provider then
-                                    print(client.name)
-                                    return true
-                                end
+                lsp.buf.format({
+                    async = false,
+                    timeout_ms = 5000,
+                    filter = function(client)
+                        for _, provider in ipairs(providers) do
+                            if client.name == provider then
+                                print(client.name)
+                                return true
                             end
-                            return false
-                        end,
-                    })
-                end)
+                        end
+                        return false
+                    end,
+                })
             end,
             "LSP formatting",
         },
 
         ["<leader>ld"] = {
             function()
-                schedule(function()
-                    diagnostic.open_float({
-                        border = "rounded",
-                        scope = "cursor",
-                        severity_sort = true,
-                    })
-                end)
+                diagnostic.open_float({
+                    border = "rounded",
+                    scope = "cursor",
+                    severity_sort = true,
+                })
             end,
             "Floating diagnostic",
         },
 
         ["<leader>lD"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").lsp_workspace_diagnostics()
-                end)
+                require("fzf-lua").lsp_workspace_diagnostics()
             end,
             "LSP list all diagnostics",
         },
 
         ["<leader>lr"] = {
             function()
-                schedule(function()
-                    lsp.buf.rename()
-                end)
+                lsp.buf.rename()
             end,
             "LSP rename",
         },
 
         ["<leader>la"] = {
             function()
-                schedule(function()
-                    lsp.buf.code_action()
-                end)
+                lsp.buf.code_action()
             end,
             "LSP code action",
         },
 
         ["gr"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").lsp_references()
-                end)
+                require("fzf-lua").lsp_references()
             end,
             "LSP references",
         },
 
         ["[d"] = {
             function()
-                schedule(function()
-                    diagnostic.jump({
-                        count = -1,
-                        float = {
-                            border = "rounded",
-                        },
-                    })
-                end)
+                diagnostic.jump({
+                    count = -1,
+                    float = {
+                        border = "rounded",
+                    },
+                })
             end,
             "Goto prev",
         },
 
         ["]d"] = {
             function()
-                schedule(function()
-                    diagnostic.jump({
-                        count = 1,
-                        float = {
-                            border = "rounded",
-                        },
-                    })
-                end)
+                diagnostic.jump({
+                    count = 1,
+                    float = {
+                        border = "rounded",
+                    },
+                })
             end,
             "Goto next",
         },
 
         ["<leader>q"] = {
             function()
-                schedule(function()
-                    diagnostic.setloclist()
-                end)
+                diagnostic.setloclist()
             end,
             "Diagnostic setloclist",
         },
@@ -247,9 +212,7 @@ M.lsp = {
     v = {
         ["<leader>la"] = {
             function()
-                schedule(function()
-                    lsp.buf.code_action()
-                end)
+                lsp.buf.code_action()
             end,
             "LSP code action",
         },
@@ -263,9 +226,7 @@ M.nvimtree = {
         -- focus
         ["<leader>oe"] = {
             function()
-                schedule(function()
-                    require("nvim-tree.api").tree.focus()
-                end)
+                require("nvim-tree.api").tree.focus()
             end,
             "Focus explorer",
         },
@@ -279,45 +240,35 @@ M["fzf-lua"] = {
         -- find
         ["<leader>ff"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").files()
-                end)
+                require("fzf-lua").files()
             end,
             "Find files",
         },
 
         ["<leader>fg"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").live_grep()
-                end)
+                require("fzf-lua").live_grep()
             end,
             "Live grep",
         },
 
         ["<leader>fb"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").buffers()
-                end)
+                require("fzf-lua").buffers()
             end,
             "Find buffers",
         },
 
         ["<leader>fh"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").helptags()
-                end)
+                require("fzf-lua").helptags()
             end,
             "Help page",
         },
 
         ["<leader>fo"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").oldfiles()
-                end)
+                require("fzf-lua").oldfiles()
             end,
             "Find oldfiles",
         },
@@ -334,9 +285,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "]c"
                 end
-                schedule(function()
-                    require("gitsigns").next_hunk()
-                end)
+                require("gitsigns").next_hunk()
                 return "<Ignore>"
             end,
             "Jump to next hunk",
@@ -348,9 +297,7 @@ M.gitsigns = {
                 if vim.wo.diff then
                     return "[c"
                 end
-                schedule(function()
-                    require("gitsigns").prev_hunk()
-                end)
+                require("gitsigns").prev_hunk()
                 return "<Ignore>"
             end,
             "Jump to prev hunk",
@@ -360,54 +307,42 @@ M.gitsigns = {
         -- Actions
         ["<leader>gr"] = {
             function()
-                schedule(function()
-                    require("gitsigns").reset_hunk()
-                end)
+                require("gitsigns").reset_hunk()
             end,
             "Reset hunk",
         },
 
         ["<leader>gp"] = {
             function()
-                schedule(function()
-                    require("gitsigns").preview_hunk()
-                end)
+                require("gitsigns").preview_hunk()
             end,
             "Preview hunk",
         },
 
         ["<leader>gb"] = {
             function()
-                schedule(function()
-                    require("gitsigns").blame_line()
-                end)
+                require("gitsigns").blame_line()
             end,
             "Blame line",
         },
 
         ["<leader>gt"] = {
             function()
-                schedule(function()
-                    require("gitsigns").toggle_deleted()
-                end)
+                require("gitsigns").toggle_deleted()
             end,
             "Toggle deleted",
         },
 
         ["<leader>gm"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").git_commits()
-                end)
+                require("fzf-lua").git_commits()
             end,
             "Git commits",
         },
 
         ["<leader>gs"] = {
             function()
-                schedule(function()
-                    require("fzf-lua").git_status()
-                end)
+                require("fzf-lua").git_status()
             end,
             "Git status",
         },

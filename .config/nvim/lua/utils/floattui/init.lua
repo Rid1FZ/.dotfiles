@@ -2,15 +2,15 @@ local M = {}
 local tuis = {}
 
 local floor = math.floor
-local opt = vim.opt
+local o = vim.o
 local bo = vim.bo -- always use the index form: bo[something]
 local api = vim.api
 local cmd = vim.cmd
 
 local get_win_config = function()
-    local columns = opt.columns
-    local lines = opt.lines
-    local cmdheight = opt.cmdheight
+    local columns = o.columns
+    local lines = o.lines
+    local cmdheight = o.cmdheight
 
     local width = floor(columns * 0.9)
     local height = floor(lines * 0.8)
