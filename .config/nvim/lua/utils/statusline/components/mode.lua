@@ -1,8 +1,10 @@
+---@class StatuslineMode
 local M = {}
 
 local api = vim.api
 local format = string.format
 
+---@type table<string, string>
 local modes = {
     ["n"] = "N",
     ["no"] = "N",
@@ -26,6 +28,8 @@ local modes = {
     ["t"] = "T",
 }
 
+---Get the highlight group for current mode
+---@return string Statusline highlight group format string
 local function update_mode_colors()
     local current_mode = api.nvim_get_mode().mode
     local mode_color = "%#StatuslineAccent#"
@@ -47,6 +51,8 @@ local function update_mode_colors()
     return mode_color
 end
 
+---Get mode component with appropriate highlighting
+---@return string Statusline format string with mode indicator
 function M.get_mode()
     local current_mode = api.nvim_get_mode().mode
     return format("%s %s ", update_mode_colors(), modes[current_mode])

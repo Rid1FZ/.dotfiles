@@ -1,3 +1,4 @@
+---@type table<string, string>
 local colors = {}
 
 colors.bg = "#313244"

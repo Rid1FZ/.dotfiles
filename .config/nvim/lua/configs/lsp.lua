@@ -1,9 +1,11 @@
+---@class LspConfig
 local M = {}
 
 local lsp = vim.lsp
 local api = vim.api
 local fn = vim.fn
 
+---@return nil
 M.configure_diagnostics = function()
     local severity = vim.diagnostic.severity
 
@@ -31,18 +33,25 @@ M.configure_diagnostics = function()
     end
 end
 
--- export on_attach & capabilities for custom lspconfigs
+---LSP on_attach callback
+---@param client vim.lsp.Client The LSP client
+---@param bufnr integer The buffer number
+---@return nil
 M.on_attach = function(client, bufnr)
     require("utils").load_mappings("lsp", { buffer = bufnr })
 end
 
--- disable semantic tokens
+---LSP on_init callback - disable semantic tokens
+---@param client vim.lsp.Client The LSP client
+---@param _ any Unused parameter
+---@return nil
 M.on_init = function(client, _)
-    if not client.supports_method("textDocument/semanticTokens") then
+    if not client:supports_method("textDocument/semanticTokens") then
         client.server_capabilities.semanticTokensProvider = nil
     end
 end
 
+---@type lsp.ClientCapabilities
 M.capabilities = lsp.protocol.make_client_capabilities()
 
 M.capabilities.textDocument.completion.completionItem = {
@@ -63,6 +72,8 @@ M.capabilities.textDocument.completion.completionItem = {
     },
 }
 
+---Setup LSP servers
+---@return nil
 M.setup = function()
     local configs = {}
 

@@ -1,12 +1,13 @@
+---@class StatuslineHighlights
 local M = {}
+
 local colors = require("utils.statusline.highlights.colors")
 local highlight = require("utils").highlight
 
 local api = vim.api
 
-----------------------------------------------------------------------
--- Highlight Setup
-----------------------------------------------------------------------
+---Setup all statusline highlight groups
+---@return nil
 M.setup_highlights = function()
     -- Core statusline
     highlight("StatusLine", { fg = colors.fg, bg = colors.bg })

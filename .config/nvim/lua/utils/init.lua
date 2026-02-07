@@ -1,3 +1,4 @@
+---@class Utils
 local M = {}
 
 local merge_tb = vim.tbl_deep_extend
@@ -15,6 +16,9 @@ local format = string.format
 --------------------------------------------------------------------
 -- Set highlighting
 --------------------------------------------------------------------
+---@param name string The highlight group name
+---@param val vim.api.keyset.highlight The highlight attributes
+---@return nil
 M.highlight = function(name, val)
     api.nvim_set_hl(0, name, val)
 end
@@ -22,6 +26,9 @@ end
 --------------------------------------------------------------------
 -- Start treesitter for current buffer
 --------------------------------------------------------------------
+---@param bufnr integer Buffer number
+---@param winnr integer Window number
+---@return nil
 M.start_treesitter = function(bufnr, winnr)
     local filetype = bo[bufnr].filetype
     local nvim_treesitter = require("nvim-treesitter")
@@ -44,8 +51,12 @@ end
 --------------------------------------------------------------------
 -- Load keymappings for specific plugin
 --------------------------------------------------------------------
+---@param section? string|table Optional mapping section name or table
+---@param mapping_opt? table Optional mapping options
+---@return nil
 M.load_mappings = function(section, mapping_opt)
     schedule(function()
+        ---@param section_values table
         local function set_section_map(section_values)
             if section_values.plugin then
                 return

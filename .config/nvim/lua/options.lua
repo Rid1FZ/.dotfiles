@@ -1,11 +1,16 @@
+---@class Options
 local M = {}
 
-M.setup = function()
-    -- Local shorthand
-    local opt = vim.opt
-    local g = vim.g
-    local env = vim.env
+local filetype = vim.filetype
+local opt = vim.opt
+local g = vim.g
+local env = vim.env
+local fn = vim.fn
+local cmd = vim.cmd
 
+---Setup options for neovim
+---@return nil
+M.setup = function()
     --------------------------------------------------------------------
     -- Global variables
     --------------------------------------------------------------------
@@ -71,12 +76,12 @@ M.setup = function()
     --------------------------------------------------------------------
     -- Disable right-click menu
     --------------------------------------------------------------------
-    vim.cmd("aunmenu PopUp")
+    cmd("aunmenu PopUp")
 
     --------------------------------------------------------------------
     -- Environment setup
     --------------------------------------------------------------------
-    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+    local mason_bin = fn.stdpath("data") .. "/mason/bin"
     if not env.PATH:find(vim.pesc(mason_bin), 1, true) then
         env.PATH = mason_bin .. ":" .. env.PATH
     end
@@ -84,7 +89,7 @@ M.setup = function()
     --------------------------------------------------------------------
     -- Filetype detection
     --------------------------------------------------------------------
-    vim.filetype.add({
+    filetype.add({
         extension = {
             qml = "qml",
             ipy = "python",
@@ -93,9 +98,9 @@ M.setup = function()
             tmux = "tmux",
         },
         pattern = {
-            [vim.fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",
-            [vim.fn.expand("$HOME") .. "/.config/waybar/config"] = "jsonc",
-            [vim.fn.expand("$HOME") .. "/.config/zathura/.*"] = "zathurarc",
+            [fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",
+            [fn.expand("$HOME") .. "/.config/waybar/config"] = "jsonc",
+            [fn.expand("$HOME") .. "/.config/zathura/.*"] = "zathurarc",
         },
     })
 end

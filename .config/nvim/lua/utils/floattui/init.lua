@@ -1,4 +1,11 @@
+---@class FloatTUI
 local M = {}
+
+---@class TUIInstance
+---@field buf integer Buffer number
+---@field win integer Window number
+
+---@type table<string, TUIInstance>
 local tuis = {}
 
 local floor = math.floor
@@ -7,6 +14,8 @@ local bo = vim.bo -- always use the index form: bo[something]
 local api = vim.api
 local cmd = vim.cmd
 
+---Get window configuration for floating window
+---@return vim.api.keyset.win_config
 local get_win_config = function()
     local columns = o.columns
     local lines = o.lines
@@ -28,6 +37,9 @@ local get_win_config = function()
     }
 end
 
+---Create a floating window
+---@param opts? {buf?: integer}
+---@return TUIInstance
 local create_floating_window = function(opts)
     opts = opts or {}
 
@@ -45,6 +57,10 @@ local create_floating_window = function(opts)
     return { buf = buf, win = win }
 end
 
+---Set autocommands for terminal buffer
+---@param buf integer Buffer number
+---@param win integer Window number
+---@return nil
 local set_autocommands = function(buf, win)
     -- Close floating window if process exits
     api.nvim_create_autocmd("TermClose", {
@@ -67,6 +83,9 @@ local set_autocommands = function(buf, win)
     })
 end
 
+---Open a TUI application in a floating window
+---@param command string The command to run
+---@return TUIInstance
 M.open = function(command)
     if tuis[command] == nil then
         tuis[command] = {

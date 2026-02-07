@@ -1,3 +1,4 @@
+---@class Statusline
 local M = {}
 
 local highlights = require("utils.statusline.highlights")
@@ -10,6 +11,8 @@ local diagnostics = require("utils.statusline.components.diagnostics")
 local git = require("utils.statusline.components.git")
 local location = require("utils.statusline.components.location")
 
+---Global statusline function
+---@return string The statusline string
 _G.Statusline = function()
     return table.concat({
         border.get_left_border(),
@@ -29,6 +32,8 @@ _G.Statusline = function()
     })
 end
 
+---Setup statusline
+---@return nil
 M.setup = function()
     highlights.setup_highlights()
     autocommands.setup_autocommands()

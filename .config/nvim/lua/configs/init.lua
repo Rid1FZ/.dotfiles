@@ -1,3 +1,4 @@
+---@class Configs
 local M = {}
 
 local utils = require("utils")
@@ -11,6 +12,8 @@ local schedule = vim.schedule
 local defer_fn = vim.defer_fn
 local fn = vim.fn
 
+---Setup custom events for autocmd
+---@return nil
 M.setup_custom_events = function()
     --------------------------------------------------------------------
     -- All augroups
@@ -52,6 +55,8 @@ M.setup_custom_events = function()
     })
 end
 
+---Setup autocommands
+---@return nil
 M.setup_autocommands = function()
     local ok_fzf, fzflua = pcall(require, "fzf-lua")
     local ok_nvim_tree_api, nvim_tree_api = pcall(require, "nvim-tree.api")

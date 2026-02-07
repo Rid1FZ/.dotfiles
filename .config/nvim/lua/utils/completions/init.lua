@@ -1,3 +1,4 @@
+---@class Completions
 local M = {}
 
 local highlights = require("utils.completions.highlights")
@@ -7,6 +8,8 @@ local bo = vim.bo -- always use the index form: bo[something]
 local lsp = vim.lsp
 local notify = vim.notify
 
+---Setup LSP-based autocompletion
+---@return nil
 M.setup = function()
     -- Setup highlights
     highlights.setup_highlights()
@@ -29,6 +32,7 @@ M.setup = function()
             end
 
             -- Set a more reasonable list of trigger characters
+            ---@type table
             local default_triggers
             if client.server_capabilities.completionProvider then
                 default_triggers = client.server_capabilities.completionProvider.triggerCharacters

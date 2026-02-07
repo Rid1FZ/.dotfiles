@@ -1,7 +1,13 @@
+---@class StatuslineFile
 local M = {}
 
+---@type table<integer, string>
 local project_root_cache = {}
+
+---@type table<integer, {filepath: string?, results: table<integer, string>}>
 local file_path_cache = {}
+
+---@type table<integer, string>
 local file_icon_cache = {}
 
 local api = vim.api
@@ -13,6 +19,7 @@ local fs = vim.fs
 local colors = require("utils.statusline.highlights.colors")
 local highlight = require("utils").highlight
 
+---@type string[]
 local root_markers = {
     ".git",
     ".hg",
@@ -24,6 +31,9 @@ local root_markers = {
     "Makefile",
 }
 
+---Find the project root directory for the current buffer
+---Uses common project markers like .git, package.json, etc.
+---@return string Project root path
 local function get_project_root()
     local bufnr = api.nvim_get_current_buf()
     if project_root_cache[bufnr] then
@@ -44,6 +54,9 @@ local function get_project_root()
     return root
 end
 
+---Get file icon component with appropriate highlighting
+---Uses nvim-web-devicons for filetype-specific icons
+---@return string Statusline format string with file icon (empty for special buffers)
 M.get_fileicon = function()
     local bufnr = api.nvim_get_current_buf()
 
@@ -80,6 +93,8 @@ M.get_fileicon = function()
     return file_icon_cache[bufnr]
 end
 
+---Get file path component relative to project root
+---@return string Statusline format string with file path (empty for special buffers)
 M.get_filepath = function()
     local bufnr = api.nvim_get_current_buf()
 
@@ -145,6 +160,9 @@ M.get_filepath = function()
     return result
 end
 
+---Get file modification status indicators
+---Shows [+] for modified, [-] for readonly/unmodifiable
+---@return string Statusline format string with status indicators (spaces if unchanged)
 M.get_modified_status = function()
     local bufnr = api.nvim_get_current_buf()
 
@@ -162,6 +180,7 @@ M.get_modified_status = function()
     return #s > 0 and s or "   "
 end
 
+-- Clear cache on buffer events
 api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufDelete" }, {
     callback = function(args)
         project_root_cache[args.buf] = nil

@@ -1,3 +1,4 @@
+---@class StatuslineDiagnostics
 local M = {}
 
 local api = vim.api
@@ -7,6 +8,7 @@ local tbl_count = vim.tbl_count
 local format = string.format
 local concat = table.concat
 
+---@type table<string, vim.diagnostic.Severity>
 local severity = {
     errors = diagnostic.severity.ERROR,
     warnings = diagnostic.severity.WARN,
@@ -14,6 +16,7 @@ local severity = {
     hints = diagnostic.severity.HINT,
 }
 
+---@type table<string, string>
 local symbols = {
     errors = "",
     warnings = "",
@@ -21,6 +24,7 @@ local symbols = {
     hints = "",
 }
 
+---@type table<string, string>
 local highlights = {
     errors = "DiagnosticSignError",
     warnings = "DiagnosticSignWarn",
@@ -28,6 +32,8 @@ local highlights = {
     hints = "DiagnosticSignHint",
 }
 
+---Get diagnostics component for current buffer
+---@return string Statusline format string with diagnostic information (empty if none)
 M.get_diagnostics = function()
     local bufnr = api.nvim_get_current_buf()
 
