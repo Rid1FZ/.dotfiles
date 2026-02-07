@@ -25,6 +25,8 @@ local function build_library()
     local library = {}
 
     library[vim.env.VIMRUNTIME] = true
+    library["${3rd}/luv/library"] = true
+    library["${3rd}/busted/library"] = true
     library[vim.fn.stdpath("config")] = true
 
     local plugins = get_plugins()
