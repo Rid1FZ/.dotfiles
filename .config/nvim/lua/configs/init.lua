@@ -209,7 +209,6 @@ M.setup_autocommands = function()
         group = groups.start_treesitter,
         callback = function(args)
             local curr_win = api.nvim_get_current_win()
-
             utils.start_treesitter(args.buf, curr_win)
         end,
     })

@@ -17,13 +17,11 @@ local last_cwd = ""
 ---@return string Git branch name (empty if not in a git repository)
 local function get_branch()
     local bufnr = api.nvim_get_current_buf()
-
     if bo[bufnr].buftype ~= "" then
         return ""
     end
 
     local cwd = fn.getcwd()
-
     if cwd == last_cwd and last_branch ~= "" then
         return last_branch
     end

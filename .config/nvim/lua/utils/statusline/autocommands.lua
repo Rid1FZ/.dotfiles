@@ -4,7 +4,7 @@ local M = {}
 local api = vim.api
 local opt = vim.opt
 local cmd = vim.cmd
-local defer_fn = vim.defer_fn
+local schedule = vim.schedule
 
 ---Setup autocommands for statusline behavior
 ---Configures automatic statusline activation and refresh on various events
@@ -24,9 +24,9 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd({ "ModeChanged", "VimResized", "WinResized" }, {
         group = group,
         callback = function()
-            defer_fn(function()
+            schedule(function()
                 cmd.redrawstatus()
-            end, 10)
+            end)
         end,
     })
 end

@@ -19,6 +19,14 @@ M.setup = function()
     g.neovide_scroll_animation_length = 0
 
     --------------------------------------------------------------------
+    -- Disable unused providers
+    --------------------------------------------------------------------
+    g.loaded_python3_provider = 0
+    g.loaded_ruby_provider = 0
+    g.loaded_perl_provider = 0
+    g.loaded_node_provider = 0
+
+    --------------------------------------------------------------------
     -- General options
     --------------------------------------------------------------------
     opt.title = true
