@@ -4,10 +4,12 @@ local M = {}
 local highlights = require("utils.completions.highlights")
 
 local api = vim.api
+local fn = vim.fn
 local bo = vim.bo -- always use the index form: bo[something]
 local lsp = vim.lsp
 local notify = vim.notify
 local schedule = vim.schedule
+local list_extend = vim.list_extend
 
 ---Setup LSP-based autocompletion
 ---@return nil
@@ -40,11 +42,10 @@ M.setup = function()
                 local default_triggers = client.server_capabilities.completionProvider
                         and client.server_capabilities.completionProvider.triggerCharacters
                     or {}
-                local extra_triggers = { ".", ":", ">", "<", "'", '"', "/", "\\" }
-                local merged = vim.list_extend(extra_triggers, default_triggers)
-                client.server_capabilities.completionProvider.triggerCharacters = merged
+                local extra_triggers = { ".", ":", " ", "<", "'", '"', "/", "\\" }
+                local merged = list_extend(extra_triggers, default_triggers)
+                client.server_capabilities.completionProvider.triggerCharacters = fn.uniq(fn.sort(merged))
 
-                -- Enable autotrigger safely
                 if lsp.completion and lsp.completion.enable then
                     lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
                     require("utils").load_mappings("completion", { buffer = bufnr })

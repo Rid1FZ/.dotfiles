@@ -1,6 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    lazy = false,
+    event = "User Filepost",
     branch = "main",
     build = ":TSUpdate",
 }

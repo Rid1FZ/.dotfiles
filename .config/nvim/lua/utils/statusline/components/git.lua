@@ -1,6 +1,11 @@
 ---@class StatuslineGit
 local M = {}
 
+local system = vim.system
+local cmd = vim.cmd
+local defer_fn = vim.defer_fn
+local schedule = vim.schedule
+local schedule_wrap = vim.schedule_wrap
 local fn = vim.fn
 local api = vim.api
 local bo = vim.bo -- always use the index form: bo[something]
@@ -12,6 +17,12 @@ local last_branch = ""
 
 ---@type string
 local last_cwd = ""
+
+---@type vim.SystemObj?
+local git_job = nil
+
+---@type uv.uv_timer_t
+local git_debounce_timer = nil
 
 ---Get the current git branch name
 ---@return string Git branch name (empty if not in a git repository)
@@ -26,15 +37,37 @@ local function get_branch()
         return last_branch
     end
 
-    local branch = fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
-    if not branch or branch == "" or branch == "HEAD" then
-        branch = ""
+    if git_job and not git_job:is_closing() then
+        git_job:kill(9)
     end
 
-    last_branch = branch
-    last_cwd = cwd
+    if git_debounce_timer then
+        git_debounce_timer:stop()
+    end
 
-    return branch
+    git_debounce_timer = defer_fn(function()
+        git_job = system(
+            { "git", "branch", "--show-current" },
+            { text = true },
+            schedule_wrap(function(obj)
+                if obj.code == 0 then
+                    local branch = obj.stdout:gsub("\n", "")
+                    if branch ~= "" and branch ~= "HEAD" then
+                        last_branch = branch
+                        last_cwd = cwd
+                        cmd.redrawstatus()
+                    else
+                        last_branch = ""
+                    end
+                else
+                    last_branch = ""
+                end
+                git_job = nil
+            end)
+        )
+    end, 100)
+
+    return last_branch
 end
 
 ---Get git branch component for statusline

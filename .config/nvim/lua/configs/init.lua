@@ -27,6 +27,7 @@ M.setup_custom_events = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
         group = groups.file_post,
+        once = true,
         callback = function(args)
             local file = api.nvim_buf_get_name(args.buf)
             local buftype = bo[args.buf].buftype
@@ -84,6 +85,7 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("QuitPre", {
         group = groups.nvim_tree,
+        nested = false,
         callback = function()
             local invalid_win = {}
             local wins = api.nvim_list_wins()
