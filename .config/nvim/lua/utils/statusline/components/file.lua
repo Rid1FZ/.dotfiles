@@ -143,9 +143,7 @@ M.get_filepath = function()
 
     -- Get filename for fallback
     local filename = fn.fnamemodify(api.nvim_buf_get_name(bufnr), ":t")
-
     local result
-
     if max_path_width < #filename then
         result = ""
     elseif #display_path > max_path_width then
