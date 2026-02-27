@@ -59,9 +59,12 @@ M.filters = {
     dotfiles = false,
     custom = {
         [[^\.git$]],
-        [[^\.null-ls.*]],
+        [[^\.null-ls.*$]],
         [[^__pycache__$]],
         [[^.mypy_cache$]],
+        [[^.venv$]],
+        [[^.pytest_cache$]],
+        [[^.*\.egg-info$]],
     },
 }
 
