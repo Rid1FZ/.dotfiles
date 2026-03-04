@@ -97,6 +97,14 @@ M.git = {
 
 M.filesystem_watchers = {
     enable = true,
+    debounce_delay = 100,
+    ignore_dirs = {
+        [[/.git]],
+        [[/__pycache__]],
+        [[/.mypy_cache]],
+        [[/.venv]],
+        [[/.pytest_cache]],
+    },
 }
 
 M.actions = {
