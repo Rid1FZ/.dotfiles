@@ -8,6 +8,11 @@ local M = {}
 ---@type table<string, TUIInstance>
 local tuis = {}
 
+---Tracks every floating window opened by this module so the single, module-level
+---VimResized handler can resize all of them without accumulating duplicate autocmds.
+---@type table<integer, true>
+local float_wins = {}
+
 local floor = math.floor
 local o = vim.o
 local bo = vim.bo -- always use the index form: bo[something]
@@ -37,6 +42,21 @@ local get_win_config = function()
     }
 end
 
+-- Single module-level VimResized handler
+api.nvim_create_autocmd("VimResized", {
+    group = api.nvim_create_augroup("FloatTUIResize", { clear = true }),
+    callback = function()
+        for win in pairs(float_wins) do
+            if api.nvim_win_is_valid(win) then
+                api.nvim_win_set_config(win, get_win_config())
+            else
+                -- Prune stale entries so the table stays small.
+                float_wins[win] = nil
+            end
+        end
+    end,
+})
+
 ---Create a floating window
 ---@param opts? {buf?: integer}
 ---@return TUIInstance
@@ -54,31 +74,42 @@ local create_floating_window = function(opts)
     -- Create the floating window
     local win = api.nvim_open_win(buf, true, get_win_config())
 
+    -- Register the new window so the module-level resize handler can find it.
+    float_wins[win] = true
+
     return { buf = buf, win = win }
 end
 
----Set autocommands for terminal buffer
+---Set autocommands for terminal buffer.
+---
+---Only a TermClose handler is registered here.  The VimResized handler is
+---intentionally kept at module level (see above) so it is registered exactly
+---once regardless of how many terminals are opened.
+---
+---Each TermClose handler gets its own uniquely-named augroup so that
+---re-opening the same buffer always replaces the old handler rather than
+---stacking a second one on top.
 ---@param buf integer Buffer number
 ---@param win integer Window number
 ---@return nil
 local set_autocommands = function(buf, win)
-    -- Close floating window if process exits
+    -- Use a buffer-specific group name so re-opening the same buffer clears
+    -- any handler registered during a previous open.
+    local close_group = api.nvim_create_augroup("FloatTUIClose_" .. buf, { clear = true })
+
     api.nvim_create_autocmd("TermClose", {
         buffer = buf,
-        group = api.nvim_create_augroup("CloseTerminalBuffer", { clear = true }),
+        group = close_group,
         callback = function()
-            api.nvim_win_close(win, true)
-            cmd.bwipeout({ buf, bang = true })
-        end,
-    })
+            -- Remove from tracking table before attempting to close the window
+            -- so the VimResized handler never tries to resize a dying window.
+            float_wins[win] = nil
 
-    api.nvim_create_autocmd("VimResized", {
-        group = api.nvim_create_augroup("ResizeTerminalBuffer", {}),
-        callback = function()
             if api.nvim_win_is_valid(win) then
-                api.nvim_win_set_config(win, get_win_config())
-                api.nvim_win_set_cursor(win, { 1, 0 })
+                api.nvim_win_close(win, true)
             end
+            -- bwipeout is safe to call even if the buffer is already gone.
+            pcall(cmd.bwipeout, { buf, bang = true })
         end,
     })
 end

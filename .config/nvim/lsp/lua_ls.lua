@@ -27,7 +27,8 @@ local function build_library()
     library[vim.env.VIMRUNTIME] = true
     library["${3rd}/luv/library"] = true
     library["${3rd}/busted/library"] = true
-    library[vim.fn.stdpath("config")] = true
+
+    -- library[vim.fn.stdpath("config")] = true
 
     local plugins = get_plugins()
     for _, plugin_path in ipairs(plugins) do
@@ -64,6 +65,7 @@ return {
             },
             workspace = {
                 library = build_library(),
+
                 checkThirdParty = false,
                 maxPreload = 100000,
                 preloadFileSize = 100000,

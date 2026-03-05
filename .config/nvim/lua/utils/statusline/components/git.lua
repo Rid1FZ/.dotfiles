@@ -4,7 +4,6 @@ local M = {}
 local system = vim.system
 local cmd = vim.cmd
 local defer_fn = vim.defer_fn
-local schedule = vim.schedule
 local schedule_wrap = vim.schedule_wrap
 local fn = vim.fn
 local api = vim.api
@@ -21,31 +20,31 @@ local last_cwd = ""
 ---@type vim.SystemObj?
 local git_job = nil
 
----@type uv.uv_timer_t
-local git_debounce_timer = nil
+---@type uv.uv_timer_t?
+local debounce_timer = nil
 
----Get the current git branch name
----@return string Git branch name (empty if not in a git repository)
-local function get_branch()
-    local bufnr = api.nvim_get_current_buf()
-    if bo[bufnr].buftype ~= "" then
-        return ""
-    end
+local DEBOUNCE_MS = 100
 
-    local cwd = fn.getcwd()
-    if cwd == last_cwd and last_branch ~= "" then
-        return last_branch
-    end
-
+---Debounced branch refresh.
+---Cancels any in-flight git job and pending timer, then schedules a fresh
+---`git branch --show-current` call after DEBOUNCE_MS milliseconds.
+---Gives trailing-edge debounce semantics identical to file.lua and diagnostics.lua.
+---@param cwd string Working directory captured at call site
+---@return nil
+local function debounced_invalidate(cwd)
     if git_job and not git_job:is_closing() then
         git_job:kill(9)
+        git_job = nil
     end
 
-    if git_debounce_timer then
-        git_debounce_timer:stop()
+    if debounce_timer then
+        debounce_timer:stop()
+        debounce_timer:close()
+        debounce_timer = nil
     end
 
-    git_debounce_timer = defer_fn(function()
+    debounce_timer = defer_fn(function()
+        debounce_timer = nil
         git_job = system(
             { "git", "branch", "--show-current" },
             { text = true },
@@ -65,7 +64,23 @@ local function get_branch()
                 git_job = nil
             end)
         )
-    end, 100)
+    end, DEBOUNCE_MS)
+end
+
+---Get the current git branch name
+---@return string Git branch name (empty if not in a git repository)
+local function get_branch()
+    local bufnr = api.nvim_get_current_buf()
+    if bo[bufnr].buftype ~= "" then
+        return ""
+    end
+
+    local cwd = fn.getcwd()
+    if cwd == last_cwd and last_branch ~= "" then
+        return last_branch
+    end
+
+    debounced_invalidate(cwd)
 
     return last_branch
 end

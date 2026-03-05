@@ -6,6 +6,8 @@ local opt = vim.opt
 local cmd = vim.cmd
 local defer_fn = vim.defer_fn
 
+local DEBOUNCE_MS = 100
+
 ---Setup autocommands for statusline behavior
 ---Configures automatic statusline activation and refresh on various events
 ---@return nil
@@ -19,20 +21,22 @@ M.setup_autocommands = function()
         end,
     })
 
-    ---@type uv.uv_timer_t? result from vim.defer_fn call
-    local redraw_timer = nil
+    ---@type uv.uv_timer_t?
+    local debounce_timer = nil
 
     api.nvim_create_autocmd({ "ModeChanged", "VimResized", "WinResized" }, {
         group = group,
         callback = function()
-            if redraw_timer then
-                redraw_timer:stop()
+            if debounce_timer then
+                debounce_timer:stop()
+                debounce_timer:close()
+                debounce_timer = nil
             end
 
-            redraw_timer = defer_fn(function()
+            debounce_timer = defer_fn(function()
+                debounce_timer = nil
                 cmd.redrawstatus()
-                redraw_timer = nil
-            end, 100)
+            end, DEBOUNCE_MS)
         end,
     })
 end
