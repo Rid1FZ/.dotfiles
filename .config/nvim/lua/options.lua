@@ -72,7 +72,7 @@ M.setup = function()
     --------------------------------------------------------------------
     opt.expandtab = true
     opt.shiftwidth = 4
-    opt.smartindent = true
+    opt.smartindent = false -- let the treesitter handle this
     opt.tabstop = 4
     opt.softtabstop = 4
 
