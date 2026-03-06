@@ -1,5 +1,8 @@
 local M = {}
 
+local fn = vim.fn
+local api = vim.api
+local keycode = vim.keycode
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
@@ -74,6 +77,43 @@ M.completion = {
                 lsp.completion.get()
             end,
             "Trigger completion",
+        },
+
+        ["<Tab>"] = {
+            ---Implements tab-to-complete feature.
+            ---It first checks if the cursor is on a new line or if the previous character
+            ---is an empty character. If yes, it simply inserts <tab> character. Else it
+            ---Triggers `vim.lsp.completion.get()` to get completion
+            ---@return nil
+            function()
+                local col = api.nvim_win_get_cursor(0)[2]
+                local before = col > 0 and api.nvim_get_current_line():sub(col, col) or ""
+
+                if fn.pumvisible() == 1 then
+                    if before:match("%S") then
+                        api.nvim_feedkeys(keycode("<C-n>"), "n", false)
+                    else
+                        api.nvim_feedkeys(keycode("<C-e>"), "n", false)
+                        api.nvim_feedkeys(keycode("<Tab>"), "n", false)
+                    end
+                elseif before:match("%S") then
+                    lsp.completion.get()
+                else
+                    api.nvim_feedkeys(keycode("<Tab>"), "n", false)
+                end
+            end,
+            "Next completion or insert tab",
+        },
+
+        ["<S-Tab>"] = {
+            function()
+                if fn.pumvisible() == 1 then
+                    api.nvim_feedkeys(keycode("<C-p>"), "n", false)
+                else
+                    api.nvim_feedkeys(keycode("<S-Tab>"), "n", false)
+                end
+            end,
+            "Prev completion or dedent",
         },
     },
 }
