@@ -45,7 +45,6 @@ M.start_treesitter = function(bufnr, winnr)
 
     treesitter.start(bufnr)
     wo[winnr].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
 
 --------------------------------------------------------------------

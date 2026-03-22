@@ -9,7 +9,7 @@ return {
     on_init = lsp.on_init,
 
     settings = {
-        ["rust_analyzer"] = {
+        ["rust-analyzer"] = {
             cargo = {
                 allFeatures = true,
             },

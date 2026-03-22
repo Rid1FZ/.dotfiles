@@ -54,6 +54,7 @@ M.on_attach = function(client, bufnr)
     if client.supports_method("textDocument/formatting") then
         api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
+            group = api.nvim_create_augroup("NullLsFormat_" .. bufnr, { clear = true }),
             callback = function()
                 lsp.buf.format({
                     async = false,

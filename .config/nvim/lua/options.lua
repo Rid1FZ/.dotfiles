@@ -31,11 +31,11 @@ M.setup = function()
     --------------------------------------------------------------------
     opt.backup = false
     opt.writebackup = false
-    opt.lazyredraw = true
 
     --------------------------------------------------------------------
     -- General options
     --------------------------------------------------------------------
+    opt.winborder = "rounded"
     opt.title = true
     opt.laststatus = 3
     opt.showtabline = 0

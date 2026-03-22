@@ -1,15 +1,16 @@
 ---@class LspConfig
 local M = {}
 
+local diagnostic = vim.diagnostic
 local lsp = vim.lsp
 local api = vim.api
 local fn = vim.fn
 
 ---@return nil
 M.configure_diagnostics = function()
-    local severity = vim.diagnostic.severity
+    local severity = diagnostic.severity
 
-    vim.diagnostic.config({
+    diagnostic.config({
         virtual_text = false,
         update_in_insert = true,
         signs = {
@@ -21,16 +22,7 @@ M.configure_diagnostics = function()
             },
         },
         underline = true,
-        float = { border = "single" },
     })
-
-    -- Default border style
-    local util_open_floating_preview_ = lsp.util.open_floating_preview
-    function lsp.util.open_floating_preview(contents, syntax, opts, ...)
-        opts = opts or {}
-        opts.border = "rounded"
-        return util_open_floating_preview_(contents, syntax, opts, ...)
-    end
 end
 
 ---LSP on_attach callback
@@ -39,16 +31,6 @@ end
 ---@return nil
 M.on_attach = function(client, bufnr)
     require("utils").load_mappings("lsp", { buffer = bufnr })
-end
-
----LSP on_init callback - disable semantic tokens
----@param client vim.lsp.Client The LSP client
----@param _ any Unused parameter
----@return nil
-M.on_init = function(client, _)
-    if not client:supports_method("textDocument/semanticTokens") then
-        client.server_capabilities.semanticTokensProvider = nil
-    end
 end
 
 ---@type lsp.ClientCapabilities

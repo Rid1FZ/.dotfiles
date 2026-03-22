@@ -42,16 +42,12 @@ M.setup = function()
                 local default_triggers = client.server_capabilities.completionProvider
                         and client.server_capabilities.completionProvider.triggerCharacters
                     or {}
-                local extra_triggers = { ".", ":", " ", "<", "'", '"', "/", "\\" }
+                local extra_triggers = { ".", ":", "<", "'", '"', "/", "\\" }
                 local merged = list_extend(extra_triggers, default_triggers)
                 client.server_capabilities.completionProvider.triggerCharacters = fn.uniq(fn.sort(merged))
 
-                if lsp.completion and lsp.completion.enable then
-                    lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                    require("utils").load_mappings("completion", { buffer = bufnr })
-                else
-                    notify("LSP completion API not available in this Neovim version", vim.log.levels.WARN)
-                end
+                lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                require("utils").load_mappings("completion", { buffer = bufnr })
             end)
         end,
     })
