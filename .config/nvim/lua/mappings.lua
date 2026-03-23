@@ -1,392 +1,273 @@
 local M = {}
 
+local map = vim.keymap.set
 local fn = vim.fn
 local api = vim.api
-local keycode = vim.keycode
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
---------------------------------------------------------------------
--- General Mappings
---------------------------------------------------------------------
-M.general = {
-    n = {
-        ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
+-- stylua: ignore
+---For replacing certain <C-x>... keymaps. Wrapper around `vim.api.nvim_feedkeys`.
+---@param keys string
+---@return nil
+local function feedkeys(keys)
+    api.nvim_feedkeys(api.nvim_replace_termcodes(keys, true, false, true), "n", true)
+end
 
-        ["<C-h>"] = { "<Cmd>NvimTmuxNavigateLeft<CR>", "Window left" },
-        ["<C-l>"] = { "<Cmd>NvimTmuxNavigateRight<CR>", "Window right" },
-        ["<C-k>"] = { "<Cmd>NvimTmuxNavigateUp<CR>", "Window up" },
-        ["<C-j>"] = { "<Cmd>NvimTmuxNavigateDown<CR>", "Window down" },
+-- stylua: ignore
+---Wrapper around `vim.tbl_extend`.
+---@param main_opts table
+---@param extra_opts table
+---@return table
+local function tbl_merge(main_opts, extra_opts)
+    return vim.tbl_extend("keep", main_opts, extra_opts)
+end
 
-        -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
-        -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
-        -- empty mode is same as using <cmd> :map
-        -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-        ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-        ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-        ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-        ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+-- stylua: ignore
+---Check if completion menu is visible. Wrapper around `vim.fn.pumvisible`.
+---@return nil
+local function pumvisible()
+        return tonumber(fn.pumvisible()) ~= 0
+end
 
-        ["<Leader>oh"] = {
-            function()
-                require("utils.floattui").open("htop")
-            end,
-            "Open htop",
-        },
+---General set of mappings
+---@return nil
+M.general = function(_)
+    -- Clear highlights
+    map("n", "<Esc>", "<cmd>noh<CR>", { desc = "Clear highlights" })
 
-        ["<Leader>ol"] = {
-            function()
-                require("utils.floattui").open("lazygit")
-            end,
-            "Open lazygit",
-        },
+    -- Window navigation (tmux-aware)
+    map("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Window left" })
+    map("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Window right" })
+    map("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Window up" })
+    map("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Window down" })
 
-        ["<Leader>ot"] = {
-            function()
-                require("utils.floattui.terminal").open()
-            end,
-            "Open terminal",
-        },
-    },
+    -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
+    -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
+    -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
+    map("n", "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true, desc = "Move down" })
+    map("n", "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true, desc = "Move up" })
+    map("n", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true, desc = "Move up" })
+    map("n", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true, desc = "Move down" })
 
-    v = {
-        ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-        ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-        ["<"] = { "<gv", "Indent line" },
-        [">"] = { ">gv", "Indent line" },
-    },
+    map("v", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true, desc = "Move up" })
+    map("v", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true, desc = "Move down" })
+    map("v", "<", "<gv", { desc = "Indent left" })
+    map("v", ">", ">gv", { desc = "Indent right" })
 
-    x = {
-        ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-        ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-        -- Don't copy the replaced text after pasting in visual mode
-        -- https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text#Alternative_mapping_for_paste
-        ["p"] = { 'p:let @+=@0<CR>:let @"=@0<CR>', "Dont copy replaced text", opts = { silent = true } },
-    },
-}
+    map("x", "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true, desc = "Move down" })
+    map("x", "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true, desc = "Move up" })
+    -- Don't copy the replaced text after pasting in visual mode
+    -- https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text#Alternative_mapping_for_paste
+    map("x", "p", 'p<cmd>let @+=@0<CR><cmd>let @"=@0<CR>', { silent = true, desc = "Don't copy replaced text" })
 
---------------------------------------------------------------------
--- Plugin/Config specific mappings
---------------------------------------------------------------------
+    -- Float UI
+    map("n", "<Leader>oh", function() require("utils.floattui").open("htop") end, { desc = "Open htop" })
+    map("n", "<Leader>ol", function() require("utils.floattui").open("lazygit") end, { desc = "Open lazygit" })
+    map("n", "<Leader>ot", function() require("utils.floattui.terminal").open() end, { desc = "Open terminal" })
+end
 
-M.completion = {
-    plugin = true,
-    i = {
-        ["<C-n>"] = {
-            function()
+---Mappings for `nvim-autopairs` plugin
+---@return nil
+M["nvim-autopairs"] = function(_)
+    ---CR uses v:lua bridge to avoid terminal code mangling in expr mappings,
+    ---and must be global so it works in all buffers regardless of LSP state
+    ---@return string
+    _G._completion_cr = function()
+        local npairs = require("nvim-autopairs")
+        if pumvisible() then
+            if fn.complete_info({ "selected" }).selected ~= -1 then
+                return npairs.esc("<C-y>")
+            else
+                return npairs.esc("<C-e>") .. npairs.autopairs_cr()
+            end
+        else
+            return npairs.autopairs_cr()
+        end
+    end
+
+    map("i", "<CR>", "v:lua._completion_cr()", { expr = true, noremap = true })
+end
+
+---Mappings for `vim.lsp.completion` completions
+---@param opts? table
+---@return nil
+M.completions = function(opts)
+    if not opts then
+        opts = {}
+    end
+
+    ---@param desc string Description of the mapping
+    local set_opts = function(desc) return tbl_merge({ desc = desc }, opts) end
+
+    map("i", "<Tab>", function()
+        if pumvisible() then
+            feedkeys("<C-n>")
+        elseif vim.snippet.active({ direction = 1 }) then
+            vim.snippet.jump(1)
+        else
+            local col = api.nvim_win_get_cursor(0)[2]
+            local before = col > 0 and api.nvim_get_current_line():sub(col, col) or ""
+            if before:match("%S") then
                 lsp.completion.get()
-            end,
-            "Trigger completion",
-        },
+            else
+                feedkeys("<Tab>")
+            end
+        end
+    end, set_opts("Select next completion option or open completion menu"))
 
-        ["<Tab>"] = {
-            ---Implements tab-to-complete feature.
-            ---It first checks if the cursor is on a new line or if the previous character
-            ---is an empty character. If yes, it simply inserts <tab> character. Else it
-            ---Triggers `vim.lsp.completion.get()` to get completion
-            ---@return nil
-            function()
-                local col = api.nvim_win_get_cursor(0)[2]
-                local before = col > 0 and api.nvim_get_current_line():sub(col, col) or ""
+    map("i", "<S-Tab>", function()
+        if pumvisible() then
+            feedkeys("<C-p>")
+        elseif vim.snippet.active({ direction = -1 }) then
+            vim.snippet.jump(-1)
+        else
+            feedkeys("<S-Tab>")
+        end
+    end, tbl_merge({ desc = "Select prev completion option or dedent" }, opts or {}))
+end
 
-                if fn.pumvisible() == 1 then
-                    if before:match("%S") then
-                        api.nvim_feedkeys(keycode("<C-n>"), "n", false)
-                    else
-                        api.nvim_feedkeys(keycode("<C-e>"), "n", false)
-                        api.nvim_feedkeys(keycode("<Tab>"), "n", false)
-                    end
-                elseif before:match("%S") then
-                    lsp.completion.get()
-                else
-                    api.nvim_feedkeys(keycode("<Tab>"), "n", false)
-                end
-            end,
-            "Next completion or insert tab",
-        },
+---Mappings for lsp
+---@param opts? table
+---@return nil
+M.lsp = function(opts)
+    if not opts then
+        opts = {}
+    end
 
-        ["<S-Tab>"] = {
-            function()
-                if fn.pumvisible() == 1 then
-                    api.nvim_feedkeys(keycode("<C-p>"), "n", false)
-                else
-                    api.nvim_feedkeys(keycode("<S-Tab>"), "n", false)
-                end
-            end,
-            "Prev completion or dedent",
-        },
-    },
-}
+    ---@param desc string Description of the mapping
+    local set_opts = function(desc) return tbl_merge({ desc = desc }, opts) end
 
-M.lsp = {
-    plugin = true,
-    n = {
-        ["gD"] = {
-            function()
-                lsp.buf.declaration()
-            end,
-            "LSP declaration",
-        },
+    map("n", "gD", lsp.buf.declaration, set_opts("LSP declaration"))
+    map("n", "gd", function() require("fzf-lua").lsp_definitions() end, set_opts("LSP definition"))
+    map("n", "K", lsp.buf.hover, set_opts("LSP hover"))
+    map("n", "gi", function() require("fzf-lua").lsp_implementations() end, set_opts("LSP implementation"))
+    map("n", "<leader>ls", lsp.buf.signature_help, set_opts("LSP signature help"))
+    map("n", "<leader>lf", function()
+        lsp.buf.format({
+            async = false,
+            timeout_ms = 5000,
+            filter = function(c) return c.name == "null-ls" end,
+        })
+    end, set_opts("LSP formatting"))
 
-        ["gd"] = {
-            function()
-                require("fzf-lua").lsp_definitions()
-            end,
-            "LSP definition",
-        },
+    map(
+        "n",
+        "<leader>ld",
+        function() diagnostic.open_float({ scope = "cursor", severity_sort = true }) end,
+        set_opts("Floating diagnostic")
+    )
 
-        ["K"] = {
-            function()
-                lsp.buf.hover()
-            end,
-            "LSP hover",
-        },
+    map(
+        "n",
+        "<leader>lD",
+        function() require("fzf-lua").lsp_workspace_diagnostics() end,
+        set_opts("LSP list all diagnostics")
+    )
+    map("n", "<leader>lr", lsp.buf.rename, set_opts("LSP rename"))
+    map("n", "<leader>la", lsp.buf.code_action, set_opts("LSP code action"))
+    map("v", "<leader>la", lsp.buf.code_action, set_opts("LSP code action"))
+    map("n", "gr", function() require("fzf-lua").lsp_references() end, set_opts("LSP references"))
+    map("n", "[d", function() diagnostic.jump({ count = -1, float = true }) end, set_opts("Goto prev diagnostic"))
+    map("n", "]d", function() diagnostic.jump({ count = 1, float = true }) end, set_opts("Goto next diagnostic"))
+    map("n", "<leader>q", diagnostic.setloclist, set_opts("Diagnostic setloclist"))
+end
 
-        ["gi"] = {
-            function()
-                require("fzf-lua").lsp_implementations()
-            end,
-            "LSP implementation",
-        },
+M["nvim-tree"] = function(_)
+    local nvim_tree_api = require("nvim-tree.api")
 
-        ["<leader>ls"] = {
-            function()
-                lsp.buf.signature_help()
-            end,
-            "LSP signature help",
-        },
+    map("n", "<leader>oe", nvim_tree_api.tree.focus, { desc = "Focus explorer" })
+end
 
-        ["<leader>lf"] = {
-            function()
-                local providers = {
-                    "null-ls",
-                }
-                lsp.buf.format({
-                    async = false,
-                    timeout_ms = 5000,
-                    filter = function(client)
-                        for _, provider in ipairs(providers) do
-                            if client.name == provider then
-                                print(client.name)
-                                return true
-                            end
-                        end
-                        return false
-                    end,
-                })
-            end,
-            "LSP formatting",
-        },
+---Mappings for `NvimTree` plugin
+---@param opts table
+---@return nil
+M["nvim-tree.on-attach"] = function(opts)
+    if not opts then
+        opts = {}
+    end
 
-        ["<leader>ld"] = {
-            function()
-                diagnostic.open_float({
-                    border = "rounded",
-                    scope = "cursor",
-                    severity_sort = true,
-                })
-            end,
-            "Floating diagnostic",
-        },
+    local nvim_tree_api = require("nvim-tree.api")
 
-        ["<leader>lD"] = {
-            function()
-                require("fzf-lua").lsp_workspace_diagnostics()
-            end,
-            "LSP list all diagnostics",
-        },
+    ---@param desc string Description of the mapping
+    local function set_opts(desc)
+        return tbl_merge({
+            desc = "nvim-tree: " .. desc,
+            noremap = true,
+            silent = true,
+            nowait = true,
+        }, opts)
+    end
 
-        ["<leader>lr"] = {
-            function()
-                lsp.buf.rename()
-            end,
-            "LSP rename",
-        },
+    -- Fileops
+    map("n", "a", nvim_tree_api.fs.create, set_opts("Create File Or Directory"))
+    map("n", "d", nvim_tree_api.fs.trash, set_opts("Trash"))
+    map("n", "D", nvim_tree_api.marks.bulk.trash, set_opts("Trash Marked"))
+    map("n", "p", nvim_tree_api.fs.paste, set_opts("Paste"))
+    map("n", "y", nvim_tree_api.fs.copy.node, set_opts("Copy"))
+    map("n", "C", nvim_tree_api.fs.copy.absolute_path, set_opts("Copy Absolute Path"))
+    map("n", "c", nvim_tree_api.fs.copy.basename, set_opts("Copy Basename"))
+    map("n", "x", nvim_tree_api.fs.cut, set_opts("Cut"))
+    map("n", "r", nvim_tree_api.fs.rename, set_opts("Rename"))
+    map("n", "<C-r>", nvim_tree_api.fs.rename_full, set_opts("Rename: Full Path"))
 
-        ["<leader>la"] = {
-            function()
-                lsp.buf.code_action()
-            end,
-            "LSP code action",
-        },
+    -- Navigation
+    map("n", "<CR>", nvim_tree_api.node.open.edit, set_opts("Open"))
+    map("n", "o", nvim_tree_api.node.open.edit, set_opts("Open"))
+    map("n", "<2-LeftMouse>", nvim_tree_api.node.open.edit, set_opts("Open"))
+    map("n", "O", nvim_tree_api.node.open.no_window_picker, set_opts("Open: No Window Picker"))
+    map("n", "<Tab>", nvim_tree_api.node.open.preview, set_opts("Open Preview"))
+    map("n", "<2-RightMouse>", nvim_tree_api.tree.change_root_to_node, set_opts("CD"))
 
-        ["gr"] = {
-            function()
-                require("fzf-lua").lsp_references()
-            end,
-            "LSP references",
-        },
+    -- Others
+    map("n", "<Space>", nvim_tree_api.marks.toggle, set_opts("Toggle Bookmark"))
+    map("n", "q", nvim_tree_api.tree.close, set_opts("Close"))
+    map("n", "R", nvim_tree_api.tree.reload, set_opts("Refresh"))
+    map("n", "<S-k>", nvim_tree_api.node.show_info_popup, set_opts("Info"))
+    map("n", ".", nvim_tree_api.node.run.cmd, set_opts("Run Command"))
+    map("n", "-", nvim_tree_api.tree.change_root_to_parent, set_opts("Up"))
+    map("n", "g?", nvim_tree_api.tree.toggle_help, set_opts("Help"))
+    map("n", "H", nvim_tree_api.tree.toggle_hidden_filter, set_opts("Toggle Filter: Dotfiles"))
+    map("n", "I", nvim_tree_api.tree.toggle_gitignore_filter, set_opts("Toggle Filter: Git Ignore"))
+    map("n", "<Esc>", nvim_tree_api.live_filter.clear, set_opts("Live Filter: Clear"))
+    map("n", "/", nvim_tree_api.live_filter.start, set_opts("Live Filter: Start"))
+end
 
-        ["[d"] = {
-            function()
-                diagnostic.jump({
-                    count = -1,
-                    float = {
-                        border = "rounded",
-                    },
-                })
-            end,
-            "Goto prev",
-        },
+---Mappings for `fzf-lua` pluginj
+---@return nil
+M["fzf-lua"] = function(_)
+    map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Find files" })
+    map("n", "<leader>fg", function() require("fzf-lua").live_grep() end, { desc = "Live grep" })
+    map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Find buffers" })
+    map("n", "<leader>fh", function() require("fzf-lua").helptags() end, { desc = "Help page" })
+    map("n", "<leader>fo", function() require("fzf-lua").oldfiles() end, { desc = "Find oldfiles" })
+end
 
-        ["]d"] = {
-            function()
-                diagnostic.jump({
-                    count = 1,
-                    float = {
-                        border = "rounded",
-                    },
-                })
-            end,
-            "Goto next",
-        },
+---Mappings for `Gitsigns` plugin
+---@return nil
+M["gitsigns.on-attach"] = function(_)
+    map("n", "]c", function()
+        if vim.wo.diff then
+            return "]c"
+        end
+        require("gitsigns").nav_hunk("next")
+        return "<Ignore>"
+    end, { expr = true, desc = "Jump to next hunk" })
 
-        ["<leader>q"] = {
-            function()
-                diagnostic.setloclist()
-            end,
-            "Diagnostic setloclist",
-        },
-    },
+    map("n", "[c", function()
+        if vim.wo.diff then
+            return "[c"
+        end
+        require("gitsigns").nav_hunk("prev")
+        return "<Ignore>"
+    end, { expr = true, desc = "Jump to prev hunk" })
 
-    v = {
-        ["<leader>la"] = {
-            function()
-                lsp.buf.code_action()
-            end,
-            "LSP code action",
-        },
-    },
-}
-
-M.nvimtree = {
-    plugin = true,
-
-    n = {
-        -- focus
-        ["<leader>oe"] = {
-            function()
-                require("nvim-tree.api").tree.focus()
-            end,
-            "Focus explorer",
-        },
-    },
-}
-
-M["fzf-lua"] = {
-    plugin = true,
-
-    n = {
-        -- find
-        ["<leader>ff"] = {
-            function()
-                require("fzf-lua").files()
-            end,
-            "Find files",
-        },
-
-        ["<leader>fg"] = {
-            function()
-                require("fzf-lua").live_grep()
-            end,
-            "Live grep",
-        },
-
-        ["<leader>fb"] = {
-            function()
-                require("fzf-lua").buffers()
-            end,
-            "Find buffers",
-        },
-
-        ["<leader>fh"] = {
-            function()
-                require("fzf-lua").helptags()
-            end,
-            "Help page",
-        },
-
-        ["<leader>fo"] = {
-            function()
-                require("fzf-lua").oldfiles()
-            end,
-            "Find oldfiles",
-        },
-    },
-}
-
-M.gitsigns = {
-    plugin = true,
-
-    n = {
-        -- Navigation through hunks
-        ["]c"] = {
-            function()
-                if vim.wo.diff then
-                    return "]c"
-                end
-                require("gitsigns").nav_hunk("next")
-                return "<Ignore>"
-            end,
-            "Jump to next hunk",
-            opts = { expr = true },
-        },
-
-        ["[c"] = {
-            function()
-                if vim.wo.diff then
-                    return "[c"
-                end
-                require("gitsigns").nav_hunk("prev")
-                return "<Ignore>"
-            end,
-            "Jump to prev hunk",
-            opts = { expr = true },
-        },
-
-        -- Actions
-        ["<leader>gr"] = {
-            function()
-                require("gitsigns").reset_hunk()
-            end,
-            "Reset hunk",
-        },
-
-        ["<leader>gp"] = {
-            function()
-                require("gitsigns").preview_hunk()
-            end,
-            "Preview hunk",
-        },
-
-        ["<leader>gb"] = {
-            function()
-                require("gitsigns").blame_line()
-            end,
-            "Blame line",
-        },
-
-        ["<leader>gt"] = {
-            function()
-                require("gitsigns").preview_hunk_inline()
-            end,
-            "Toggle deleted",
-        },
-
-        ["<leader>gm"] = {
-            function()
-                require("fzf-lua").git_commits()
-            end,
-            "Git commits",
-        },
-
-        ["<leader>gs"] = {
-            function()
-                require("fzf-lua").git_status()
-            end,
-            "Git status",
-        },
-    },
-}
+    map("n", "<leader>gr", function() require("gitsigns").reset_hunk() end, { desc = "Reset hunk" })
+    map("n", "<leader>gp", function() require("gitsigns").preview_hunk() end, { desc = "Preview hunk" })
+    map("n", "<leader>gb", function() require("gitsigns").blame_line() end, { desc = "Blame line" })
+    map("n", "<leader>gt", function() require("gitsigns").preview_hunk_inline() end, { desc = "Toggle deleted" })
+    map("n", "<leader>gm", function() require("fzf-lua").git_commits() end, { desc = "Git commits" })
+    map("n", "<leader>gs", function() require("fzf-lua").git_status() end, { desc = "Git status" })
+end
 
 return M

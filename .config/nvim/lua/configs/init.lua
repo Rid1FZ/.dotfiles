@@ -147,9 +147,7 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         group = groups.qf,
-        callback = function()
-            opt_local["buflisted"] = false
-        end,
+        callback = function() opt_local["buflisted"] = false end,
     })
 
     --------------------------------------------------------------------
@@ -164,9 +162,7 @@ M.setup_autocommands = function()
 
             cmd("bwipeout")
             cmd.cd(data.file)
-            schedule(function()
-                fzflua.files()
-            end)
+            schedule(function() fzflua.files() end)
         end,
     })
 
@@ -175,9 +171,7 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("TextYankPost", {
         group = groups.yank,
-        callback = function()
-            vim.highlight.on_yank({ timeout = 150 })
-        end,
+        callback = function() vim.highlight.on_yank({ timeout = 150 }) end,
     })
 
     --------------------------------------------------------------------

@@ -7,7 +7,5 @@ return {
         "nvim-lua/plenary.nvim",
     },
 
-    opts = function()
-        return require("configs.plugins.none-ls")
-    end,
+    opts = function() return require("configs.plugins.none-ls") end,
 }

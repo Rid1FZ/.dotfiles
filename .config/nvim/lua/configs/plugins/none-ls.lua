@@ -60,9 +60,7 @@ M.on_attach = function(client, bufnr)
                     async = false,
                     timeout_ms = 5000,
                     bufnr = bufnr,
-                    filter = function(client_)
-                        return client_.name == "null-ls"
-                    end,
+                    filter = function(client_) return client_.name == "null-ls" end,
                 })
             end,
         })

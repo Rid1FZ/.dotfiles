@@ -1,6 +1,8 @@
 ---@class LspConfig
 local M = {}
 
+local utils = require("utils")
+
 local diagnostic = vim.diagnostic
 local lsp = vim.lsp
 local api = vim.api
@@ -29,9 +31,7 @@ end
 ---@param client vim.lsp.Client The LSP client
 ---@param bufnr integer The buffer number
 ---@return nil
-M.on_attach = function(client, bufnr)
-    require("utils").load_mappings("lsp", { buffer = bufnr })
-end
+M.on_attach = function(client, bufnr) utils.load_mappings("lsp", { buffer = bufnr }) end
 
 ---@type lsp.ClientCapabilities
 M.capabilities = lsp.protocol.make_client_capabilities()
