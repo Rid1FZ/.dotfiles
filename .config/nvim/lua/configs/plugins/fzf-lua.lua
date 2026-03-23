@@ -191,12 +191,8 @@ M.lsp = {
     symbols = {
         async_or_timeout = true,
         symbol_style = 1,
-        symbol_hl = function(s)
-            return "@" .. s:lower()
-        end,
-        symbol_fmt = function(s, opts)
-            return "[" .. s .. "]"
-        end,
+        symbol_hl = function(s) return "@" .. s:lower() end,
+        symbol_fmt = function(s, opts) return "[" .. s .. "]" end,
         child_prefix = true,
         fzf_opts = { ["--tiebreak"] = "begin" },
     },

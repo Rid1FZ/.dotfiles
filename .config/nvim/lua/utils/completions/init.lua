@@ -7,7 +7,6 @@ local api = vim.api
 local fn = vim.fn
 local bo = vim.bo -- always use the index form: bo[something]
 local lsp = vim.lsp
-local notify = vim.notify
 local schedule = vim.schedule
 local list_extend = vim.list_extend
 
@@ -15,9 +14,7 @@ local list_extend = vim.list_extend
 ---@return nil
 M.setup = function()
     -- Setup highlights
-    schedule(function()
-        highlights.setup_highlights()
-    end)
+    schedule(function() highlights.setup_highlights() end)
 
     local group = api.nvim_create_augroup("CompletionsSetup", { clear = true })
 
@@ -38,7 +35,7 @@ M.setup = function()
                 end
 
                 -- Set a more reasonable list of trigger characters
-                ---@type table
+                ---@type string[]
                 local default_triggers = client.server_capabilities.completionProvider
                         and client.server_capabilities.completionProvider.triggerCharacters
                     or {}
@@ -46,8 +43,11 @@ M.setup = function()
                 local merged = list_extend(extra_triggers, default_triggers)
                 client.server_capabilities.completionProvider.triggerCharacters = fn.uniq(fn.sort(merged))
 
+                -- Enable completion
                 lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                require("utils").load_mappings("completion", { buffer = bufnr })
+
+                -- Load mappings
+                require("utils").load_mappings("completions", { buffer = bufnr })
             end)
         end,
     })
