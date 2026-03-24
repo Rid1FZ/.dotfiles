@@ -1,6 +1,7 @@
 ---@class StatuslineGit
 local M = {}
 
+local opt = vim.o
 local system = vim.system
 local cmd = vim.cmd
 local defer_fn = vim.defer_fn
@@ -89,7 +90,7 @@ end
 ---@return string Statusline format string with git branch (space if not in repo)
 M.get_gitbranch = function()
     local branch = get_branch()
-    local win_width = api.nvim_win_get_width(0)
+    local win_width = opt.columns
 
     if branch == "" then
         return " "

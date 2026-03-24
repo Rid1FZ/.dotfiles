@@ -17,6 +17,7 @@ local DEBOUNCE_MS = 150
 
 local api = vim.api
 local fn = vim.fn
+local opt = vim.o
 local bo = vim.bo -- always use the index form: bo[something]
 local uv = vim.uv
 local fs = vim.fs
@@ -78,7 +79,7 @@ local function get_project_root()
     if file == "" then
         local cwd = uv.cwd()
         project_root_cache[bufnr] = cwd
-        return cwd
+        return cwd --[[@as string]]
     end
 
     local found = fs.find(root_markers, { upward = true, path = file })[1]
@@ -137,7 +138,7 @@ M.get_filepath = function()
         return ""
     end
 
-    local win_width = api.nvim_win_get_width(0)
+    local win_width = opt.columns
 
     -- Initialise the per-buffer cache table only once; never reset it inside
     -- this hot path (that was the original bug that caused perpetual misses).
@@ -235,9 +236,7 @@ end
 -- other statusline components such as the git branch component.
 api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufDelete" }, {
     group = api.nvim_create_augroup("StatuslineFileDebounce", { clear = true }),
-    callback = function(args)
-        debounced_invalidate(args.buf)
-    end,
+    callback = function(args) debounced_invalidate(args.buf) end,
 })
 
 return M
