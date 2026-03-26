@@ -78,6 +78,7 @@ M.setup_autocommands = function()
         disable_search = api.nvim_create_augroup("DisableSearchHighlighting", { clear = true }),
         start_treesitter = api.nvim_create_augroup("StartTreesitter", { clear = true }),
         nvim_tree = api.nvim_create_augroup("NvimTreeAugroup", { clear = true }),
+        format_file = api.nvim_create_augroup("FormatFile", { clear = true }),
     }
 
     --------------------------------------------------------------------
@@ -207,6 +208,14 @@ M.setup_autocommands = function()
             local curr_win = api.nvim_get_current_win()
             utils.start_treesitter(args.buf, curr_win)
         end,
+    })
+
+    --------------------------------------------------------------------
+    -- Format current file before saving
+    --------------------------------------------------------------------
+    api.nvim_create_autocmd("BufWritePre", {
+        group = groups.format_file,
+        callback = function(arg) require("utils.conform").format(arg.buf) end,
     })
 end
 

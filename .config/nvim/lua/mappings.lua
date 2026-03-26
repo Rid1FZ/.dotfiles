@@ -143,13 +143,7 @@ M.lsp = function(opts)
     map("n", "K", lsp.buf.hover, set_opts("LSP hover"))
     map("n", "gi", function() require("fzf-lua").lsp_implementations() end, set_opts("LSP implementation"))
     map("n", "<leader>ls", lsp.buf.signature_help, set_opts("LSP signature help"))
-    map("n", "<leader>lf", function()
-        lsp.buf.format({
-            async = false,
-            timeout_ms = 5000,
-            filter = function(c) return c.name == "null-ls" end,
-        })
-    end, set_opts("LSP formatting"))
+    map("n", "<leader>lf", require("utils.conform").format, set_opts("LSP formatting"))
 
     map(
         "n",
