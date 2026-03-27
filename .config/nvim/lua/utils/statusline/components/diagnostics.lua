@@ -1,10 +1,11 @@
 ---@class StatuslineDiagnostics
 local M = {}
 
+local utils = require("utils")
+
 local api = vim.api
 local bo = vim.bo -- always use the index form: bo[something]
 local diagnostic = vim.diagnostic
-local tbl_count = vim.tbl_count
 local defer_fn = vim.defer_fn
 local cmd = vim.cmd
 local format = string.format
@@ -42,23 +43,18 @@ local cache = {}
 
 local DEBOUNCE_MS = 150
 
--- One libuv timer per buffer, used to debounce DiagnosticChanged events.
--- Storing the timer handle lets us cancel a pending invalidation if the event
--- fires again before the delay has elapsed (trailing-edge debounce).
----@type table<integer, uv.uv_timer_t>
-local debounce_timers = {}
-
 ---Compute and cache the diagnostic statusline string for `bufnr`.
 ---Separated from get_diagnostics so it can be called both from the render path
 ---and from the debounce callback.
 ---@param bufnr integer
 ---@return string
 local function compute(bufnr)
+    local counts = diagnostic.count(bufnr)
     local result = {}
     local total = 0
 
     for key, sev in pairs(severity) do
-        local n = tbl_count(diagnostic.get(bufnr, { severity = sev }))
+        local n = counts[sev] or 0
         if n > 0 then
             total = total + n
             result[#result + 1] = format("%%#%s#%s %d", highlights[key], symbols[key], n)
@@ -80,35 +76,22 @@ end
 ---DEBOUNCE_MS milliseconds.  If DiagnosticChanged fires again within the window,
 ---the old timer is replaced, giving trailing-edge debounce semantics identical
 ---to file.lua and git.lua.
----@param bufnr integer
----@return nil
-local function debounced_invalidate(bufnr)
-    local timer = debounce_timers[bufnr]
-    if timer then
-        timer:stop()
-        timer:close()
-        debounce_timers[bufnr] = nil
+---@type fun(bufnr: integer): nil
+local debounced_invalidate = utils.debounce_by_key(function(bufnr)
+    if not api.nvim_buf_is_valid(bufnr) then
+        cache[bufnr] = nil
+        return
     end
-
-    debounce_timers[bufnr] = defer_fn(function()
-        debounce_timers[bufnr] = nil
-        if not api.nvim_buf_is_valid(bufnr) then
-            cache[bufnr] = nil
-            return
-        end
-        compute(bufnr)
-        cmd.redrawstatus()
-    end, DEBOUNCE_MS)
-end
+    compute(bufnr)
+    cmd.redrawstatus()
+end, DEBOUNCE_MS)
 
 -- Invalidate the cache whenever diagnostics change for a buffer.
 -- DiagnosticChanged carries the buffer number in args.buf, so we can
 -- invalidate only the affected buffer rather than flushing everything.
 api.nvim_create_autocmd("DiagnosticChanged", {
     group = api.nvim_create_augroup("StatuslineDiagnosticsDebounce", { clear = true }),
-    callback = function(args)
-        debounced_invalidate(args.buf)
-    end,
+    callback = function(args) debounced_invalidate(args.buf) end,
 })
 
 ---Get diagnostics component for current buffer.

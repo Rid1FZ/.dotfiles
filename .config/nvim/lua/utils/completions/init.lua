@@ -23,9 +23,11 @@ M.setup = function()
         callback = function(args)
             schedule(function()
                 local client = assert(lsp.get_client_by_id(args.data.client_id))
-                local bufnr = args.buf
+                if not client then
+                    return
+                end
 
-                -- Skip buffers where completions are irrelevant
+                local bufnr = args.buf
                 if
                     bo[bufnr].buftype ~= ""
                     or bo[bufnr].filetype == ""

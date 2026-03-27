@@ -8,10 +8,10 @@
 ---@class Conform
 local M = {}
 
--- Per-buffer debounce timers. Each buffer gets its own timer so that typing in
--- buffer A does not reset the pending format for buffer B.
----@type table<integer, uv.uv_timer_t>
-local timers = {}
+local utils = require("utils")
+
+---@type integer
+DEBOUNCE_MS = 1000
 
 ---Per-formatter config overrides. Merges on top of configs/formatters/<name>.lua.
 ---Set directly, e.g.:
@@ -216,20 +216,18 @@ local function resolve(names, bufnr)
     return result
 end
 
----Cancel and destroy a buffer's pending debounce timer, if any.
+---Format a buffer. Run formatter without any delay(synchronously).
+---
+---Formatters for the same filetype run in `priority` order (lowest first).
+---Multiple formatters are chained: each receives the output of the previous.
+---
+---Errors (missing command, non-zero exit, …) are surfaced via vim.notify
+---and abort the chain — the buffer is left in whatever state the last
+---successful formatter (or no formatter) produced.
 ---@param bufnr integer
-local function cancel_debounce_timer(bufnr)
-    local t = timers[bufnr]
-    if t then
-        t:stop()
-        t:close()
-        timers[bufnr] = nil
-    end
-end
+M.format_no_wait = function(bufnr)
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
 
----Run formatters immediately.
----@param bufnr integer
-local function format_no_wait(bufnr)
     local names = names_for_buffer(bufnr)
     if vim.tbl_isempty(names) then
         vim.notify(
@@ -247,7 +245,12 @@ local function format_no_wait(bufnr)
     require("utils.conform.runner").format_sync(bufnr, formatters)
 end
 
----Format a buffer.
+---Format a buffer asynchronously with added debounce effect.
+---This function will be used by `M.format`
+---@type fun(bufnr: integer): nil
+local format_debounced = utils.debounce_by_key(function(bufnr) M.format_no_wait(bufnr) end, DEBOUNCE_MS)
+
+---Format a buffer. Run formatter asynchronously.
 ---
 ---Formatters for the same filetype run in `priority` order (lowest first).
 ---Multiple formatters are chained: each receives the output of the previous.
@@ -256,24 +259,11 @@ end
 ---and abort the chain — the buffer is left in whatever state the last
 ---successful formatter (or no formatter) produced.
 ---@param bufnr?  integer  Buffer to format. Defaults to current buffer (0).
----@param delay?  integer  Debounce delay in ms. Defaults to 1000.
-M.format = function(bufnr, delay)
+---@return nil
+M.format = function(bufnr)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
-    delay = delay or 1000
 
-    cancel_debounce_timer(bufnr)
-
-    ---@type boolean
-    local formatting_done = false
-    timers[bufnr] = vim.defer_fn(function()
-        timers[bufnr] = nil
-        format_no_wait(bufnr)
-        formatting_done = true
-    end, delay)
-
-    -- `vim.defer_fn` will be run asynchronously. So this call will make this function
-    -- wait until the formatting is done. This is to prevent asynchronousa formatting.
-    vim.wait(delay, function() return formatting_done end)
+    return format_debounced(bufnr)
 end
 
 return M

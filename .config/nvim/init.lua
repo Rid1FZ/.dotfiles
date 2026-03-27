@@ -1,7 +1,5 @@
 -- Enable bytecode cache for faster module loading (Neovim 0.11+)
-if vim.loader and not vim.loader.enabled then
-    vim.loader.enable()
-end
+vim.loader.enable()
 
 -- Prevent reloading twice
 if vim.g.loaded_config_init then

@@ -1,10 +1,11 @@
 ---@class StatuslineGit
 local M = {}
 
+local utils = require("utils")
+
 local opt = vim.o
 local system = vim.system
 local cmd = vim.cmd
-local defer_fn = vim.defer_fn
 local schedule_wrap = vim.schedule_wrap
 local fn = vim.fn
 local api = vim.api
@@ -21,52 +22,39 @@ local last_cwd = ""
 ---@type vim.SystemObj?
 local git_job = nil
 
----@type uv.uv_timer_t?
-local debounce_timer = nil
-
 local DEBOUNCE_MS = 100
 
 ---Debounced branch refresh.
 ---Cancels any in-flight git job and pending timer, then schedules a fresh
 ---`git branch --show-current` call after DEBOUNCE_MS milliseconds.
 ---Gives trailing-edge debounce semantics identical to file.lua and diagnostics.lua.
----@param cwd string Working directory captured at call site
----@return nil
-local function debounced_invalidate(cwd)
+---@type fun(cwd: string): nil
+local debounced_invalidate = utils.debounce_by_key(function(cwd)
     if git_job and not git_job:is_closing() then
         git_job:kill(9)
         git_job = nil
     end
 
-    if debounce_timer then
-        debounce_timer:stop()
-        debounce_timer:close()
-        debounce_timer = nil
-    end
-
-    debounce_timer = defer_fn(function()
-        debounce_timer = nil
-        git_job = system(
-            { "git", "branch", "--show-current" },
-            { text = true },
-            schedule_wrap(function(obj)
-                if obj.code == 0 then
-                    local branch = obj.stdout:gsub("\n", "")
-                    if branch ~= "" and branch ~= "HEAD" then
-                        last_branch = branch
-                        last_cwd = cwd
-                        cmd.redrawstatus()
-                    else
-                        last_branch = ""
-                    end
+    git_job = system(
+        { "git", "branch", "--show-current" },
+        { text = true },
+        schedule_wrap(function(obj)
+            if obj.code == 0 then
+                local branch = obj.stdout:gsub("\n", "")
+                if branch ~= "" and branch ~= "HEAD" then
+                    last_branch = branch
+                    last_cwd = cwd
+                    cmd.redrawstatus()
                 else
                     last_branch = ""
                 end
-                git_job = nil
-            end)
-        )
-    end, DEBOUNCE_MS)
-end
+            else
+                last_branch = ""
+            end
+            git_job = nil
+        end)
+    )
+end, DEBOUNCE_MS)
 
 ---Get the current git branch name
 ---@return string Git branch name (empty if not in a git repository)

@@ -27,7 +27,6 @@ M.setup_custom_events = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
         group = groups.file_post,
-        once = true,
         callback = function(args)
             local file = api.nvim_buf_get_name(args.buf)
             local buftype = bo[args.buf].buftype
@@ -59,15 +58,6 @@ end
 ---Setup autocommands
 ---@return nil
 M.setup_autocommands = function()
-    local ok_fzf, fzflua = pcall(require, "fzf-lua")
-    local ok_nvim_tree_api, nvim_tree_api = pcall(require, "nvim-tree.api")
-
-    local tree = nil
-
-    if ok_nvim_tree_api then
-        tree = nvim_tree_api.tree
-    end
-
     --------------------------------------------------------------------
     -- All augroups
     --------------------------------------------------------------------
@@ -114,9 +104,13 @@ M.setup_autocommands = function()
         group = groups.nvim_tree,
         nested = false,
         callback = function(e)
-            if not tree then
+            local ok, nvim_tree_api = pcall(require, "nvim-tree.api")
+            if not ok then
                 return
-            elseif not tree.is_visible() then
+            end
+
+            local tree = nvim_tree_api.tree
+            if not tree.is_visible() then
                 return
             end
 
@@ -157,7 +151,12 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("VimEnter", {
         group = groups.open_find,
         callback = function(data)
-            if fn.isdirectory(data.file) ~= 1 or not ok_fzf then
+            if fn.isdirectory(data.file) ~= 1 then
+                return
+            end
+
+            local ok_fzf, fzflua = pcall(require, "fzf-lua")
+            if not ok_fzf then
                 return
             end
 
@@ -205,8 +204,8 @@ M.setup_autocommands = function()
     api.nvim_create_autocmd("FileType", {
         group = groups.start_treesitter,
         callback = function(args)
-            local curr_win = api.nvim_get_current_win()
-            utils.start_treesitter(args.buf, curr_win)
+            local winid = api.nvim_get_current_win()
+            utils.start_treesitter(args.buf, winid)
         end,
     })
 
@@ -215,7 +214,7 @@ M.setup_autocommands = function()
     --------------------------------------------------------------------
     api.nvim_create_autocmd("BufWritePre", {
         group = groups.format_file,
-        callback = function(arg) require("utils.conform").format(arg.buf) end,
+        callback = function(arg) require("utils.conform").format_no_wait(arg.buf) end,
     })
 end
 

@@ -31,12 +31,12 @@ end
 ---@param client vim.lsp.Client The LSP client
 ---@param bufnr integer The buffer number
 ---@return nil
-M.on_attach = function(client, bufnr) utils.load_mappings("lsp", { buffer = bufnr }) end
+local function on_attach(client, bufnr) utils.load_mappings("lsp", { buffer = bufnr }) end
 
 ---@type lsp.ClientCapabilities
-M.capabilities = lsp.protocol.make_client_capabilities()
+local capabilities = lsp.protocol.make_client_capabilities()
 
-M.capabilities.textDocument.completion.completionItem = {
+capabilities.textDocument.completion.completionItem = {
     documentationFormat = { "markdown", "plaintext" },
     snippetSupport = true,
     preselectSupport = true,
@@ -54,12 +54,21 @@ M.capabilities.textDocument.completion.completionItem = {
     },
 }
 
+---Apply default options to all the lsp servers
+---@return nil
+local function apply_defaults()
+    lsp.config("*", {
+        on_attach = on_attach,
+        capabilities = capabilities,
+    })
+end
+
 ---Setup LSP servers
 ---@return nil
 M.setup = function()
-    local configs = {}
+    apply_defaults()
 
-    -- enable lsp
+    local configs = {}
     for _, v in ipairs(api.nvim_get_runtime_file("lsp/*", true)) do
         local name = fn.fnamemodify(v, ":t:r")
         configs[name] = true

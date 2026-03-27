@@ -1,6 +1,19 @@
 ---@class StatuslineFile
 local M = {}
 
+local utils = require("utils")
+
+local api = vim.api
+local fn = vim.fn
+local opt = vim.o
+local bo = vim.bo -- always use the index form: bo[something]
+local uv = vim.uv
+local fs = vim.fs
+local cmd = vim.cmd
+
+local colors = require("utils.statusline.highlights.colors")
+local highlight = require("utils").highlight
+
 ---@type table<integer, string>
 local project_root_cache = {}
 
@@ -10,22 +23,7 @@ local file_path_cache = {}
 ---@type table<integer, string>
 local file_icon_cache = {}
 
----@type table<integer, uv.uv_timer_t>
-local debounce_timers = {}
-
 local DEBOUNCE_MS = 150
-
-local api = vim.api
-local fn = vim.fn
-local opt = vim.o
-local bo = vim.bo -- always use the index form: bo[something]
-local uv = vim.uv
-local fs = vim.fs
-local defer_fn = vim.defer_fn
-local cmd = vim.cmd
-
-local colors = require("utils.statusline.highlights.colors")
-local highlight = require("utils").highlight
 
 ---@type string[]
 local root_markers = {
@@ -43,27 +41,17 @@ local root_markers = {
 ---Coalesces rapid back-to-back buffer events (e.g. BufWritePost fired multiple
 ---times in quick succession) into a single cache clear + statusline redraw so
 ---that the component never recomputes more often than necessary.
----@param bufnr integer
----@return nil
-local function debounced_invalidate(bufnr)
-    local timer = debounce_timers[bufnr]
-    if timer then
-        timer:stop()
-        timer:close()
-        debounce_timers[bufnr] = nil
-    end
+---@type fun(bufnr: integer): nil
+local debounced_invalidate = utils.debounce_by_key(function(bufnr)
+    project_root_cache[bufnr] = nil
+    file_path_cache[bufnr] = nil
+    file_icon_cache[bufnr] = nil
 
-    debounce_timers[bufnr] = defer_fn(function()
-        project_root_cache[bufnr] = nil
-        file_path_cache[bufnr] = nil
-        file_icon_cache[bufnr] = nil
-        debounce_timers[bufnr] = nil
-        -- Only redraw if the buffer still exists
-        if api.nvim_buf_is_valid(bufnr) then
-            cmd.redrawstatus()
-        end
-    end, DEBOUNCE_MS)
-end
+    -- Only redraw if the buffer still exists
+    if api.nvim_buf_is_valid(bufnr) then
+        cmd.redrawstatus()
+    end
+end, DEBOUNCE_MS)
 
 ---Find the project root directory for the current buffer.
 ---Uses common project markers like .git, package.json, etc.

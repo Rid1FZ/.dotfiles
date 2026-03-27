@@ -108,8 +108,8 @@ local set_autocommands = function(buf, win)
             if api.nvim_win_is_valid(win) then
                 api.nvim_win_close(win, true)
             end
-            -- bwipeout is safe to call even if the buffer is already gone.
-            pcall(cmd.bwipeout, { buf, bang = true })
+
+            pcall(vim.api.nvim_buf_delete, buf, { force = true })
         end,
     })
 end

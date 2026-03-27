@@ -1,5 +1,3 @@
-local lsp = require("configs.lsp")
-
 local function get_plugins()
     local plugins = {}
 
@@ -28,8 +26,6 @@ local function build_library()
     library["${3rd}/luv/library"] = true
     library["${3rd}/busted/library"] = true
 
-    -- library[vim.fn.stdpath("config")] = true
-
     local plugins = get_plugins()
     for _, plugin_path in ipairs(plugins) do
         library[plugin_path] = true
@@ -42,9 +38,6 @@ return {
     cmd = { "lua-language-server" },
     root_markers = { ".luarc.json", ".luarc.jsonc", ".luacheckrc", "stylua.toml", ".git" },
     filetypes = { "lua" },
-    on_init = lsp.on_init,
-    on_attach = lsp.on_attach,
-    capabilities = lsp.capabilities,
 
     settings = {
         Lua = {

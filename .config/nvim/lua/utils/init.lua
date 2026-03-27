@@ -10,12 +10,65 @@ local notify = vim.notify
 local treesitter = vim.treesitter
 local schedule = vim.schedule
 local format = string.format
+local defer_fn = vim.defer_fn
 
 ---Set highlighting
 ---@param name string The highlight group name
 ---@param val vim.api.keyset.highlight The highlight attributes
 ---@return nil
 M.highlight = function(name, val) api.nvim_set_hl(0, name, val) end
+
+---Trailing-edge debounce for a single-instance timer.
+---Returns the debounced function and a cancel function.
+---@param fn function
+---@param ms integer
+---@return fun(...), fun()
+M.debounce = function(fn, ms)
+    local timer = nil
+
+    local function cancel()
+        if timer then
+            timer:stop()
+            timer:close()
+            timer = nil
+        end
+    end
+
+    local function executor(...)
+        local args = { ... }
+
+        cancel()
+        timer = defer_fn(function()
+            timer = nil
+            fn(unpack(args))
+        end, ms)
+    end
+
+    return executor, cancel
+end
+
+---Trailing-edge debounce keyed by an arbitrary value (e.g. bufnr).
+---All timers share one table managed inside the closure.
+---@param fn fun(key: any, ...)
+---@param ms integer
+---@return fun(key: any, ...)
+M.debounce_by_key = function(fn, ms)
+    local timers = {}
+
+    return function(key, ...)
+        local t = timers[key]
+        if t then
+            t:stop()
+            t:close()
+        end
+
+        local args = { ... }
+        timers[key] = defer_fn(function()
+            timers[key] = nil
+            fn(key, unpack(args))
+        end, ms)
+    end
+end
 
 ---Start treesitter for current buffer
 ---@param bufnr integer Buffer number
@@ -24,6 +77,7 @@ M.highlight = function(name, val) api.nvim_set_hl(0, name, val) end
 M.start_treesitter = function(bufnr, winnr)
     local filetype = bo[bufnr].filetype
     local parser_available, _ = pcall(treesitter.get_parser, bufnr) -- NOTE: change this in Neovim 0.12
+    -- local parser = treesitter.get_parser(bufnr, nil, { error = false }) -- for neovim 0.12
 
     if not parser_available then
         local nvim_treesitter = require("nvim-treesitter") -- do not require unless needed
@@ -36,7 +90,7 @@ M.start_treesitter = function(bufnr, winnr)
     end
 
     treesitter.start(bufnr)
-    wo[winnr].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    wo[winnr][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
 end
 
 ---Load keymappings for specific plugin
