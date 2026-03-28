@@ -5,7 +5,7 @@ return {
     command = "rustfmt",
     args = function(self, ctx)
         local edition = util.parse_rust_edition(ctx.dirname) or "2021"
-        return { "--edition", edition, "--stdin-filepath", "$FILENAME" }
+        return { "--edition", edition, "--emit", "stdout" }
     end,
     cwd = util.root_file({ "Cargo.toml" }),
 }
