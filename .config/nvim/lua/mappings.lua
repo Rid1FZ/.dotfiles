@@ -6,29 +6,20 @@ local api = vim.api
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
--- stylua: ignore
 ---For replacing certain <C-x>... keymaps. Wrapper around `vim.api.nvim_feedkeys`.
 ---@param keys string
 ---@return nil
-local function feedkeys(keys)
-    api.nvim_feedkeys(api.nvim_replace_termcodes(keys, true, false, true), "n", true)
-end
+local function feedkeys(keys) api.nvim_feedkeys(api.nvim_replace_termcodes(keys, true, false, true), "n", true) end
 
--- stylua: ignore
 ---Wrapper around `vim.tbl_extend`.
 ---@param main_opts table
 ---@param extra_opts table
 ---@return table
-local function tbl_merge(main_opts, extra_opts)
-    return vim.tbl_extend("keep", main_opts, extra_opts)
-end
+local function tbl_merge(main_opts, extra_opts) return vim.tbl_extend("keep", main_opts, extra_opts) end
 
--- stylua: ignore
 ---Check if completion menu is visible. Wrapper around `vim.fn.pumvisible`.
 ---@return nil
-local function pumvisible()
-        return tonumber(fn.pumvisible()) ~= 0
-end
+local function pumvisible() return tonumber(fn.pumvisible()) ~= 0 end
 
 ---General set of mappings
 ---@return nil
@@ -70,10 +61,7 @@ end
 ---Mappings for `nvim-autopairs` plugin
 ---@return nil
 M["nvim-autopairs"] = function(_)
-    ---CR uses v:lua bridge to avoid terminal code mangling in expr mappings,
-    ---and must be global so it works in all buffers regardless of LSP state
-    ---@return string
-    _G._completion_cr = function()
+    map("i", "<CR>", function()
         local npairs = require("nvim-autopairs")
         if pumvisible() then
             if fn.complete_info({ "selected" }).selected ~= -1 then
@@ -84,9 +72,7 @@ M["nvim-autopairs"] = function(_)
         else
             return npairs.autopairs_cr()
         end
-    end
-
-    map("i", "<CR>", "v:lua._completion_cr()", { expr = true, noremap = true })
+    end, { expr = true, noremap = true, replace_keycodes = false })
 end
 
 ---Mappings for `vim.lsp.completion` completions
@@ -124,7 +110,9 @@ M.completions = function(opts)
         else
             feedkeys("<S-Tab>")
         end
-    end, tbl_merge({ desc = "Select prev completion option or dedent" }, opts or {}))
+    end, set_opts("Select prev completion option or dedent"))
+
+    map("s", "<BS>", "<C-o>s", set_opts("Remove snippet placeholder"))
 end
 
 ---Mappings for lsp
