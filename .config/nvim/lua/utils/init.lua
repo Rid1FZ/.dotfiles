@@ -76,10 +76,9 @@ end
 ---@return nil
 M.start_treesitter = function(bufnr, winnr)
     local filetype = bo[bufnr].filetype
-    local parser_available, _ = pcall(treesitter.get_parser, bufnr) -- NOTE: change this in Neovim 0.12
-    -- local parser = treesitter.get_parser(bufnr, nil, { error = false }) -- for neovim 0.12
+    local parser = treesitter.get_parser(bufnr, nil, { error = false }) 
 
-    if not parser_available then
+    if not parser then
         local nvim_treesitter = require("nvim-treesitter") -- do not require unless needed
         if not contains(nvim_treesitter.get_available(), filetype) then
             return

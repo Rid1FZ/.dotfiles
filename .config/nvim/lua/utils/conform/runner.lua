@@ -7,9 +7,8 @@ local fs = require("utils.conform.fs")
 local ft_to_ext = require("utils.conform.ft_to_ext")
 local util = require("utils.conform.util")
 
--- vim.diff was renamed to vim.text.diff in (0.12). Support both.
 ---@type fun(a: string, b: string, opts: table): any
-local vim_diff = (vim.text and vim.text.diff) or vim.diff
+local vim_diff = vim.text.diff
 
 ---@class fmt.Context
 ---@field buf integer Buffer handle
