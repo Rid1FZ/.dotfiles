@@ -16,8 +16,6 @@ local statusline = require("utils.statusline")
 
 local notify = vim.notify
 local log_levels = vim.log.levels
-local uv = vim.uv
-local fn = vim.fn
 
 --------------------------------------------------------------------
 -- Setup options
