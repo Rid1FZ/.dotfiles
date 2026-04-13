@@ -10,12 +10,7 @@ local lsp = vim.lsp
 local schedule = vim.schedule
 local list_extend = vim.list_extend
 
----Setup LSP-based autocompletion
----@return nil
-M.setup = function()
-    -- Setup highlights
-    schedule(function() highlights.setup_highlights() end)
-
+local setup_autocommands = function()
     local group = api.nvim_create_augroup("CompletionsSetup", { clear = true })
 
     api.nvim_create_autocmd("LspAttach", {
@@ -53,6 +48,18 @@ M.setup = function()
             end)
         end,
     })
+
+    api.nvim_create_autocmd("ColorScheme", {
+        group = group,
+        callback = function() highlights.setup_highlights() end,
+    })
+end
+
+---Setup LSP-based autocompletion
+---@return nil
+M.setup = function()
+    highlights.setup_highlights()
+    setup_autocommands()
 end
 
 return M

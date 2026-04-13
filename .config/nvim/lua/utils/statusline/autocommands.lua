@@ -27,6 +27,11 @@ M.setup_autocommands = function()
         group = group,
         callback = redraw_debounce,
     })
+
+    api.nvim_create_autocmd("ColorScheme", {
+        group = group,
+        callback = function() require("utils.statusline.highlights").setup_highlights() end,
+    })
 end
 
 return M
