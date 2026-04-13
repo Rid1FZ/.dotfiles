@@ -1,24 +1,3 @@
-local function get_plugins()
-    local plugins = {}
-
-    if not package.loaded.lazy then
-        return plugins
-    end
-
-    local ok, lazy_config = pcall(require, "lazy.core.config")
-    if not ok then
-        return plugins
-    end
-
-    for _, plugin in pairs(lazy_config.plugins) do
-        if plugin.dir then
-            table.insert(plugins, plugin.dir)
-        end
-    end
-
-    return plugins
-end
-
 local function build_library()
     local library = {}
 
@@ -26,9 +5,8 @@ local function build_library()
     library["${3rd}/luv/library"] = true
     library["${3rd}/busted/library"] = true
 
-    local plugins = get_plugins()
-    for _, plugin_path in ipairs(plugins) do
-        library[plugin_path] = true
+    for _, plugin in ipairs(vim.pack.get()) do
+        library[plugin.path] = true
     end
 
     return library
