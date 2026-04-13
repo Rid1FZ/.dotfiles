@@ -36,7 +36,7 @@
       "rev": "4898c98702954439233fdaf764c39636681e2861",
       "src": "https://github.com/alexghergh/nvim-tmux-navigation"
     },
-    "nvim-tree.lua": {
+    "nvim-tree": {
       "rev": "509962f21ab7289d8dcd28568af539be39a8c01e",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
