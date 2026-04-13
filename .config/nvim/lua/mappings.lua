@@ -58,19 +58,18 @@ M.general = function(_)
     map("n", "<Leader>ot", function() require("utils.floattui.terminal").open() end, { desc = "Open terminal" })
 end
 
----Mappings for `nvim-autopairs` plugin
+---Mappings for `mini.pairs` plugin
 ---@return nil
-M["nvim-autopairs"] = function(_)
+M["mini-pairs"] = function(_)
     map("i", "<CR>", function()
-        local npairs = require("nvim-autopairs")
         if pumvisible() then
             if fn.complete_info({ "selected" }).selected ~= -1 then
-                return npairs.esc("<C-y>")
+                return api.nvim_replace_termcodes("<C-y>", true, false, true)
             else
-                return npairs.esc("<C-e>") .. npairs.autopairs_cr()
+                return api.nvim_replace_termcodes("<C-e>", true, false, true) .. require("mini.pairs").cr()
             end
         else
-            return npairs.autopairs_cr()
+            return require("mini.pairs").cr()
         end
     end, { expr = true, noremap = true, replace_keycodes = false })
 end
