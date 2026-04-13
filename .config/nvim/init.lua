@@ -30,32 +30,6 @@ options.setup()
 utils.load_mappings()
 
 --------------------------------------------------------------------
--- Bootstrap lazy.nvim
---------------------------------------------------------------------
-local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"
-
-if not uv.fs_stat(lazypath) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    notify("Bootstrapping lazy.nvim...", log_levels.INFO)
-
-    local out = fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-
-    if vim.v.shell_error ~= 0 then
-        notify(string.format("Failed to load lazy.nvim:\n\n%s", out), log_levels.ERROR)
-        notify("Press any key to continue...", log_levels.INFO)
-        fn.getchar()
-        os.exit(1)
-    else
-        notify("Done...", log_levels.INFO)
-    end
-end
-
-vim.opt.rtp:prepend(lazypath)
-
--- Load plugins
-require("lazy").setup(require("configs.lazy"))
-
---------------------------------------------------------------------
 -- Setup lsp and diagnostics
 --------------------------------------------------------------------
 lspconfig.configure_diagnostics()
