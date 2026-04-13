@@ -214,7 +214,7 @@ M["nvim-tree.on-attach"] = function(opts)
     map("n", "/", nvim_tree_api.live_filter.start, set_opts("Live Filter: Start"))
 end
 
----Mappings for `fzf-lua` pluginj
+---Mappings for `fzf-lua` plugin
 ---@return nil
 M["fzf-lua"] = function(_)
     map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Find files" })
@@ -222,16 +222,18 @@ M["fzf-lua"] = function(_)
     map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Find buffers" })
     map("n", "<leader>fh", function() require("fzf-lua").helptags() end, { desc = "Help page" })
     map("n", "<leader>fo", function() require("fzf-lua").oldfiles() end, { desc = "Find oldfiles" })
+    map("n", "<leader>gm", function() require("fzf-lua").git_commits() end, { desc = "Git commits" })
+    map("n", "<leader>gs", function() require("fzf-lua").git_status() end, { desc = "Git status" })
 end
 
----Mappings for `Gitsigns` plugin
+---Mappings for `mini.diff` plugin
 ---@return nil
-M["gitsigns.on-attach"] = function(_)
+M["mini-diff"] = function(_)
     map("n", "]c", function()
         if vim.wo.diff then
             return "]c"
         end
-        require("gitsigns").nav_hunk("next")
+        require("mini.diff").goto_hunk("next")
         return "<Ignore>"
     end, { expr = true, desc = "Jump to next hunk" })
 
@@ -239,16 +241,9 @@ M["gitsigns.on-attach"] = function(_)
         if vim.wo.diff then
             return "[c"
         end
-        require("gitsigns").nav_hunk("prev")
+        require("mini.diff").goto_hunk("prev")
         return "<Ignore>"
     end, { expr = true, desc = "Jump to prev hunk" })
-
-    map("n", "<leader>gr", function() require("gitsigns").reset_hunk() end, { desc = "Reset hunk" })
-    map("n", "<leader>gp", function() require("gitsigns").preview_hunk() end, { desc = "Preview hunk" })
-    map("n", "<leader>gb", function() require("gitsigns").blame_line() end, { desc = "Blame line" })
-    map("n", "<leader>gt", function() require("gitsigns").preview_hunk_inline() end, { desc = "Toggle deleted" })
-    map("n", "<leader>gm", function() require("fzf-lua").git_commits() end, { desc = "Git commits" })
-    map("n", "<leader>gs", function() require("fzf-lua").git_status() end, { desc = "Git status" })
 end
 
 return M
