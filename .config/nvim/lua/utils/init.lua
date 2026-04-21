@@ -75,18 +75,11 @@ end
 ---@param winnr integer Window number
 ---@return nil
 M.start_treesitter = function(bufnr, winnr)
-    -- local filetype = bo[bufnr].filetype
-    -- local parser = treesitter.get_parser(bufnr, nil, { error = false })
-    --
-    -- if not parser then
-    --     local nvim_treesitter = require("nvim-treesitter") -- do not require unless needed
-    --     if not contains(nvim_treesitter.get_available(), filetype) then
-    --         return
-    --     end
-    --
-    --     notify(format("installing '%s' treesitter parser...", filetype), log_levels.INFO)
-    --     nvim_treesitter.install(filetype):wait(30000)
-    -- end
+    local parser = treesitter.get_parser(bufnr, nil, { error = false })
+
+    if not parser then
+        return
+    end
 
     treesitter.start(bufnr)
     wo[winnr][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
