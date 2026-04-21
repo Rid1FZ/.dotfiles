@@ -75,9 +75,17 @@ end
 ---@param winnr integer Window number
 ---@return nil
 M.start_treesitter = function(bufnr, winnr)
+    local filetype = bo[bufnr].filetype
     local parser = treesitter.get_parser(bufnr, nil, { error = false })
 
     if not parser then
+        local config = require("tree-sitter-manager.config")
+
+        if not contains(config.languages, filetype) then
+            return
+        end
+
+        notify(format("treesitter: parser for '%s' is available but not installed", filetype), log_levels.INFO)
         return
     end
 
