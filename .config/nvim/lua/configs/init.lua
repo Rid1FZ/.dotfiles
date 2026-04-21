@@ -198,9 +198,9 @@ M.setup_autocommands = function()
         end,
     })
 
-    --------------------------------------------------------------------
-    -- Start treesitter when a file is opened
-    --------------------------------------------------------------------
+    -- --------------------------------------------------------------------
+    -- -- Start treesitter when a file is opened
+    -- --------------------------------------------------------------------
     api.nvim_create_autocmd("FileType", {
         group = groups.start_treesitter,
         callback = function(args)
