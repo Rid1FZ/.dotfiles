@@ -1,3 +1,5 @@
+-- Filetype-to-extension map used only when formatting an unnamed buffer,
+-- so that $FILENAME has a sensible extension for language detection.
 ---@type table<string, string>
 return {
     elixir = "ex",

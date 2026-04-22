@@ -1,8 +1,9 @@
-local util = require("utils.conform.util")
+local utils = require("utils")
+
 return {
     filetype = { "python" },
-    priority = 2,
+    priority = 2, -- priority:1 will be for isort
     command = "black",
     args = { "--stdin-filename", "$FILENAME", "--quiet", "-" },
-    cwd = util.root_file({ "pyproject.toml" }),
+    cwd = utils.root_file({ "pyproject.toml" }),
 }

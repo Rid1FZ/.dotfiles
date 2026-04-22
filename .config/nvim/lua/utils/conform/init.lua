@@ -1,60 +1,40 @@
----Public API for fmt.nvim.
----
----Usage:
---- local fmt = require("utils.conform")
---- fmt.formatters_by_ft  -- discovered automatically from configs/formatters/
---- fmt.formatters.black = { append_args = { "--line-length", "100" } }
---- fmt.format()
 ---@class Conform
 local M = {}
 
 local utils = require("utils")
+local diff = require("utils.conform.diff")
 
----@type integer
-DEBOUNCE_MS = 1000
+local api = vim.api
+local bo = vim.bo
+local fn = vim.fn
+local uv = vim.uv
 
----Per-formatter config overrides. Merges on top of configs/formatters/<name>.lua.
----Set directly, e.g.:
----  require("utils.conform").formatters.black = { append_args = { "--line-length", "100" } }
----@type table<string, table|fun(bufnr: integer): table>
-M.formatters = {}
+local DEBOUNCE_MS = 1000
 
----Scanned once on the first format() call then cached.
----Each file in configs/formatters/ declares its own `filetype` and `priority`.
----@type table<string, string[]>|nil  ft → ordered list of formatter names
+---@type table<string, string[]>|nil  ft -> ordered list of formatter names
 local ft_map = nil
 
 ---Scan lua/configs/formatters/ and build the ft -> formatters map.
----@return nil
 local function build_ft_map()
     ft_map = {}
-    ---@type table<string, {name: string, priority: integer}[]>
     local by_ft = {}
-    local dir_path = vim.fn.stdpath("config") .. "/lua/configs/formatters"
+    local dir = fn.stdpath("config") .. "/lua/configs/formatters"
 
-    for entry_name, entry_type in vim.fs.dir(dir_path) do
-        if entry_type ~= "file" then
-            goto loop_exit
-        end
-
-        local name = entry_name:match("^(.-)%.lua$")
-        if not name then
-            goto loop_exit
-        end
-
-        local ok, mod = pcall(require, "configs.formatters." .. name)
-        if not ok then
-            vim.notify(("[fmt] Failed to load configs.formatters.%s: %s"):format(name, mod), vim.log.levels.ERROR)
-        elseif mod.filetype then
-            local fts = type(mod.filetype) == "string" and { mod.filetype } or mod.filetype
-            local priority = mod.priority or math.huge
-            for _, ft in ipairs(fts) do
-                by_ft[ft] = by_ft[ft] or {}
-                by_ft[ft][#by_ft[ft] + 1] = { name = name, priority = priority }
+    for entry, kind in vim.fs.dir(dir) do
+        if kind == "file" then
+            local name = entry:match("^(.-)%.lua$")
+            if name then
+                local ok, mod = pcall(require, "configs.formatters." .. name)
+                if ok and mod.filetype then
+                    local fts = type(mod.filetype) == "string" and { mod.filetype } or mod.filetype
+                    local priority = mod.priority or math.huge
+                    for _, ft in ipairs(fts) do
+                        by_ft[ft] = by_ft[ft] or {}
+                        by_ft[ft][#by_ft[ft] + 1] = { name = name, priority = priority }
+                    end
+                end
             end
         end
-
-        ::loop_exit:: -- this label must be at the end
     end
 
     for ft, entries in pairs(by_ft) do
@@ -73,10 +53,8 @@ local function names_for_buffer(bufnr)
         build_ft_map()
     end
 
-    local ft = vim.bo[bufnr].filetype
+    local ft = bo[bufnr].filetype
     local parts = vim.split(ft, ".", { plain = true })
-
-    -- Priority order: full compound > components in reverse > "_"
     local candidates = { ft }
     for i = #parts, 1, -1 do
         candidates[#candidates + 1] = parts[i]
@@ -85,185 +63,174 @@ local function names_for_buffer(bufnr)
 
     local seen, result = {}, {}
     for _, candidate in ipairs(candidates) do
-        for _, name in ipairs((ft_map and ft_map[candidate]) or {}) do
+        for _, name in ipairs(ft_map[candidate] or {}) do
             if not seen[name] then
                 seen[name] = true
                 result[#result + 1] = name
             end
         end
     end
-
     return result
 end
 
----Load and merge a formatter's config.
----
----Resolution order:
----  1. Load base from configs/formatters/<name>.lua
----  2. Merge any entry from M.formatters[name] on top (respects prepend_args /
----     append_args / inherit semantics)
----
----Returns nil and emits vim.notify on any configuration error.
----@param name string
----@param bufnr? integer Defaults to current buffer
----@return table|nil config
-M.get_formatter_config = function(name, bufnr)
-    bufnr = bufnr or vim.api.nvim_get_current_buf()
+---Build context
+---@class fmt.Context
+---@field buf integer
+---@field filename string  Absolute path (fabricated for unnamed buffers)
+---@field dirname string
+---@field shiftwidth integer
 
-    local override = M.formatters[name]
-    if type(override) == "function" then
-        override = override(bufnr)
+---@param bufnr integer
+---@return fmt.Context
+local function build_context(bufnr)
+    local ft_to_ext = require("utils.conform.ft_to_ext")
+
+    if bufnr == 0 then
+        bufnr = api.nvim_get_current_buf()
     end
 
-    -- Sanity: a formatter can use a job command OR a Lua format function, not both.
-    if override and override.command and override.format then
-        vim.notify(
-            ("[fmt] Formatter '%s': cannot define both 'command' and 'format'"):format(name),
-            vim.log.levels.ERROR
-        )
+    local filename = api.nvim_buf_get_name(bufnr)
+    local shiftwidth = bo[bufnr].shiftwidth
+    if shiftwidth == 0 then
+        shiftwidth = bo[bufnr].tabstop
+    end
+
+    local dirname
+    if filename == "" or bo[bufnr].buftype ~= "" then
+        dirname = uv.cwd()
+        local ext = ft_to_ext[bo[bufnr].filetype] or bo[bufnr].filetype
+        filename = vim.fs.joinpath(dirname, "unnamed_temp." .. ext)
+    else
+        dirname = vim.fs.dirname(filename)
+    end
+
+    return { buf = bufnr, filename = filename, dirname = dirname, shiftwidth = shiftwidth }
+end
+
+---Build the argv for a formatter's shell command.
+---Substitutes $FILENAME and $DIRNAME in args.
+---@param name string
+---@param ctx fmt.Context
+---@param config table
+---@return string[]
+local function build_cmd(name, ctx, config)
+    local command = type(config.command) == "function" and config.command(config, ctx) or config.command
+    local exe = fn.exepath(command)
+    if exe ~= "" then
+        command = exe
+    end
+
+    local args = config.args or {}
+    if type(args) == "function" then
+        args = args(config, ctx)
+    end
+
+    local subs = { ["$FILENAME"] = ctx.filename, ["$DIRNAME"] = ctx.dirname }
+    local cmd = { command }
+    for _, v in ipairs(args) do
+        cmd[#cmd + 1] = subs[v] or v
+    end
+    return cmd
+end
+
+---Run one formatter synchronously against input_lines.
+---Returns the new lines on success, nil on error (error already notified).
+---@param bufnr integer
+---@param name string
+---@param config table
+---@param ctx fmt.Context
+---@param input_lines string[]
+---@return string[]|nil
+local function run_one(bufnr, name, config, ctx, input_lines)
+    local eol_line = bo[bufnr].eol and "\n" or ""
+    local stdin_text = table.concat(input_lines, "\n") .. eol_line
+    local cmd = build_cmd(name, ctx, config)
+    local cwd = config.cwd and config.cwd(config, ctx) or nil
+    local env = type(config.env) == "function" and config.env(config, ctx) or config.env
+
+    local ok, obj = pcall(vim.system, cmd, { cwd = cwd, env = env, stdin = stdin_text, text = true })
+    if not ok then
+        vim.notify(("[fmt] '%s' failed to start: %s"):format(name, obj), vim.log.levels.ERROR)
         return nil
     end
 
-    -- inherit = true -> merge override on top of configs/formatters/<name>.lua
-    -- inherit = false -> use only the override (no base file needed)
-    -- inherit = "other" -> merge override on top of configs/formatters/other.lua
-    local inherit = (override == nil) or (override.inherit == nil) or override.inherit
-    if inherit == false then
-        inherit = false
-    else
-        inherit = override and override.inherit or true
+    local result = obj:wait(5000)
+
+    if result.code == nil then
+        obj:kill(9)
+        vim.notify(("[fmt] '%s' timed out after 5s"):format(name), vim.log.levels.ERROR)
+        return nil
     end
 
-    local config
-    if inherit then
-        local parent = type(inherit) == "string" and inherit or name
-        local ok, base = pcall(require, "configs.formatters." .. parent)
-        if not ok then
-            -- No built-in — allow a fully-specified override with command/format.
-            if override and (override.command or override.format) then
-                config = override
-            else
-                vim.notify(
-                    ("[fmt] Formatter '%s': no config at configs.formatters.%s"):format(name, parent),
-                    vim.log.levels.ERROR
-                )
-                return nil
-            end
-        else
-            config = override and require("utils.conform.util").merge_formatter_configs(base, override) or base
-        end
-    else
-        if not override then
-            vim.notify(("[fmt] Formatter '%s': inherit=false but no override set"):format(name), vim.log.levels.ERROR)
-            return nil
-        end
-        config = override
+    if result.code ~= 0 then
+        local msg = (result.stderr ~= "" and result.stderr) or result.stdout or "unknown error"
+        vim.notify(("[fmt] '%s' exited %d: %s"):format(name, result.code, msg), vim.log.levels.ERROR)
+        return nil
     end
 
-    -- Default stdin=true: most formatters read from stdin / write to stdout.
-    if config.stdin == nil then
-        config.stdin = true
+    local output = vim.split(result.stdout or "", "\r?\n")
+    if eol_line ~= "" and output[#output] == "" then
+        table.remove(output)
     end
-    return config
+    if #output == 0 then
+        output[1] = ""
+    end
+    return output
 end
 
----Load configs and check executable availability for a list of formatter names.
----Returns nil (and has already notified) on the first problem encountered.
----@param names string[]
----@param bufnr integer
----@return {name: string, config: table}[]|nil
-local function resolve(names, bufnr)
-    local runner = require("utils.conform.runner")
-    local result = {}
+-- Forward declaration so M.format can reference it before assignment.
+local format_debounced
 
-    for _, name in ipairs(names) do
-        local config = M.get_formatter_config(name, bufnr)
-        if not config then
-            return nil
-        end
-
-        -- For job formatters, verify the executable exists before we try to run.
-        if not config.format then
-            local cmd_str = config.command
-            if type(cmd_str) == "function" then
-                cmd_str = cmd_str(config, runner.build_context(bufnr, config))
-            end
-            if vim.fn.executable(cmd_str) == 0 then
-                vim.notify(("[fmt] Formatter '%s': command '%s' not found"):format(name, cmd_str), vim.log.levels.ERROR)
-                return nil
-            end
-
-            if config.condition then
-                local ctx = runner.build_context(bufnr, config)
-                if not config.condition(config, ctx) then
-                    vim.notify(("[fmt] Formatter '%s': condition failed"):format(name), vim.log.levels.ERROR)
-                    return nil
-                end
-            end
-
-            if config.require_cwd and config.cwd then
-                local ctx = runner.build_context(bufnr, config)
-                if not config.cwd(config, ctx) then
-                    vim.notify(("[fmt] Formatter '%s': root directory not found"):format(name), vim.log.levels.ERROR)
-                    return nil
-                end
-            end
-        end
-
-        result[#result + 1] = { name = name, config = config }
-    end
-
-    return result
-end
-
----Format a buffer. Run formatter without any delay(synchronously).
----
----Formatters for the same filetype run in `priority` order (lowest first).
----Multiple formatters are chained: each receives the output of the previous.
----
----Errors (missing command, non-zero exit, …) are surfaced via vim.notify
----and abort the chain — the buffer is left in whatever state the last
----successful formatter (or no formatter) produced.
+---Format a buffer immediately (no debounce).
+---Called from BufWritePre. Silently skips filetypes with no formatter.
 ---@param bufnr integer
 M.format_no_wait = function(bufnr)
-    bufnr = bufnr or vim.api.nvim_get_current_buf()
+    bufnr = bufnr or api.nvim_get_current_buf()
 
     local names = names_for_buffer(bufnr)
     if vim.tbl_isempty(names) then
-        vim.notify(
-            ("[fmt] No formatters configured for filetype '%s'"):format(vim.bo[bufnr].filetype),
-            vim.log.levels.ERROR
-        )
         return
     end
 
-    local formatters = resolve(names, bufnr)
-    if not formatters then
-        return
+    local ctx = build_context(bufnr)
+
+    -- Verify all executables exist before running any formatter.
+    local formatters = {}
+    for _, name in ipairs(names) do
+        local ok, config = pcall(require, "configs.formatters." .. name)
+        if not ok then
+            vim.notify(("[fmt] Failed to load config for '%s': %s"):format(name, config), vim.log.levels.ERROR)
+            return
+        end
+        local cmd_str = type(config.command) == "function" and config.command(config, ctx) or config.command
+        if fn.executable(cmd_str) == 0 then
+            vim.notify(("[fmt] '%s': command '%s' not found"):format(name, cmd_str), vim.log.levels.ERROR)
+            return
+        end
+        formatters[#formatters + 1] = { name = name, config = config }
     end
 
-    require("utils.conform.runner").format_sync(bufnr, formatters)
+    local original = api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local lines = vim.deepcopy(original)
+
+    for _, f in ipairs(formatters) do
+        local result = run_one(bufnr, f.name, f.config, ctx, lines)
+        if not result then
+            return
+        end
+        lines = result
+    end
+
+    diff.apply_format(bufnr, original, lines)
 end
 
----Format a buffer asynchronously with added debounce effect.
----This function will be used by `M.format`
----@type fun(bufnr: integer): nil
-local format_debounced = utils.debounce_by_key(function(bufnr) M.format_no_wait(bufnr) end, DEBOUNCE_MS)
-
----Format a buffer. Run formatter asynchronously.
----
----Formatters for the same filetype run in `priority` order (lowest first).
----Multiple formatters are chained: each receives the output of the previous.
----
----Errors (missing command, non-zero exit, …) are surfaced via vim.notify
----and abort the chain — the buffer is left in whatever state the last
----successful formatter (or no formatter) produced.
----@param bufnr?  integer  Buffer to format. Defaults to current buffer (0).
----@return nil
+---Format a buffer with a debounce. Called from the keymap.
+---@param bufnr? integer
 M.format = function(bufnr)
-    bufnr = bufnr or vim.api.nvim_get_current_buf()
-
+    bufnr = bufnr or api.nvim_get_current_buf()
     return format_debounced(bufnr)
 end
+
+format_debounced = utils.debounce_by_key(function(bufnr) M.format_no_wait(bufnr) end, DEBOUNCE_MS)
 
 return M

@@ -111,4 +111,20 @@ M.load_mappings = function(section, mapping_opt)
     end)
 end
 
+---Return a cwd resolver that walks upward from ctx.dirname looking for any
+---file in `files`. Used as the `cwd` field in formatter configs.
+---@param files string|string[]
+---@return fun(self: table, ctx: fmt.Context): string|nil
+M.root_file = function(files)
+    return function(self, ctx) return vim.fs.root(ctx.dirname, files) end
+end
+
+---Return the line ending string for a buffer based on its 'fileformat'.
+---@param bufnr integer
+---@return string "\n", "\r\n", or "\r"
+M.buf_line_ending = function(bufnr)
+    local ff = vim.bo[bufnr].fileformat
+    return ff == "dos" and "\r\n" or ff == "mac" and "\r" or "\n"
+end
+
 return M
