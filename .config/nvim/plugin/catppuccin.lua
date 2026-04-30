@@ -2,4 +2,6 @@ vim.pack.add({
     { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 })
 
-vim.cmd.colorscheme("catppuccin-mocha")
+require("catppuccin").setup(require("configs.plugins.catppuccin"))
+
+vim.cmd.colorscheme("catppuccin-nvim")
