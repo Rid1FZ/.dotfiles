@@ -63,20 +63,20 @@ set_env JAVA_HOME "/usr/lib/jvm/jre-21-openjdk"
 set_env ANDROID_HOME "${HOME}/Android"
 set_env ANDROID_SDK_ROOT "${HOME}/Android"
 
-set_env PATH "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${HOME}/.cargo/bin:${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+set_env PATH "${HOME}/.local/share/bob/nvim-bin:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${HOME}/.cargo/bin:${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 set_env LD_LIBRARY_PATH "${ANDROID_SDK_ROOT}/cmdline-tools/latest/lib:${ANDROID_SDK_ROOT}/platform-tools"
 
 case "$(ps -p $$ -o comm=)" in
-    "zsh")
-        set_env HISTFILE "${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/zsh_history"
+"zsh")
+    set_env HISTFILE "${XDG_STATE_HOME:-${HOME}/.local/state}/zsh/zsh_history"
 
-        fpath+=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions")
-        export fpath
-        ;;
-    "bash")
-        set_env HISTFILE "${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"
-        set_env HISTCONTROL "ignoreboth"
-        ;;
+    fpath+=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions")
+    export fpath
+    ;;
+"bash")
+    set_env HISTFILE "${XDG_STATE_HOME:-${HOME}/.local/state}/bash/bash_history"
+    set_env HISTCONTROL "ignoreboth"
+    ;;
 esac
 
 unset reverse_colon_values prepend_value set_env
