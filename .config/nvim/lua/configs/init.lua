@@ -41,8 +41,6 @@ M.setup_custom_events = function()
                 api.nvim_del_augroup_by_id(groups.file_post)
 
                 schedule(function()
-                    api.nvim_exec_autocmds("FileType", {})
-
                     if g.editorconfig then
                         local ok, editorconfig = pcall(require, "editorconfig")
                         if ok then

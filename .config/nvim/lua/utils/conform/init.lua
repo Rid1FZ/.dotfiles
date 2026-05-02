@@ -163,8 +163,6 @@ local function run_one(bufnr, name, config, ctx, input_lines)
     end
 
     if result.code ~= 0 then
-        local msg = (result.stderr ~= "" and result.stderr) or result.stdout or "unknown error"
-        vim.notify(("[fmt] '%s' exited %d: %s"):format(name, result.code, msg), vim.log.levels.ERROR)
         return nil
     end
 

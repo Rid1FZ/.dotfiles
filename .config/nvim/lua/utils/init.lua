@@ -85,7 +85,7 @@ M.start_treesitter = function(bufnr, winnr)
             return
         end
 
-        notify(format("treesitter: parser for '%s' is available but not installed", filetype), log_levels.INFO)
+        notify(format("[treesitter] parser for '%s' is available but not installed", filetype), log_levels.INFO)
         return
     end
 
