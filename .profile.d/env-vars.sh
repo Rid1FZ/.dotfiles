@@ -43,7 +43,7 @@ function set_env {
 
 # >>> environment variables >>>
 set_env COLORTERM "truecolor"
-set_env DOTFILES "${HOME}/.dotfiles"
+set_env DOTFILES "${XDG_PROJECTS_DIR:=${HOME}/Projects}/dotfiles"
 set_env VISUAL "nvim"
 set_env EDITOR "${VISUAL}"
 set_env SUDO_EDITOR "${VISUAL}"
@@ -53,10 +53,10 @@ set_env PAGER "less"
 set_env LESS "-R -i -M -g"
 set_env MANPAGER "sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat --pager=less --paging=always -p -lman'"
 set_env BAT_PAGER ""
-set_env RIPGREP_CONFIG_PATH "${XDG_CONFIG_HOME:-${HOME}/.config}/ripgrep/ripgreprc"
+set_env RIPGREP_CONFIG_PATH "${XDG_CONFIG_HOME:=${HOME}/.config}/ripgrep/ripgreprc"
 set_env HISTSIZE "100000"
 set_env SAVEHIST "100000"
-set_env FZF_DEFAULT_OPTS_FILE "${XDG_CONFIG_HOME:-${HOME}/.config}/fzf/fzfrc"
+set_env FZF_DEFAULT_OPTS_FILE "${XDG_CONFIG_HOME:=${HOME}/.config}/fzf/fzfrc"
 
 # Android
 set_env JAVA_HOME "/usr/lib/jvm/jre-21-openjdk"

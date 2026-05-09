@@ -9,7 +9,6 @@ set-option -g repeat-time 500
 set-option -g base-index 1
 set-option -g pane-base-index 1
 set-option -g renumber-windows on
-set-option -g default-shell '/bin/zsh'
 set-option -g synchronize-panes off
 set-option -g destroy-unattached on
 set-option -g mouse on
