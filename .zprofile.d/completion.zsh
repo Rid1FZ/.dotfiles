@@ -47,7 +47,7 @@ zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f
 # <<< completion <<<
 
 # >>> load zsh-autosuggestions >>>
-__zsh_autosuggestion_path="/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+__zsh_autosuggestion_path="/run/current-system/sw/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh:/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 __scripts=(${(@s/:/)__zsh_autosuggestion_path})
 
 for __script in ${__scripts[@]}; do

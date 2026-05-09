@@ -60,7 +60,7 @@ ZSH_HIGHLIGHT_STYLES[cursor]='fg=#cdd6f4'
 # <<< colorscheme <<<
 
 # >>> load zsh-syntax-highlighting >>>
-__syntax_highlighter_path="/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh:/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh:/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+__syntax_highlighter_path="/run/current-system/sw/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh:/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh:/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh:/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 __scripts=(${(@s/:/)__syntax_highlighter_path})
 
 for __script in ${__scripts[@]}; do
