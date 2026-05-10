@@ -118,14 +118,6 @@ M.setup = function()
     cmd("aunmenu PopUp")
 
     --------------------------------------------------------------------
-    -- Environment setup
-    --------------------------------------------------------------------
-    local mason_bin = fn.stdpath("data") .. "/mason/bin"
-    if not env.PATH:find(vim.pesc(mason_bin), 1, true) then
-        env.PATH = mason_bin .. ":" .. env.PATH
-    end
-
-    --------------------------------------------------------------------
     -- Filetype detection
     --------------------------------------------------------------------
     filetype.add({

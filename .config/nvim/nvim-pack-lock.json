@@ -16,10 +16,6 @@
       "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
-    "mason.nvim": {
-      "rev": "e54f5bf5f12c560da31c17eee5b3e1bd369f3ff9",
-      "src": "https://github.com/williamboman/mason.nvim"
-    },
     "mini.diff": {
       "rev": "0ee0459152b141c0e1b0931eb6949105be4850a9",
       "src": "https://github.com/echasnovski/mini.diff"
