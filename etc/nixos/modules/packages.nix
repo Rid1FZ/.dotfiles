@@ -17,6 +17,7 @@
     uv
     python3
     rustup
+    go
     gcc
     lua
     luajit

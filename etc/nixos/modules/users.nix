@@ -39,7 +39,11 @@
       # Nix
       nixd
       nixfmt
+
+      # Go
+      gopls
+      gotools
+      golangci-lint
     ];
   };
 }
-
