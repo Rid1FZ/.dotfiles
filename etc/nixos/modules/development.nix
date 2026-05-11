@@ -24,7 +24,6 @@
   services.udev.packages = [ pkgs.android-tools ];
 
   environment.sessionVariables = {
-    RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
     ANDROID_HOME = "$HOME/Android/Sdk";
     JAVA_HOME = "${pkgs.jdk17}";
     PATH = [
@@ -50,5 +49,33 @@
     jdk17
     gradle
     android-tools
+
+    # Bash
+    bash-language-server
+    shfmt
+    shellcheck
+
+    # Python
+    pyright
+    ruff
+
+    # Lua
+    lua-language-server
+    stylua
+
+    # C/Cpp
+    clang-tools
+
+    # Docker
+    docker-language-server
+
+    # Nix
+    nixd
+    nixfmt
+
+    # Go
+    gopls
+    gotools
+    golangci-lint
   ];
 }
