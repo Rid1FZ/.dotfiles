@@ -27,8 +27,8 @@
     gnome-connections
     yelp
   ];
-  services.gnome.tracker-miners.enable = false;
-  services.gnome.tracker.enable = false;
+  services.gnome.tinysparql.enable = false;
+  services.gnome.localsearch.enable = false;
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
