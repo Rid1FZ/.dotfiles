@@ -5,6 +5,11 @@
     "flakes"
   ];
 
+  nix.settings = {
+    max-jobs = "auto";
+    cores = 0; # use all cores per job
+  };
+
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
@@ -29,5 +34,21 @@
       "$HOME/.cargo/bin"
     ];
   };
-}
 
+  environment.systemPackages = with pkgs; [
+    uv
+    python3
+    rustup
+    go
+    gcc
+    lua
+    luajit
+    luarocks
+    sqlite
+    mariadb
+    sqlfluff
+    jdk17
+    gradle
+    android-tools
+  ];
+}
