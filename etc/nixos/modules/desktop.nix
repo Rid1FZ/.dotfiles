@@ -27,6 +27,8 @@
     gnome-connections
     yelp
   ];
+  services.gnome.tracker-miners.enable = false;
+  services.gnome.tracker.enable = false;
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
@@ -41,5 +43,13 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
-}
 
+  environment.systemPackages = with pkgs; [
+    gnome-tweaks
+    dconf-editor
+    papirus-icon-theme
+    gnomeExtensions.user-themes
+    brave
+    alacritty
+  ];
+}
