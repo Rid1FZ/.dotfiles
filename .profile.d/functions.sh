@@ -7,21 +7,21 @@ function __fzf {
 
 function open {
     case "$(file -b --mime-type --dereference "${1}")" in
-        inode/directory)
-            builtin cd -- "${1}" || return 1
-            ;;
-        text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize)
-            "${EDITOR}" "${1}"
-            ;;
-        *)
-            xdg-open "$1" &>/dev/null || {
-                local __cmd
-                echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
-                printf "enter command to open file: "
-                read -r __cmd
-                "${__cmd} ${1}"
-            }
-            ;;
+    inode/directory)
+        builtin cd -- "${1}" || return 1
+        ;;
+    text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize)
+        "${EDITOR}" "${1}"
+        ;;
+    *)
+        xdg-open "$1" &>/dev/null || {
+            local __cmd
+            echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
+            printf "enter command to open file: "
+            read -r __cmd
+            "${__cmd} ${1}"
+        }
+        ;;
     esac
 }
 
@@ -90,6 +90,20 @@ function rm {
         trash-put "${__to_trash[@]}"
     else
         return 0
+    fi
+}
+
+function nrs {
+    local nixos_conf
+
+    nixos_conf="${DOTFILES}/etc/nixos"
+
+    if [[ -d "${nixos_conf}" ]]; then
+        nixos-rebuild switch --sudo --flake "${nixos_conf}#$(hostname)"
+    else
+        echo "error: could not determine nixos configuration. Please run the following command manually" >&2
+        echo "nixos-rebuild switch --sudo --flake <nixos config>#$(hostname)"
+        return 1
     fi
 }
 
