@@ -1,16 +1,5 @@
 { pkgs, ... }:
 {
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-  nix.settings = {
-    max-jobs = "auto";
-    cores = 0; # use all cores per job
-    warn-dirty = false;
-  };
-
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
