@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
@@ -6,26 +6,26 @@ __file_path="$1"
 __mime_type="$(file -b --mime-type --dereference "${__file_path}")"
 
 case "${__mime_type}" in
-    inode/directory)
-        eza --classify --oneline --all --long --color=always --icons --group-directories-first "${__file_path}"
-        ;;
-    video/* | image/*)
+inode/directory)
+    eza --classify --oneline --all --long --color=always --icons --group-directories-first "${__file_path}"
+    ;;
+video/* | image/*)
+    exiftool "${__file_path}"
+    ;;
+text/*)
+    bat --style=changes,numbers "${__file_path}"
+    ;;
+application/*)
+    case "${__mime_type}" in
+    */pdf)
         exiftool "${__file_path}"
         ;;
-    text/*)
-        bat --style=changes,numbers "${__file_path}"
+    */gzip)
+        { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || gunzip -l "${__file_path}"
         ;;
-    application/*)
-        case "${__mime_type}" in
-            */pdf)
-                exiftool "${__file_path}"
-                ;;
-            */gzip)
-                { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || gunzip -l "${__file_path}"
-                ;;
-            */x-xz)
-                { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || xz -l "${__file_path}"
-                ;;
-        esac
+    */x-xz)
+        { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || xz -l "${__file_path}"
         ;;
+    esac
+    ;;
 esac
