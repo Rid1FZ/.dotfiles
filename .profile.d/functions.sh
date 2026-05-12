@@ -93,20 +93,6 @@ function rm {
     fi
 }
 
-function nrs {
-    local nixos_conf
-
-    nixos_conf="${DOTFILES}/etc/nixos"
-
-    if [[ -d "${nixos_conf}" ]]; then
-        nixos-rebuild switch --sudo --flake "${nixos_conf}#$(hostname)"
-    else
-        echo "error: could not determine nixos configuration. Please run the following command manually" >&2
-        echo "nixos-rebuild switch --sudo --flake <nixos config>#$(hostname)"
-        return 1
-    fi
-}
-
 # for vterm inside emacs
 function vterm_printf {
     if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
