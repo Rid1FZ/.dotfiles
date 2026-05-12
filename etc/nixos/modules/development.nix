@@ -8,6 +8,7 @@
   nix.settings = {
     max-jobs = "auto";
     cores = 0; # use all cores per job
+    warn-dirty = false;
   };
 
   programs.nix-ld = {
@@ -32,6 +33,19 @@
       "$HOME/bin"
       "$HOME/.cargo/bin"
     ];
+  };
+
+  virtualisation.containers.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    dockerSocket.enable = true;
+    defaultNetwork.settings.dns_enabled = true;
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+      flags = [ "--all" ];
+    };
   };
 
   environment.systemPackages = with pkgs; [

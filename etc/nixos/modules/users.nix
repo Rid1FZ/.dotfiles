@@ -6,6 +6,21 @@
       "wheel"
       "adbusers"
     ];
+
+    # The following 2s are needed for podman
+    subUidRanges = [
+      {
+        startUid = 100000;
+        count = 65536;
+      }
+    ];
+    subGidRanges = [
+      {
+        startGid = 100000;
+        count = 65536;
+      }
+    ];
+
     shell = pkgs.zsh;
     packages = with pkgs; [
       eza
