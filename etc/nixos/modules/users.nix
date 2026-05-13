@@ -31,6 +31,10 @@
       delta
       trash-cli
       github-cli
+      yt-dlp
+      ffmpeg
+      atomicparsley
+      deno
     ];
   };
 }
