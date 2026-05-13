@@ -26,4 +26,15 @@
       dates = "weekly";
     };
   };
+  security = {
+    sudo = {
+      enable = true;
+      wheelNeedsPassword = false;
+      extraConfig = ''
+        Defaults pwfeedback
+        Defaults env_keep += "EDITOR PATH DISPLAY"
+        Defaults passprompt = "[sudo 󱅞 ]: "
+      '';
+    };
+  };
 }
