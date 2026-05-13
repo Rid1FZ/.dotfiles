@@ -30,10 +30,6 @@
   services.gnome.tinysparql.enable = false;
   services.gnome.localsearch.enable = false;
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-  ];
-
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -42,6 +38,38 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
+  };
+
+  fonts = {
+    packages = with pkgs; [
+      adwaita-fonts
+      nerd-fonts.jetbrains-mono
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
+      lohit-fonts.bengali
+    ];
+    fontconfig = {
+      defaultFonts.sansSerif = [ "Adwaita Sans" ];
+      localConf = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+        <fontconfig>
+          <alias>
+            <family>sans-serif</family>
+            <prefer>
+              <family>Lohit Bengali</family>
+            </prefer>
+          </alias>
+          <alias>
+            <family>serif</family>
+            <prefer>
+              <family>Lohit Bengali</family>
+            </prefer>
+          </alias>
+        </fontconfig>
+      '';
+    };
   };
 
   environment.systemPackages = with pkgs; [
