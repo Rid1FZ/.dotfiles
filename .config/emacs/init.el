@@ -18,12 +18,11 @@ FILE: the name of file inside `elisp' directory"
 
 ;; Setup Package Manager
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(setq package-archives '(("melpa"  . "https://melpa.org/packages/")
+                         ("elpa"   . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-(setq package-native-compile t
-      native-comp-async-report-warnings-errors nil
-      byte-compile-warnings nil)
+(setq package-native-compile t)
 
 (package-initialize)
 
@@ -36,14 +35,18 @@ FILE: the name of file inside `elisp' directory"
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Do Not Populate Config Directory
+;; Keep config directory clean — must load before custom-file is read
 (use-package no-littering
   :ensure t)
+
+;; Set and load custom-file after no-littering resolves its path
+(setq custom-file (no-littering-expand-var-file-name "custom.el"))
+(load custom-file 'noerror)
 
 ;; Load Packages
 (load-user-file "packages/init.el")
 
-;; Load Custom Configs
+;; Load Keybindings
 (load-user-file "keybindings.el")
 
 ;;; init.el ends here

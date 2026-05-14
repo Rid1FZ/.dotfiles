@@ -8,6 +8,6 @@
   :ensure nil
 
   :hook
-  (bash-ts-mode . lsp-deferred))
+  (bash-ts-mode . eglot-ensure))
 
 ;;; bash-ts-mode.el ends here

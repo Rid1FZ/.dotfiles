@@ -5,7 +5,7 @@
 ;;; Code:
 
 (defun custom/close-buffer()
-  "Close current buffer and it's window if not last window"
+  "Close current buffer and it's window if not last window."
   (interactive)
   (let* ((buffer (current-buffer))
          (window (get-buffer-window buffer)))

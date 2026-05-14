@@ -5,10 +5,10 @@
 ;;; Code:
 
 (use-package evil-collection
-  :after
-  (evil)
+  :ensure t
+  :after evil
 
-  :init
+  :config
   (evil-collection-init))
 
 ;;; evil-collection.el ends here

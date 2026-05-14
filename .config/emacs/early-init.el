@@ -5,16 +5,15 @@
 ;;; Code:
 
 (setq disabled-command-function nil
-      make-backup-files nil ;; disable backup files
-      create-lockfiles nil ;; disable lockfiles
-      custom-file (expand-file-name "emacs/custom.el" "~/.local/state/") ;; change location of custom configs
-      package-user-dir (expand-file-name "packages/" user-emacs-directory)) ;; change location of installed packages
+      make-backup-files nil
+      create-lockfiles nil
+      evil-want-keybinding nil
+      native-comp-async-report-warnings-errors 'silent
+      byte-compile-warnings nil
+      package-user-dir (expand-file-name "packages/" user-emacs-directory))
 
-(load custom-file 'noerror)
-
-;; Disable Autosave FIles
+;; Disable Autosave for Programming Modes
 (add-hook 'prog-mode-hook (lambda ()
-                            (interactive)
                             (auto-save-mode -1)))
 
 ;;; early-init.el ends here

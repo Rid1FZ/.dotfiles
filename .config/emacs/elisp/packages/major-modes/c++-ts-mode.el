@@ -8,6 +8,6 @@
   :ensure nil
 
   :hook
-  (c++-ts-mode . lsp-deferred))
+  (c++-ts-mode . eglot-ensure))
 
 ;;; c++-ts-mode.el ends here

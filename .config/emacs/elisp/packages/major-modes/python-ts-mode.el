@@ -4,16 +4,13 @@
 
 ;;; Code:
 
-(use-package python-ts-mode
+(use-package python
   :ensure nil
 
-  :after
-  (lsp-pyright)
-
   :hook
-  (python-ts-mode . lsp-deferred)
+  (python-ts-mode . eglot-ensure)
 
-  :init
-  (require 'lsp-pyright))
+  :custom
+  (python-indent-offset 4))
 
 ;;; python-ts-mode.el ends here

@@ -39,8 +39,7 @@
 
 ;; Indentation
 (setq-default indent-tabs-mode nil
-              tab-width 4
-              indent-line-function #'insert-tab)
+              tab-width 4)
 
 ;; Disable Wrap
 (global-visual-line-mode -1)
@@ -58,7 +57,7 @@
                 treemacs-mode-hook
                 help-mode-hook
                 inferior-emacs-lisp-mode-hook
-                flycheck-error-list-mode-hook
+                flymake-diagnostics-buffer-mode-hook
                 dired-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
@@ -76,18 +75,18 @@
 ;; Maximize Window On Startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-;; Map Modes to Major Modes
+;; Map Modes to Major Modes (tree-sitter variants)
 (setq major-mode-remap-alist
-      '((python-mode . python-ts-mode)
-        (c-mode . c-ts-mode)
-        (c++-mode . c++-ts-mode)
-        (c-or-c++-mode . c-or-c++-ts-mode)
-        (sh-mode . bash-ts-mode)))
+      '((python-mode    . python-ts-mode)
+        (c-mode         . c-ts-mode)
+        (c++-mode       . c++-ts-mode)
+        (c-or-c++-mode  . c-or-c++-ts-mode)
+        (sh-mode        . bash-ts-mode)))
 
-;; Autoclose Parens, Quotes, etc...
+;; Autoclose Parens, Quotes, etc.
 (electric-pair-mode t)
 
-;; Kill Previous Dired Buffer is New Directory is Visited
+;; Kill Previous Dired Buffer When New Directory Is Visited
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; Set Font Lock Level for TS Modes
@@ -104,10 +103,10 @@
 (add-hook 'emacs-lisp-mode-hook (lambda ()
                                   (setq lexical-binding t)))
 
-;; Enable Mouse Support in Terminal
+;; Enable Mouse Support in Terminal for New Frames
 (add-hook 'after-make-frame-functions
-          (lambda ()
-            (unless (display-graphics-p)
+          (lambda (frame)
+            (unless (display-graphic-p frame)
               (xterm-mouse-mode 1))))
 
 ;;; options.el ends here
