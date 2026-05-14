@@ -25,6 +25,7 @@
     snapshot
     gnome-text-editor
     gnome-connections
+    gnome-weather
     yelp
   ];
   services.gnome.tinysparql.enable = false;
