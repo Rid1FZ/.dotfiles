@@ -11,21 +11,21 @@
 
   services.desktopManager.gnome.enable = true;
   environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    gnome-user-docs
     epiphany
     geary
     gnome-calendar
     gnome-clocks
+    gnome-connections
     gnome-console
     gnome-contacts
     gnome-maps
     gnome-music
+    gnome-text-editor
+    gnome-tour
+    gnome-user-docs
+    gnome-weather
     simple-scan
     snapshot
-    gnome-text-editor
-    gnome-connections
-    gnome-weather
     yelp
   ];
   services.gnome.tinysparql.enable = false;
@@ -75,11 +75,11 @@
   };
 
   environment.systemPackages = with pkgs; [
-    gnome-tweaks
-    dconf-editor
-    papirus-icon-theme
-    gnomeExtensions.user-themes
-    brave
     alacritty
+    brave
+    dconf-editor
+    gnome-tweaks
+    gnomeExtensions.user-themes
+    papirus-icon-theme
   ];
 }

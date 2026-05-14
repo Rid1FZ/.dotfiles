@@ -23,25 +23,27 @@
     shell = pkgs.zsh;
 
     packages = with pkgs; [
+      atomicparsley
+      bat
       (emacs-pgtk.override {
         withNativeCompilation = true;
         withTreeSitter = true;
         withSQLite3 = true;
       })
-      zed-editor
-      eza
-      bat
-      fzf
-      ripgrep
-      tree-sitter
-      delta
-      trash-cli
-      github-cli
-      yt-dlp
-      ffmpeg
-      atomicparsley
       deno
+      delta
+      eza
+      fastfetch
+      ffmpeg
+      fzf
+      gdu
+      github-cli
       lazygit
+      ripgrep
+      trash-cli
+      tree-sitter
+      yt-dlp
+      zed-editor
     ];
   };
 }
