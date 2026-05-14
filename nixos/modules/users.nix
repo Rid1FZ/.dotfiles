@@ -20,8 +20,8 @@
         count = 65536;
       }
     ];
-
     shell = pkgs.zsh;
+
     packages = with pkgs; [
       zed-editor
       eza

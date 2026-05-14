@@ -22,8 +22,7 @@ def rebuild(flakes_dir: str, hostname: str) -> int:
 
 def main() -> int:
     flakes_dir = (
-        os.environ.get("DOTFILES", os.path.expanduser("~/Projects/dotfiles"))
-        + "/etc/nixos"
+        os.environ.get("DOTFILES", os.path.expanduser("~/Projects/dotfiles")) + "/nixos"
     )
 
     parser = argparse.ArgumentParser(
