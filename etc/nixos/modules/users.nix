@@ -23,6 +23,7 @@
 
     shell = pkgs.zsh;
     packages = with pkgs; [
+      zed-editor
       eza
       bat
       fzf

@@ -1,0 +1,53 @@
+[
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      "j k": "vim::NormalBefore",
+      "j j": "vim::NormalBefore",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "space o e": "project_panel::ToggleFocus",
+      "space o t": "terminal_panel::ToggleFocus",
+      "space l d": "editor::Hover",
+      "K": "editor::Hover",
+      "space l a": "editor::ToggleCodeActions",
+      "space l D": "diagnostics::Deploy",
+      "space f f": "file_finder::Toggle",
+      "space f b": "tab_switcher::Toggle",
+      "space f g": "workspace::NewSearch",
+      "space b c": "pane::CloseActiveItem",
+    },
+  },
+  {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "tab": "editor::ContextMenuNext",
+      "shift-tab": "editor::ContextMenuPrevious",
+      "enter": "editor::ConfirmCompletion",
+      "escape": "editor::Cancel",
+    },
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "space o e": "workspace::ToggleLeftDock",
+      "q": "workspace::ToggleLeftDock",
+      "a": "project_panel::NewFile",
+      "A": "project_panel::NewDirectory",
+      "y": "project_panel::Copy",
+      "x": "project_panel::Cut",
+      "p": "project_panel::Paste",
+      "space d": "project_panel::Trash",
+      "space D": "project_panel::Delete",
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "escape escape": "terminal_panel::Toggle",
+    },
+  },
+]
