@@ -1,5 +1,5 @@
 return {
-    cmd = { "pyright-langserver", "--stdio" },
+    cmd = { "basedpyright-langserver", "--stdio" },
     root_markers = { ".git", "pyproject.toml" },
     filetypes = { "python" },
 

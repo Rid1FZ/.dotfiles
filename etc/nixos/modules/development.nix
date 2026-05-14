@@ -38,20 +38,13 @@
   };
 
   environment.systemPackages = with pkgs; [
-    uv
-    python3
-    rustup
-    go
-    gcc
-    lua
-    luajit
-    luarocks
+    ## Tools
+    libtool
+
+    # SQL
     sqlite
     mariadb
     sqlfluff
-    jdk17
-    gradle
-    android-tools
 
     # Bash
     bash-language-server
@@ -59,15 +52,23 @@
     shellcheck
 
     # Python
-    pyright
+    uv
+    python3
+    basedpyright
     ruff
 
     # Lua
+    lua
+    luajit
+    luarocks
     lua-language-server
     stylua
 
     # C/Cpp
+    gcc
     clang-tools
+    cmake
+    gnumake
 
     # Docker
     docker-language-server
@@ -77,8 +78,17 @@
     nixfmt
 
     # Go
+    go
     gopls
     gotools
     golangci-lint
+
+    # Rust
+    rustup
+
+    # Java/Kotlin
+    jdk17
+    gradle
+    android-tools
   ];
 }
