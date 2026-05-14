@@ -23,6 +23,11 @@
     shell = pkgs.zsh;
 
     packages = with pkgs; [
+      (emacs-pgtk.override {
+        withNativeCompilation = true;
+        withTreeSitter = true;
+        withSQLite3 = true;
+      })
       zed-editor
       eza
       bat
