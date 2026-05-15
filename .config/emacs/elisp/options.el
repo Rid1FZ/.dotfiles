@@ -39,7 +39,8 @@
 
 ;; Indentation
 (setq-default indent-tabs-mode nil
-              tab-width 4)
+              tab-width 2
+              tab-stop-list (number-sequence 2 120 2))
 
 ;; Disable Wrap
 (global-visual-line-mode -1)
@@ -91,6 +92,8 @@
 
 ;; Set Font Lock Level for TS Modes
 (dolist (mode '(python-ts-mode-hook
+                rust-ts-mode-hook
+                go-ts-mode-hook
                 yaml-ts-mode-hook
                 toml-ts-mode-hook
                 bash-ts-mode-hook

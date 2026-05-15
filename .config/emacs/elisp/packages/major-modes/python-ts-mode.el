@@ -11,6 +11,6 @@
   (python-ts-mode . eglot-ensure)
 
   :custom
-  (python-indent-offset 4))
+  (python-indent-offset 2))
 
 ;;; python-ts-mode.el ends here

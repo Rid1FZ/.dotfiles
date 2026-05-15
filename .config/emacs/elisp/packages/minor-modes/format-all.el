@@ -17,6 +17,10 @@
   (setq-default format-all-formatters
                 '(("Python"
                    (ruff))
+                  ("Rust"
+                   (rustfmt))
+                  ("Go"
+                   (gofmt))
                   ("Shell"
                    (shfmt "--indent" "4" "--case-indent" "--language-dialect" "bash"))
                   ("C"

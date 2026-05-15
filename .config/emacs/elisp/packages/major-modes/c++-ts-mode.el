@@ -8,6 +8,9 @@
   :ensure nil
 
   :hook
-  (c++-ts-mode . eglot-ensure))
+  (c++-ts-mode . eglot-ensure)
+  
+  :custom
+  (c-ts-mode-indent-offset 2))
 
 ;;; c++-ts-mode.el ends here

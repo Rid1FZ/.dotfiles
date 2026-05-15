@@ -10,6 +10,7 @@
       evil-want-keybinding nil
       native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings nil
+      warning-minimum-log-level :error
       package-user-dir (expand-file-name "packages/" user-emacs-directory))
 
 ;; Disable Autosave for Programming Modes

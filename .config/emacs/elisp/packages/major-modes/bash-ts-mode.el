@@ -8,6 +8,9 @@
   :ensure nil
 
   :hook
-  (bash-ts-mode . eglot-ensure))
+  (bash-ts-mode . eglot-ensure)
+
+  :custom
+  (sh-basic-offset 2))
 
 ;;; bash-ts-mode.el ends here
