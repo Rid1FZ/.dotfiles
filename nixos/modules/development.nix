@@ -84,7 +84,11 @@
     golangci-lint
 
     # Rust
-    rustup
+    rustc
+    cargo
+    rust-analyzer
+    clippy
+    rustfmt
 
     # Java/Kotlin
     jdk17
