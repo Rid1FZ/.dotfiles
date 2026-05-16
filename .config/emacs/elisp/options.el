@@ -9,15 +9,11 @@
       ring-bell-function 'ignore
       initial-scratch-message ";;; -*- lexical-binding: t -*-"
       inhibit-compacting-font-caches t
-      case-fold-search nil)
+      case-fold-search nil
+      use-short-answers t)
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(tooltip-mode -1)
-(menu-bar-mode -1)
 (delete-selection-mode 1)
 (blink-cursor-mode 0)
-(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Fonts
 (set-face-attribute 'default nil
@@ -72,9 +68,6 @@
       mouse-wheel-follow-mouse t
       scroll-step 1
       scroll-conservatively most-positive-fixnum)
-
-;; Maximize Window On Startup
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Map Modes to Major Modes (tree-sitter variants)
 (setq major-mode-remap-alist

@@ -10,7 +10,7 @@
   :ensure t
 
   :init
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-dabbrev))
+  (add-hook 'completion-at-point-functions #'cape-file    nil :local)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev nil :local))
 
 ;;; cape.el ends here

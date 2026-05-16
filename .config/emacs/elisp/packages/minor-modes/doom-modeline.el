@@ -21,10 +21,10 @@
   (doom-modeline-modal-modern-icon nil)
   (nerd-icons-scale-factor 1.2)
 
-  :config
-  (custom-set-faces
-   '(mode-line          ((t (:family "JetBrainsMono Nerd Font Propo" :height 125))))
-   '(mode-line-active   ((t (:family "JetBrainsMono Nerd Font Propo" :height 125))))
-   '(mode-line-inactive ((t (:family "JetBrainsMono Nerd Font Propo" :height 125))))))
+ :config
+  (dolist (face '(mode-line mode-line-active mode-line-inactive))
+    (set-face-attribute face nil
+                        :family "JetBrainsMono Nerd Font Propo"
+                        :height 125)))
 
 ;;; doom-modeline.el ends here

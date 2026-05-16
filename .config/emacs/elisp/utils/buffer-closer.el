@@ -10,7 +10,7 @@
   (let* ((buffer (current-buffer))
          (window (get-buffer-window buffer)))
     (kill-buffer buffer)
-    (when (not (one-window-p))
+    (when (and window (not (one-window-p)))
       (delete-window window))))
 
 ;;; buffer-closer.el ends here

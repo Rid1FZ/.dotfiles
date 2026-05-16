@@ -40,6 +40,8 @@
       github-cli
       lazygit
       ripgrep
+      fd
+      plocate
       trash-cli
       tree-sitter
       yt-dlp

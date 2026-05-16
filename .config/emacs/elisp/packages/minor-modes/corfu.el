@@ -38,7 +38,10 @@
   ;; fires on evil ex (:) commands. TAB still triggers completion.
   (add-hook 'minibuffer-setup-hook
             (lambda ()
-              (setq-local corfu-auto nil))))
+              (setq-local corfu-auto nil)))
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (corfu-mode -1))))
 
 (use-package corfu-terminal
   :ensure t

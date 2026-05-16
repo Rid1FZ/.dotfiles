@@ -34,21 +34,24 @@
 
 (normal-mode-leader-definer
   "f"  '(:ignore t                                                          :which-key "Find")
-  "ff" '(find-file                                                          :which-key "Find File")
-  "fF" '(project-find-file                                                  :which-key "Find File(Project)")
+  "ff" '(consult-fd                                                         :which-key "Find File")
+  "fF" '((lambda () (interactive)
+            (consult-fd (project-root (project-current t))))                :which-key "Find File(Project)")
   "fg" '(consult-ripgrep                                                    :which-key "rg")
   "fG" '((lambda () (interactive)
-           (consult-ripgrep (project-root (project-current t))))            :which-key "rg(Project)")
+            (consult-ripgrep (project-root (project-current t))))           :which-key "rg(Project)")
   "fp" '(project-switch-project                                             :which-key "Find Project")
+  "fd" '((lambda () (interactive)
+            (consult-flymake t))                                            :which-key "Project Diagnostics")
   "fb" '(consult-buffer                                                     :which-key "Find Buffer")
   "fB" '(consult-project-buffer                                             :which-key "Find Buffer(Project)"))
 
 (normal-mode-leader-definer
-  "o"  '(:ignore t                          :which-key "Open")
-  "od" '(dired-jump                         :which-key "Open Dired")
-  "oe" '(treemacs-select-window             :which-key "Open Explorer")
-  "ot" '(custom/project-run-vterm-other-window :which-key "Open Vterm(Other Window)")
-  "oT" '(custom/project-run-vterm           :which-key "Open Vterm(Current Window)"))
+  "o"  '(:ignore t                              :which-key "Open")
+  "od" '(dired-jump                             :which-key "Open Dired")
+  "oe" '(treemacs-select-window                 :which-key "Open Explorer")
+  "ot" '(custom/project-run-vterm-other-window  :which-key "Open Vterm(Other Window)")
+  "oT" '(custom/project-run-vterm               :which-key "Open Vterm(Current Window)"))
 
 (normal-mode-leader-definer
   "b"  '(:ignore t                          :which-key "Buffer")
@@ -61,11 +64,11 @@
 
 (normal-mode-leader-definer
   :keymaps 'eglot-mode-map
-  "l"  '(:ignore t              :which-key "LSP")
-  "la" '(eglot-code-actions     :which-key "Code Action")
-  "ld" '(eldoc-doc-buffer       :which-key "Documentation")
-  "lr" '(eglot-rename           :which-key "Rename Symbol")
-  "lf" '(eglot-format           :which-key "Format (LSP)"))
+  "l"  '(:ignore t                          :which-key "LSP")
+  "la" '(eglot-code-actions                 :which-key "Code Action")
+  "ld" '(consult-flymake                    :which-key "Diagnostic at Point")
+  "lr" '(eglot-rename                       :which-key "Rename Symbol")
+  "lf" '(eglot-format                       :which-key "Format (LSP)"))
 
 (visual-mode-leader-definer
   "b"  '(:ignore t                    :which-key "Buffer")

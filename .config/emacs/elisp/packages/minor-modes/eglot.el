@@ -14,6 +14,8 @@
   (eglot-autoshutdown t)          ;; shut down server when last buffer closes
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)        ;; jump to definitions outside the project
+  (eglot-events-buffer-size 0)
+  (eglot-sync-connect nil)        ;; do not log to *EGLOT events* buffer
 
   :config
   ;; Explicit server entries for languages without auto-detection
