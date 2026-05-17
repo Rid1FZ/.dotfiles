@@ -16,10 +16,9 @@
   environment.sessionVariables = {
     ANDROID_HOME = "$HOME/Android/Sdk";
     JAVA_HOME = "${pkgs.jdk17}";
+    RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
     PATH = [
       "$HOME/Android/Sdk/cmdline-tools/latest/bin"
-      "$HOME/.local/bin"
-      "$HOME/bin"
       "$HOME/.cargo/bin"
     ];
   };
@@ -39,8 +38,11 @@
 
   environment.systemPackages = with pkgs; [
     ## Tools
+    distrobox
     libtool
+    direnv
 
+    ## Language Specific Tools/libs
     # SQL
     sqlite
     mariadb

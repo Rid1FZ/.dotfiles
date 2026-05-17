@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   users.users.rid1 = {
+    description = "Ridwan";
     isNormalUser = true;
     extraGroups = [
       "wheel"
@@ -45,7 +46,13 @@
       trash-cli
       tree-sitter
       yt-dlp
-      zed-editor
+      zed-editor-fhs
+    ];
+  };
+  environment.sessionVariables = {
+    PATH = [
+      "$HOME/.local/bin"
+      "$HOME/bin"
     ];
   };
 }
