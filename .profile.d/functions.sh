@@ -6,6 +6,11 @@ function __fzf {
 }
 
 function open {
+    [[ -z "${1}" ]] && {
+        echo -e "\033[0;31m[error]\033[0m: no argument given" >&2
+        return 1
+    }
+
     case "$(file -b --mime-type --dereference "${1}")" in
     inode/directory)
         builtin cd -- "${1}" || return 1
@@ -15,95 +20,81 @@ function open {
         ;;
     *)
         xdg-open "$1" &>/dev/null || {
-            local __cmd
+            local cmd
+
             echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
             printf "enter command to open file: "
-            read -r __cmd
-            "${__cmd} ${1}"
+            read -r cmd
+
+            ${cmd} "${1}"
         }
         ;;
     esac
 }
 
-function floc {
-    local __plocate_prefix __target
-
-    __plocate_prefix="plocate --ignore-case --regex"
-    __target="$(__fzf --disabled --keep-right --bind "start:reload:${__plocate_prefix} {q}" --bind "change:reload:sleep 0.1; ${__plocate_prefix} {q} || true" --preview 'preview {}')"
-
-    [[ -z "${__target}" ]] && return 1
-
-    open "${__target}"
-}
-
 function ff {
-    local __arg __path
+    local arg input_path
 
-    __arg="${1:-.}"
-    [[ -d "${__arg}" ]] || return 1
+    arg="${1:-.}"
+    [[ -d "${arg}" ]] || {
+        echo -e "\033[0;31m[error]\033[0m: '${arg}' is not a directory" >&2
+        return 1
+    }
 
-    __path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --keep-right --preview="preview {}")"
-    [[ -z "${__path}" ]] && return 1
+    input_path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --keep-right --preview="preview {}")"
+    [[ -z "${input_path}" ]] && return 1
 
-    open "${__path}"
+    open "${input_path}"
 }
 
 function fcd {
-    local __arg
+    local arg input_dir
 
-    __arg="${1:-.}"
-    [[ -d "${__arg}" ]] || return 1
+    arg="${1:-.}"
+    [[ -d "${arg}" ]] || {
+        echo -e "\033[0;31m[error]\033[0m: '${arg}' is not a directory" >&2
+        return 1
+    }
 
-    __dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${__arg}" | __fzf --info=default --keep-right --preview="preview {}")"
-    [[ -z "${__dir}" ]] && return 1
+    input_dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --info=default --keep-right --preview="preview {}")"
+    [[ -z "${input_dir}" ]] && return 1
 
-    builtin cd -- "${__dir}" || return 1
+    builtin cd -- "${input_dir}" || return 1
 }
 
 function frg {
-    local __rg_prefix
+    local rg_prefix
 
-    __rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
+    rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
     __fzf --disabled \
-        --bind "start:reload:${__rg_prefix} {q} ${1:-.}" \
-        --bind "change:reload:sleep 0.1; ${__rg_prefix} {q} || true" \
+        --bind "start:reload:${rg_prefix} {q} ${1:-.}" \
+        --bind "change:reload:sleep 0.1; ${rg_prefix} {q} || true" \
         --delimiter : \
         --preview 'bat --color=always {1} --highlight-line {2} --theme="Catppuccin Macchiato"' \
         --bind 'enter:become(nvim {1} +{2})'
 }
 
 function rm {
-    local __to_trash __arg
+    local to_trash arg
 
-    (("$#" == 0)) && echo -e "\033[0;31m[error]\033[0m: please specify file to remove..." >&2
-    __to_trash=()
+    (("$#" == 0)) && {
+        echo -e "\033[0;31m[error]\033[0m: please specify file to remove..." >&2
+        return 1
+    }
+    to_trash=()
 
-    for __arg in "$@"; do
-        if [[ -L "${__arg}" ]]; then
-            unlink "${__arg}"
+    for arg in "$@"; do
+        if [[ -L "${arg}" ]]; then
+            unlink "${arg}"
         else
-            __to_trash+=("${__arg}")
+            to_trash+=("${arg}")
         fi
     done
 
-    if (("${#__to_trash[@]}" != 0)); then
-        trash-put "${__to_trash[@]}"
+    if (("${#to_trash[@]}" != 0)); then
+        trash-put "${to_trash[@]}"
     else
         return 0
-    fi
-}
-
-function nrs {
-    local nixos_conf
-
-    nixos_conf="${DOTFILES}/etc/nixos"
-
-    if [[ -d "${nixos_conf}" ]]; then
-        nixos-rebuild switch --sudo --flake "${nixos_conf}#$(hostname)"
-    else
-        echo "error: could not determine nixos configuration. Please run the following command manually" >&2
-        echo "nixos-rebuild switch --sudo --flake <nixos config>#$(hostname)"
-        return 1
     fi
 }
 

@@ -6,7 +6,8 @@
 (defun load-package-conf(dir)
   "Bootstrap given configs from dir under `user-emacs-directory/elisp/packages'.
 DIR: dir to load"
-  (mapc 'load-file
+  (mapc (lambda (f)
+          (load (file-name-sans-extension f)))
         (file-expand-wildcards
          (concat user-emacs-directory "elisp/packages/" dir "/*.el"))))
 

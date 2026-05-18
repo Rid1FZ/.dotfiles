@@ -127,6 +127,7 @@ M.setup = function()
             sh = "bash",
             bash = "bash",
             tmux = "tmux",
+            dconf = "ini",
         },
         pattern = {
             [fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",

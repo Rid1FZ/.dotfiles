@@ -6,7 +6,6 @@
 
 (require 'general)
 
-
 (general-create-definer normal-mode-leader-definer
   :states 'normal
   :prefix "SPC")
@@ -34,39 +33,45 @@
   "w" '(evil-window-map :which-key "Window"))
 
 (normal-mode-leader-definer
-  "f" '(:ignore t :which-key "Find")
-  "ff" '(counsel-find-file :which-key "Find File")
-  "ff" '(projectile-find-file :which-key "Find File(Project)")
-  "fg" '(counsel-rg :which-key "rg")
-  "fG" '(counsel-projectile-rg :which-key "rg(Project)")
-  "fp" '(counsel-projectile-switch-project :which-key "Find Project")
-  "fb" '(counsel-switch-buffer :which-key "Find Buffer")
-  "fB" '(counsel-projectile-switch-to-buffer :which-key "Find Buffer(Project)"))
+  "f"  '(:ignore t                                                          :which-key "Find")
+  "ff" '(consult-fd                                                         :which-key "Find File")
+  "fF" '((lambda () (interactive)
+            (consult-fd (project-root (project-current t))))                :which-key "Find File(Project)")
+  "fg" '(consult-ripgrep                                                    :which-key "rg")
+  "fG" '((lambda () (interactive)
+            (consult-ripgrep (project-root (project-current t))))           :which-key "rg(Project)")
+  "fp" '(project-switch-project                                             :which-key "Find Project")
+  "fd" '((lambda () (interactive)
+            (consult-flymake t))                                            :which-key "Project Diagnostics")
+  "fb" '(consult-buffer                                                     :which-key "Find Buffer")
+  "fB" '(consult-project-buffer                                             :which-key "Find Buffer(Project)"))
 
 (normal-mode-leader-definer
-  "o" '(:ignore t :which-key "Open")
-  "od" '(dired-jump :which-key "Open Dired")
-  "oe" '(treemacs-select-window :which-key "Open Explorer")
-  "ot" '(projectile-run-vterm-other-window :which-key "Open Vterm(Other Window)")
-  "oT" '(projectile-run-vterm :which-key "Open Vterm(Current Window)"))
+  "o"  '(:ignore t                              :which-key "Open")
+  "od" '(dired-jump                             :which-key "Open Dired")
+  "oe" '(treemacs-select-window                 :which-key "Open Explorer")
+  "ot" '(custom/project-run-vterm-other-window  :which-key "Open Vterm(Other Window)")
+  "oT" '(custom/project-run-vterm               :which-key "Open Vterm(Current Window)"))
 
 (normal-mode-leader-definer
-  "b" '(:ignore t :which-key "Buffer")
-  "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer")
-  "bc" '(custom/close-buffer :which-key "Close Buffer")
-  "bC" '(projectile-kill-buffers :which-key "Kill Buffers(Project)")
-  "bw" '(write-file :which-key "Write Buffer to File")
-  "bs" '(save-buffer :which-key "Save Buffer")
-  "bk" '(kill-buffer :which-key "Select and Kill Buffer"))
+  "b"  '(:ignore t                          :which-key "Buffer")
+  "bf" '(format-all-region-or-buffer        :which-key "Format Region or Buffer")
+  "bc" '(custom/close-buffer                :which-key "Close Buffer")
+  "bC" '(project-kill-buffers               :which-key "Kill Buffers(Project)")
+  "bw" '(write-file                         :which-key "Write Buffer to File")
+  "bs" '(save-buffer                        :which-key "Save Buffer")
+  "bk" '(kill-buffer                        :which-key "Select and Kill Buffer"))
 
 (normal-mode-leader-definer
-  :keymaps 'lsp-mode-map
-  "l" '(:ignore t :which-key "LSP")
-  "la" '(lsp-execute-code-action :which-key "Code Action")
-  "ld" '(lsp-ui-doc-glance :which-key "Documentation"))
+  :keymaps 'eglot-mode-map
+  "l"  '(:ignore t                          :which-key "LSP")
+  "la" '(eglot-code-actions                 :which-key "Code Action")
+  "ld" '(consult-flymake                    :which-key "Diagnostic at Point")
+  "lr" '(eglot-rename                       :which-key "Rename Symbol")
+  "lf" '(eglot-format                       :which-key "Format (LSP)"))
 
 (visual-mode-leader-definer
-  "b" '(:ignore t :which-key "Buffer")
-  "bf" '(format-all-region-or-buffer :which-key "Format Region or Buffer"))
+  "b"  '(:ignore t                    :which-key "Buffer")
+  "bf" '(format-all-region-or-buffer  :which-key "Format Region or Buffer"))
 
 ;;; keybindings.el ends here

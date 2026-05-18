@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 # >>> aliases >>>
-eza_cmd="eza --classify --oneline --color=always --icons --group-directories-first"
+eza_cmd="eza --classify --oneline --color=auto --icons --group-directories-first"
 leza_cmd="${eza_cmd} --modified --links --group --long --git --git-repos --header"
 
 alias ls="${eza_cmd}"

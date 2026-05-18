@@ -1,0 +1,245 @@
+[apps/seahorse/listing]
+keyrings-selected=['gnupg://']
+
+[apps/seahorse/windows/key-manager]
+height=476
+width=864
+
+[org/gnome/GWeather4]
+temperature-unit='centigrade'
+
+[org/gnome/Music]
+window-maximized=true
+
+[org/gnome/Ptyxis]
+audible-bell=false
+default-profile-uuid='fa2f4fc3ba903f2c8f1d376e6a045860'
+font-name='JetBrainsMono Nerd Font Medium 12'
+profile-uuids=['fa2f4fc3ba903f2c8f1d376e6a045860']
+text-blink-mode='never'
+use-system-font=false
+window-size=(uint32 169, uint32 37)
+
+[org/gnome/Ptyxis/Profiles/fa2f4fc3ba903f2c8f1d376e6a045860]
+cell-height-scale=1.0
+palette='Catppuccin Mocha'
+
+[org/gnome/Showtime/State]
+is-maximized=false
+
+[org/gnome/Weather]
+locations=[<(uint32 2, <('Dhaka', 'VGHS', false, [(0.41626102660064762, 1.5777776438028739)], [(0.41626102660064762, 1.5777776438028739)])>)>]
+window-height=506
+window-maximized=true
+window-width=439
+
+[org/gnome/control-center]
+last-panel='keyboard'
+window-state=(980, 640, false)
+
+[org/gnome/desktop/app-folders]
+folder-children=['System', 'Utilities', 'YaST', 'Pardus']
+
+[org/gnome/desktop/app-folders/folders/Pardus]
+categories=['X-Pardus-Apps']
+name='X-Pardus-Apps.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/System]
+apps=['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.gnome.SystemMonitor.desktop', 'org.gnome.tweaks.desktop', 'ca.desrt.dconf-editor.desktop', 'org.gnome.Settings.desktop', 'auto-cpufreq-gtk.desktop', 'org.gnome.seahorse.Application.desktop']
+name='X-GNOME-Shell-System.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/Utilities]
+apps=['org.gnome.Decibels.desktop', 'org.gnome.Connections.desktop', 'org.gnome.Papers.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Showtime.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.Characters.desktop']
+name='X-GNOME-Shell-Utilities.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/YaST]
+categories=['X-SuSE-YaST']
+name='suse-yast.directory'
+translate=true
+
+[org/gnome/desktop/background]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
+picture-uri-dark='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
+
+[org/gnome/desktop/break-reminders/eyesight]
+play-sound=true
+
+[org/gnome/desktop/break-reminders/movement]
+duration-seconds=uint32 300
+interval-seconds=uint32 1800
+play-sound=true
+
+[org/gnome/desktop/input-sources]
+mru-sources=[('xkb', 'us'), ('xkb', 'bd')]
+per-window=true
+sources=[('xkb', 'us'), ('xkb', 'bd')]
+xkb-options=@as []
+
+[org/gnome/desktop/interface]
+color-scheme='prefer-dark'
+document-font-name='Adwaita Sans 12'
+enable-hot-corners=false
+font-hinting='slight'
+font-name='Adwaita Sans Semi-Bold 11 @wght=600'
+gtk-theme='Adwaita-dark'
+icon-theme='Papirus-Dark'
+monospace-font-name='JetBrainsMono Nerd Font Medium 11'
+show-battery-percentage=false
+text-scaling-factor=1.0
+
+[org/gnome/desktop/notifications]
+application-children=['org-gnome-nautilus', 'gnome-about-panel', 'brave-browser']
+
+[org/gnome/desktop/notifications/application/brave-browser]
+application-id='brave-browser.desktop'
+
+[org/gnome/desktop/notifications/application/gnome-about-panel]
+application-id='gnome-about-panel.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-nautilus]
+application-id='org.gnome.Nautilus.desktop'
+
+[org/gnome/desktop/peripherals/keyboard]
+numlock-state=true
+
+[org/gnome/desktop/peripherals/touchpad]
+send-events='disabled'
+two-finger-scrolling-enabled=true
+
+[org/gnome/desktop/screensaver]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
+
+[org/gnome/desktop/session]
+idle-delay=uint32 0
+
+[org/gnome/desktop/wm/keybindings]
+minimize=@as []
+move-to-workspace-left=['<Shift><Super>h']
+move-to-workspace-right=['<Shift><Super>l']
+switch-applications=['<Alt>Tab']
+switch-applications-backward=['<Shift><Alt>Tab']
+switch-to-workspace-left=['<Super>h']
+switch-to-workspace-right=['<Super>l']
+switch-windows=['<Super>Tab']
+switch-windows-backward=['<Shift><Super>Tab']
+
+[org/gnome/desktop/wm/preferences]
+button-layout='close:appmenu'
+num-workspaces=5
+
+[org/gnome/evolution-data-server]
+migrated=true
+
+[org/gnome/gnome-system-monitor]
+maximized=true
+show-dependencies=false
+show-whose-processes='user'
+window-height=720
+window-width=800
+
+[org/gnome/gnome-system-monitor/proctree]
+col-26-visible=false
+col-26-width=0
+
+[org/gnome/mutter]
+attach-modal-dialogs=false
+dynamic-workspaces=false
+overlay-key='Super'
+
+[org/gnome/nautilus/preferences]
+default-folder-viewer='icon-view'
+migrated-gtk-settings=true
+
+[org/gnome/nautilus/window-state]
+initial-size=(890, 550)
+initial-size-file-chooser=(890, 550)
+
+[org/gnome/papers]
+night-mode=false
+
+[org/gnome/papers/default]
+annot-color='yellow'
+continuous=true
+dual-page=false
+dual-page-odd-left=false
+enable-spellchecking=true
+show-sidebar=true
+sizing-mode='automatic'
+
+[org/gnome/portal/filechooser/dev.zed.Zed]
+last-folder-path='/home/rid1/Projects/go-practice'
+
+[org/gnome/portal/filechooser/org.chromium.Chromium]
+last-folder-path='/home/rid1/Documents'
+
+[org/gnome/portal/filechooser/org.gnome.Settings]
+last-folder-path='/home/rid1/Pictures'
+
+[org/gnome/settings-daemon/plugins/color]
+night-light-schedule-automatic=false
+
+[org/gnome/settings-daemon/plugins/housekeeping]
+donation-reminder-last-shown=int64 1778273416370749
+
+[org/gnome/settings-daemon/plugins/media-keys]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']
+screensaver=@as []
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Super>Return'
+command='xdg-terminal-exec'
+name='Open Terminal'
+
+[org/gnome/settings-daemon/plugins/power]
+idle-dim=false
+power-button-action='interactive'
+power-saver-profile-on-low-battery=false
+sleep-inactive-ac-type='nothing'
+sleep-inactive-battery-type='nothing'
+
+[org/gnome/shell]
+app-picker-layout=[{'System': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'nixos-manual.desktop': <{'position': <2>}>, 'emacs.desktop': <{'position': <3>}>, 'org.gnome.Calculator.desktop': <{'position': <4>}>}]
+command-history=['lg']
+enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com', 'rounded-windows@marcosgt.github.io']
+favorite-apps=['org.gnome.Nautilus.desktop', 'brave-browser.desktop', 'nvim.desktop', 'dev.zed.Zed.desktop', 'emacs.desktop', 'Alacritty.desktop', 'org.gnome.SystemMonitor.desktop']
+last-selected-power-profile='performance'
+welcome-dialog-last-shown-version='49.4'
+
+[org/gnome/shell/app-switcher]
+current-workspace-only=true
+
+[org/gnome/shell/extensions/rounded-windows]
+border-alpha=1.0
+border-blue=0.85000002384185791
+border-green=0.80000001192092896
+border-red=0.80000001192092896
+border-width=2
+corner-radius=12
+padding-bottom=7
+skip-libadwaita-app=false
+smoothing=1.3877787807814457e-17
+
+[org/gnome/shell/weather]
+automatic-location=true
+locations=[<(uint32 2, <('Dhaka', 'VGHS', false, [(0.41626102660064762, 1.5777776438028739)], [(0.41626102660064762, 1.5777776438028739)])>)>]
+
+[org/gnome/tweaks]
+show-extensions-notice=false
+
+[org/gtk/gtk4/settings/color-chooser]
+custom-colors=[(0.80000001192092896, 0.80000001192092896, 0.85000002384185791, 1.0)]
+selected-color=(true, 0.80000001192092896, 0.80000001192092896, 0.85000002384185791, 1.0)
+
+[org/gtk/gtk4/settings/file-chooser]
+show-hidden=true

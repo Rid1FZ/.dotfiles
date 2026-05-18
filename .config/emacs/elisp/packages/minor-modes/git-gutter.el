@@ -17,6 +17,7 @@
 
   :config
   (global-git-gutter-mode +1)
+  (add-hook 'vterm-mode-hook (lambda () (git-gutter-mode -1)))
   (set-face-foreground 'git-gutter:modified "#f9e2af")
   (set-face-foreground 'git-gutter:added "#a6e3a1")
   (set-face-foreground 'git-gutter:deleted "#f38ba8"))

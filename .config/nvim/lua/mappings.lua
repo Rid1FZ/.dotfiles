@@ -208,10 +208,10 @@ M["nvim-tree.on-attach"] = function(opts)
     map("n", ".", nvim_tree_api.node.run.cmd, set_opts("Run Command"))
     map("n", "-", nvim_tree_api.tree.change_root_to_parent, set_opts("Up"))
     map("n", "g?", nvim_tree_api.tree.toggle_help, set_opts("Help"))
-    map("n", "H", nvim_tree_api.tree.toggle_hidden_filter, set_opts("Toggle Filter: Dotfiles"))
-    map("n", "I", nvim_tree_api.tree.toggle_gitignore_filter, set_opts("Toggle Filter: Git Ignore"))
-    map("n", "<Esc>", nvim_tree_api.live_filter.clear, set_opts("Live Filter: Clear"))
-    map("n", "/", nvim_tree_api.live_filter.start, set_opts("Live Filter: Start"))
+    map("n", "H", nvim_tree_api.filter.dotfiles.toggle, set_opts("Toggle Filter: Dotfiles"))
+    map("n", "I", nvim_tree_api.filter.git.ignored.toggle, set_opts("Toggle Filter: Git Ignore"))
+    map("n", "<Esc>", nvim_tree_api.filter.live.clear, set_opts("Live Filter: Clear"))
+    map("n", "/", nvim_tree_api.filter.live.start, set_opts("Live Filter: Start"))
 end
 
 ---Mappings for `fzf-lua` plugin

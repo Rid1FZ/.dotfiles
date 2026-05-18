@@ -1,0 +1,65 @@
+{
+  "indent_guides": {
+    "coloring": "indent_aware",
+  },
+  "vim": {
+    "use_smartcase_find": true,
+    "toggle_relative_line_numbers": true,
+  },
+  "proxy": "",
+  "git": {
+    "disable_git": false,
+  },
+  "terminal": {
+    "font_weight": 500.0,
+  },
+  "seed_search_query_from_cursor": "selection",
+  "search": {
+    "regex": true,
+  },
+  "base_keymap": "Emacs",
+  "bottom_dock_layout": "contained",
+  "tabs": {
+    "git_status": false,
+  },
+  "tab_bar": {
+    "show": false,
+  },
+  "title_bar": {
+    "show_menus": false,
+    "show_user_picture": false,
+    "show_user_menu": true,
+    "show_sign_in": false,
+  },
+  "project_panel": {
+    "indent_size": 25.0,
+    "dock": "left",
+    "button": true,
+  },
+  "which_key": {
+    "delay_ms": 500,
+    "enabled": true,
+  },
+  "load_direnv": "direct",
+  "show_wrap_guides": false,
+  "cursor_blink": false,
+  "ui_font_weight": 550.0,
+  "ui_font_family": "Adwaita Sans",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "disable_ai": true,
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "vim_mode": true,
+  "ui_font_size": 16.0,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Catppuccin Mocha",
+  },
+}
