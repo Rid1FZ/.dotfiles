@@ -15,17 +15,10 @@ SPECS: dict = {
     "SETUP": [
         {"CMD": ["dnf", "update", "--assumeyes"]},
         {
-            "LINK": {
-                "SRC_GLOBS": [".config/nvim", ".config/tmux"],
-                "RECURSIVE": False,
-                "FORCE": True,
-            }
-        },
-        {
             "COPY": {
                 "SRC_GLOBS": [".local/share/applications/*"],
                 "IGNORE_GLOBS": [".local/share/applications/nvim.desktop"],
-                "FORCE": True,
+                "IF_EXISTS": "backup",  # backup/remove/ignore
             }
         },
         {
@@ -33,16 +26,12 @@ SPECS: dict = {
                 "SRC_GLOBS": [".local/bin/*"],
                 "IGNORE_GLOBS": [],
                 "RECURSIVE": False,
-                "FORCE": False,
+                "IF_EXISTS": "backup",  # backup/remove/ignore
             }
         },
         {"CMD": ["systemctl", "--user", "enable", "--now", "syncthing"]},
     ],
 }
-
-
-class SpecError(Exception):
-    pass
 
 
 class LogLevel(Enum):
@@ -208,6 +197,36 @@ def remove_path(
             Logger.error(f"failed to remove {path}: file not found")
 
 
+def _resolve_name(path: Path) -> str:
+    from datetime import datetime
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    return path.name + "_" + timestamp + ".bak"
+
+
+def make_backup(
+    path: Path,
+    *,
+    verbose: bool = False,
+    dry_run: bool = False,
+) -> None:
+    if not exists(path):
+        return
+
+    backup_name = _resolve_name(path)
+    backup_path = path.parent / backup_name
+
+    if verbose:
+        Logger.info(f"Backing up: {path!s} -> {backup_path!s}")
+
+    if dry_run:
+        Logger.info(f"[dry-run] Would backup: {path!s} -> {backup_path!s}")
+        return
+
+    path.rename(str(backup_path))
+
+
 def _remove_hindrance(
     path: Path,
     *,
@@ -243,28 +262,40 @@ def _copy_file(
     *,
     verbose: bool = False,
     dry_run: bool = False,
-    force: bool = False,
+    if_exists: str = "ignore",
     rebuild_symlinks: bool = False,
 ) -> None:
     dst = dest_dir / src.relative_to(dotfiles_dir)
 
     if hinder := get_hinder(dst):
-        if not force:
-            Logger.error(f"Skipping {dst}: blocked by {hinder}")
-            return
+        match if_exists:
+            case "ignore":
+                Logger.error(f"Skipping {dst}: blocked by {hinder}")
+                return
+            case "remove":
+                _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
+            case "backup":
+                make_backup(Path(hinder), verbose=verbose, dry_run=dry_run)
+                get_hinder.cache_clear()
+            case _:
+                Logger.error(f"Invalid value for `if_exists`: {if_exists!r}")
+                return
 
-        _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
-
-    if exists(dst) and not force:
-        if verbose:
-            Logger.debug(f"Skipping (already exists): {dst}")
-        return
+    if exists(dst):
+        match if_exists:
+            case "ignore":
+                if verbose:
+                    Logger.debug(f"Skipping (already exists): {dst}")
+                return
+            case "remove":
+                remove_path(dst, verbose=verbose, dry_run=dry_run)
+            case "backup":
+                make_backup(dst, verbose=verbose, dry_run=dry_run)
 
     if dry_run:
         Logger.info(f"[dry-run] Would copy: {src} -> {dst}")
         return
 
-    remove_path(dst, verbose=verbose, dry_run=dry_run)
     os.makedirs(dst.parent, exist_ok=True)
 
     if rebuild_symlinks and (islink(src) or isbrokenlink(src)):
@@ -284,17 +315,23 @@ def _copy_dir(
     *,
     verbose: bool = False,
     dry_run: bool = False,
-    force: bool = False,
+    if_exists: str = "ignore",
     rebuild_symlinks: bool = False,
 ) -> None:
     dst = dest_dir / src.relative_to(dotfiles_dir)
 
     if hinder := get_hinder(dst):
-        if not force:
-            Logger.error(f"Skipping {dst}: blocked by {hinder}")
-            return
-
-        _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
+        match if_exists:
+            case "ignore":
+                Logger.error(f"Skipping {dst}: blocked by {hinder}")
+                return
+            case "remove":
+                _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
+            case "backup":
+                make_backup(dst, verbose=verbose, dry_run=dry_run)
+            case _:
+                Logger.error("invalid input for `if_exists`")
+                return
 
     if dry_run:
         Logger.info(f"[dry-run] Would create: {dst}")
@@ -310,7 +347,7 @@ def _copy_dir(
             dotfiles_dir,
             verbose=verbose,
             dry_run=dry_run,
-            force=force,
+            if_exists=if_exists,
             rebuild_symlinks=rebuild_symlinks,
         )
 
@@ -323,7 +360,7 @@ def copy(
     ignore_globs: list[str] | None = None,
     verbose: bool = False,
     dry_run: bool = False,
-    force: bool = False,
+    if_exists: str = "ignore",
     rebuild_symlinks: bool = False,
 ) -> None:
     dotfiles_dir = dotfiles_dir.absolute()
@@ -345,7 +382,7 @@ def copy(
                 dotfiles_dir,
                 verbose=verbose,
                 dry_run=dry_run,
-                force=force,
+                if_exists=if_exists,
                 rebuild_symlinks=rebuild_symlinks,
             )
             continue
@@ -357,7 +394,7 @@ def copy(
             expanded_ignore_globs,
             verbose=verbose,
             dry_run=dry_run,
-            force=force,
+            if_exists=if_exists,
             rebuild_symlinks=rebuild_symlinks,
         )
 
@@ -369,27 +406,39 @@ def _link_entry(
     *,
     verbose: bool = False,
     dry_run: bool = False,
-    force: bool = False,
+    if_exists: str = "ignore",
 ) -> None:
     dst = dest_dir / src.relative_to(dotfiles_dir)
 
     if hinder := get_hinder(dst):
-        if not force:
-            Logger.error(f"Skipping {dst}: blocked by {hinder}")
-            return
+        match if_exists:
+            case "ignore":
+                Logger.error(f"Skipping {dst}: blocked by {hinder}")
+                return
+            case "remove":
+                _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
+            case "backup":
+                make_backup(Path(hinder), verbose=verbose, dry_run=dry_run)
+                get_hinder.cache_clear()
+            case _:
+                Logger.error(f"Invalid value for `if_exists`: {if_exists!r}")
+                return
 
-        _remove_hindrance(dst, verbose=verbose, dry_run=dry_run)
-
-    if exists(dst) and not force:
-        if verbose:
-            Logger.debug(f"Skipping (already exists): {dst}")
-        return
+    if exists(dst):
+        match if_exists:
+            case "ignore":
+                if verbose:
+                    Logger.debug(f"Skipping (already exists): {dst}")
+                return
+            case "remove":
+                remove_path(dst, verbose=verbose, dry_run=dry_run)
+            case "backup":
+                make_backup(dst, verbose=verbose, dry_run=dry_run)
 
     if dry_run:
         Logger.info(f"[dry-run] Would link: {dst} -> {src.absolute()}")
         return
 
-    remove_path(dst, verbose=verbose)
     os.makedirs(dst.parent, exist_ok=True)
     dst.symlink_to(src.absolute())
 
@@ -404,7 +453,7 @@ def link(
     *,
     ignore_globs: list[str] | None = None,
     recursive: bool = False,
-    force: bool = False,
+    if_exists: str = "ignore",
     verbose: bool = False,
     dry_run: bool = False,
 ) -> None:
@@ -427,7 +476,7 @@ def link(
                 dotfiles_dir,
                 verbose=verbose,
                 dry_run=dry_run,
-                force=force,
+                if_exists=if_exists,
             )
             continue
 
@@ -438,7 +487,7 @@ def link(
                 dotfiles_dir,
                 verbose=verbose,
                 dry_run=dry_run,
-                force=force,
+                if_exists=if_exists,
             )
 
 
@@ -468,149 +517,12 @@ def run_command(
         Logger.error(f"failed to run {cmd_string}: {e.stderr}")
 
 
-def _validate_str_list(
-    value: object, errors: list[str], prefix: str, *, allow_empty: bool
-) -> None:
-    if not isinstance(value, list):
-        errors.append(f"{prefix}: must be a list of strings")
-        return
-    if not allow_empty and not value:
-        errors.append(f"{prefix}: must not be empty")
-        return
-    for i, item in enumerate(value):
-        if not isinstance(item, str):
-            errors.append(f"{prefix}[{i}]: must be a string, got {type(item).__name__}")
-
-
-def _validate_cmd(value: object, errors: list[str], prefix: str) -> None:
-    _validate_str_list(value, errors, prefix, allow_empty=False)
-
-
-def _validate_copy(value: object, errors: list[str], prefix: str) -> None:
-    if not isinstance(value, dict):
-        errors.append(f"{prefix}: must be a dict")
-        return
-
-    valid_keys = {"SRC_GLOBS", "IGNORE_GLOBS", "FORCE"}
-    for key in value:
-        if key not in valid_keys:
-            errors.append(f"{prefix}: unknown key '{key}'")
-
-    if "SRC_GLOBS" not in value:
-        errors.append(f"{prefix}: missing required key 'SRC_GLOBS'")
-    else:
-        _validate_str_list(
-            value["SRC_GLOBS"], errors, f"{prefix}.SRC_GLOBS", allow_empty=False
-        )
-
-    if "IGNORE_GLOBS" in value:
-        _validate_str_list(
-            value["IGNORE_GLOBS"], errors, f"{prefix}.IGNORE_GLOBS", allow_empty=True
-        )
-
-    if "FORCE" in value and not isinstance(value["FORCE"], bool):
-        errors.append(f"{prefix}.FORCE: must be a bool")
-
-
-def _validate_link(value: object, errors: list[str], prefix: str) -> None:
-    if not isinstance(value, dict):
-        errors.append(f"{prefix}: must be a dict")
-        return
-
-    valid_keys = {"SRC_GLOBS", "IGNORE_GLOBS", "RECURSIVE", "FORCE"}
-    for key in value:
-        if key not in valid_keys:
-            errors.append(f"{prefix}: unknown key '{key}'")
-
-    if "SRC_GLOBS" not in value:
-        errors.append(f"{prefix}: missing required key 'SRC_GLOBS'")
-    else:
-        _validate_str_list(
-            value["SRC_GLOBS"], errors, f"{prefix}.SRC_GLOBS", allow_empty=False
-        )
-
-    if "IGNORE_GLOBS" in value:
-        _validate_str_list(
-            value["IGNORE_GLOBS"], errors, f"{prefix}.IGNORE_GLOBS", allow_empty=True
-        )
-
-    if "RECURSIVE" in value and not isinstance(value["RECURSIVE"], bool):
-        errors.append(f"{prefix}.RECURSIVE: must be a bool")
-
-    if "FORCE" in value and not isinstance(value["FORCE"], bool):
-        errors.append(f"{prefix}.FORCE: must be a bool")
-
-
-def _validate_setup(setup: object, errors: list[str]) -> None:
-    if not isinstance(setup, list):
-        errors.append("'SETUP': must be a list")
-        return
-
-    valid_actions = {"CMD", "COPY", "LINK"}
-    validators = {"CMD": _validate_cmd, "COPY": _validate_copy, "LINK": _validate_link}
-
-    for i, item in enumerate(setup):
-        prefix = f"SETUP[{i}]"
-
-        if not isinstance(item, dict):
-            errors.append(f"{prefix}: must be a dict")
-            continue
-
-        if len(item) != 1:
-            errors.append(
-                f"{prefix}: must have exactly one key, got {list(item.keys())}"
-            )
-            continue
-
-        action, value = next(iter(item.items()))
-
-        if action not in valid_actions:
-            errors.append(
-                f"{prefix}: unknown action '{action}', valid: {valid_actions}"
-            )
-            continue
-
-        validators[action](value, errors, f"{prefix}.{action}")
-
-
-def validate_spec(specs: object) -> None:
-    errors = []
-
-    if not isinstance(specs, dict):
-        Logger.error("spec must be a dict")
-        raise SpecError("spec must be a dict")
-
-    valid_top_level = {"DOTFILES_DIR", "DOTFILES_REMOTE", "TARGET_DIR", "SETUP"}
-
-    for key in specs:
-        if key not in valid_top_level:
-            errors.append(f"unknown top-level key: '{key}'")
-
-    for key in valid_top_level:
-        if key not in specs:
-            errors.append(f"missing required key: '{key}'")
-
-    for key in ("DOTFILES_DIR", "DOTFILES_REMOTE", "TARGET_DIR"):
-        if key in specs and not isinstance(specs[key], str):
-            errors.append(f"'{key}': must be a string")
-
-    if "SETUP" in specs:
-        _validate_setup(specs["SETUP"], errors)
-
-    if errors:
-        for error in errors:
-            Logger.error(error)
-        raise SpecError(f"invalid spec: {len(errors)} error(s) found")
-
-
 def dispatch(
     specs: dict,
     *,
     verbose: bool = False,
     dry_run: bool = False,
 ) -> None:
-    validate_spec(specs)
-
     dotfiles_dir = Path(os.path.expandvars(specs["DOTFILES_DIR"])).expanduser()
     target_dir = Path(os.path.expandvars(specs["TARGET_DIR"])).expanduser()
 
@@ -627,7 +539,7 @@ def dispatch(
                     target_dir,
                     dotfiles_dir,
                     ignore_globs=value.get("IGNORE_GLOBS"),
-                    force=value.get("FORCE", False),
+                    if_exists=value.get("IF_EXISTS", "ignore"),
                     verbose=verbose,
                     dry_run=dry_run,
                 )
@@ -639,7 +551,7 @@ def dispatch(
                     dotfiles_dir,
                     ignore_globs=value.get("IGNORE_GLOBS"),
                     recursive=value.get("RECURSIVE", False),
-                    force=value.get("FORCE", False),
+                    if_exists=value.get("IF_EXISTS", "ignore"),
                     verbose=verbose,
                     dry_run=dry_run,
                 )
