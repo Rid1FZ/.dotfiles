@@ -18,7 +18,7 @@ font-name='JetBrainsMono Nerd Font Medium 12'
 profile-uuids=['fa2f4fc3ba903f2c8f1d376e6a045860']
 text-blink-mode='never'
 use-system-font=false
-window-size=(uint32 169, uint32 37)
+window-size=(uint32 135, uint32 30)
 
 [org/gnome/Ptyxis/Profiles/fa2f4fc3ba903f2c8f1d376e6a045860]
 cell-height-scale=1.0
@@ -27,6 +27,11 @@ palette='Catppuccin Mocha'
 [org/gnome/Showtime/State]
 is-maximized=false
 
+[org/gnome/Snapshot]
+is-maximized=false
+window-height=640
+window-width=800
+
 [org/gnome/Weather]
 locations=[<(uint32 2, <('Dhaka', 'VGHS', false, [(0.41626102660064762, 1.5777776438028739)], [(0.41626102660064762, 1.5777776438028739)])>)>]
 window-height=506
@@ -34,7 +39,7 @@ window-maximized=true
 window-width=439
 
 [org/gnome/control-center]
-last-panel='keyboard'
+last-panel='online-accounts'
 window-state=(980, 640, false)
 
 [org/gnome/desktop/app-folders]
@@ -63,10 +68,10 @@ translate=true
 [org/gnome/desktop/background]
 color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
-picture-uri-dark='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
-primary-color='#000000000000'
-secondary-color='#000000000000'
+picture-uri='file:///usr/share/backgrounds/gnome/map-l.svg'
+picture-uri-dark='file:///usr/share/backgrounds/gnome/map-d.svg'
+primary-color='#241f31'
+secondary-color='#000000'
 
 [org/gnome/desktop/break-reminders/eyesight]
 play-sound=true
@@ -83,6 +88,7 @@ sources=[('xkb', 'us'), ('xkb', 'bd')]
 xkb-options=@as []
 
 [org/gnome/desktop/interface]
+clock-format='24h'
 color-scheme='prefer-dark'
 document-font-name='Adwaita Sans 12'
 enable-hot-corners=false
@@ -95,7 +101,7 @@ show-battery-percentage=false
 text-scaling-factor=1.0
 
 [org/gnome/desktop/notifications]
-application-children=['org-gnome-nautilus', 'gnome-about-panel', 'brave-browser']
+application-children=['org-gnome-nautilus', 'gnome-about-panel', 'brave-browser', 'org-freedesktop-problems-applet', 'org-gnome-software', 'helium']
 
 [org/gnome/desktop/notifications/application/brave-browser]
 application-id='brave-browser.desktop'
@@ -103,8 +109,17 @@ application-id='brave-browser.desktop'
 [org/gnome/desktop/notifications/application/gnome-about-panel]
 application-id='gnome-about-panel.desktop'
 
+[org/gnome/desktop/notifications/application/helium]
+application-id='helium.desktop'
+
+[org/gnome/desktop/notifications/application/org-freedesktop-problems-applet]
+application-id='org.freedesktop.problems.applet.desktop'
+
 [org/gnome/desktop/notifications/application/org-gnome-nautilus]
 application-id='org.gnome.Nautilus.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-software]
+application-id='org.gnome.Software.desktop'
 
 [org/gnome/desktop/peripherals/keyboard]
 numlock-state=true
@@ -116,9 +131,9 @@ two-finger-scrolling-enabled=true
 [org/gnome/desktop/screensaver]
 color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///home/rid1/.local/share/backgrounds/catppuccin-mocha.jpg'
-primary-color='#000000000000'
-secondary-color='#000000000000'
+picture-uri='file:///usr/share/backgrounds/gnome/map-l.svg'
+primary-color='#241f31'
+secondary-color='#000000'
 
 [org/gnome/desktop/session]
 idle-delay=uint32 0
@@ -152,6 +167,11 @@ window-width=800
 col-26-visible=false
 col-26-width=0
 
+[org/gnome/login-screen]
+enable-fingerprint-authentication=false
+enable-smartcard-authentication=false
+enable-switchable-authentication=false
+
 [org/gnome/mutter]
 attach-modal-dialogs=false
 dynamic-workspaces=false
@@ -184,7 +204,7 @@ last-folder-path='/home/rid1/Projects/go-practice'
 last-folder-path='/home/rid1/Documents'
 
 [org/gnome/portal/filechooser/org.gnome.Settings]
-last-folder-path='/home/rid1/Pictures'
+last-folder-path='/home/rid1/Downloads'
 
 [org/gnome/settings-daemon/plugins/color]
 night-light-schedule-automatic=false
@@ -209,15 +229,24 @@ sleep-inactive-ac-type='nothing'
 sleep-inactive-battery-type='nothing'
 
 [org/gnome/shell]
-app-picker-layout=[{'System': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'nixos-manual.desktop': <{'position': <2>}>, 'emacs.desktop': <{'position': <3>}>, 'org.gnome.Calculator.desktop': <{'position': <4>}>}]
-command-history=['lg']
-enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com', 'rounded-windows@marcosgt.github.io']
-favorite-apps=['org.gnome.Nautilus.desktop', 'brave-browser.desktop', 'nvim.desktop', 'dev.zed.Zed.desktop', 'emacs.desktop', 'Alacritty.desktop', 'org.gnome.SystemMonitor.desktop']
+always-show-log-out=true
+app-picker-layout=[{'System': <{'position': <0>}>, 'Utilities': <{'position': <1>}>, 'org.gnome.Yelp.desktop': <{'position': <2>}>, 'org.freedesktop.GnomeAbrt.desktop': <{'position': <3>}>}]
+command-history=['lg', 'gsettings set org.gnome.shell always-show-log-out true']
+enabled-extensions=['user-theme@gnome-shell-extensions.gcampax.github.com', 'gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com', 'rounded-windows@marcosgt.github.io', 'disable-menu-switching@selfmade.pl', 'InternetSpeedMeter@alshakib.dev', 'clipboard-indicator@tudmotu.com']
+favorite-apps=['org.gnome.Nautilus.desktop', 'helium.desktop', 'dev.zed.Zed.desktop', 'nvim.desktop', 'emacs.desktop', 'Alacritty.desktop', 'htop.desktop']
 last-selected-power-profile='performance'
 welcome-dialog-last-shown-version='49.4'
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
+
+[org/gnome/shell/extensions/clipboard-indicator]
+disable-down-arrow=true
+enable-keybindings=false
+history-size=30
+notify-on-copy=false
+regex-search=true
+show-settings-button=false
 
 [org/gnome/shell/extensions/rounded-windows]
 border-alpha=1.0
@@ -234,6 +263,14 @@ smoothing=1.3877787807814457e-17
 automatic-location=true
 locations=[<(uint32 2, <('Dhaka', 'VGHS', false, [(0.41626102660064762, 1.5777776438028739)], [(0.41626102660064762, 1.5777776438028739)])>)>]
 
+[org/gnome/shell/world-clocks]
+locations=@av []
+
+[org/gnome/software]
+check-timestamp=int64 1779101922
+first-run=false
+update-notification-timestamp=int64 1779101929
+
 [org/gnome/tweaks]
 show-extensions-notice=false
 
@@ -243,3 +280,6 @@ selected-color=(true, 0.80000001192092896, 0.80000001192092896, 0.85000002384185
 
 [org/gtk/gtk4/settings/file-chooser]
 show-hidden=true
+
+[org/gtk/settings/file-chooser]
+clock-format='24h'
