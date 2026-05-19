@@ -1,0 +1,20 @@
+fork = false
+frame = "full"
+idle = true
+maximized = true
+no-multigrid = false
+srgb = true
+tabs = false
+mouse-cursor-icon = "arrow"
+vsync = false
+wsl = false
+neovim-bin = "nvim"
+
+[font]
+normal = ["JetBrainsMono Nerd Font"]
+size = 13
+hinting = "slight"
+edging = "antialias"
+
+[box-drawing]
+mode = "native"
