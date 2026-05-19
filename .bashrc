@@ -9,7 +9,7 @@ function __source_rc {
     local rc
     rc="${1}"
 
-    source "${HOME}"/.profile.d/"${rc}"
+    source "${XDG_CONFIG_HOME:="${HOME}/.config"}"/profile.d/"${rc}"
 }
 
 __source_rc "options.sh"
