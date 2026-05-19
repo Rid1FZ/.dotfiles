@@ -2,7 +2,7 @@
 
 # >>> functions >>>
 function __fzf {
-    fzf --layout=reverse --tmux --border=rounded --height=100% --preview-window 'up,60%,border-rounded,+{2}-5/5' "$@"
+    command fzf --layout=reverse --tmux --border=rounded --height=100% --preview-window 'up,60%,border-rounded,+{2}-5/5' "$@"
 }
 
 function open {
@@ -11,22 +11,22 @@ function open {
         return 1
     }
 
-    case "$(file -b --mime-type --dereference "${1}")" in
+    case "$(command file -b --mime-type --dereference "${1}")" in
     inode/directory)
         builtin cd -- "${1}" || return 1
         ;;
     text/* | application/javascript | application/toml | application/x-shellscript | application/x-zerosize)
-        "${EDITOR}" "${1}"
+        command "${EDITOR}" "${1}"
         ;;
     *)
-        xdg-open "$1" &>/dev/null || {
+        command xdg-open "$1" &>/dev/null || {
             local cmd
 
             echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
             printf "enter command to open file: "
             read -r cmd
 
-            ${cmd} "${1}"
+            command ${cmd} "${1}"
         }
         ;;
     esac
@@ -41,7 +41,7 @@ function ff {
         return 1
     }
 
-    input_path="$(fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --keep-right --preview="preview {}")"
+    input_path="$(command fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --keep-right --preview="preview {}")"
     [[ -z "${input_path}" ]] && return 1
 
     open "${input_path}"
@@ -56,7 +56,7 @@ function fcd {
         return 1
     }
 
-    input_dir="$(fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --info=default --keep-right --preview="preview {}")"
+    input_dir="$(command fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --info=default --keep-right --preview="preview {}")"
     [[ -z "${input_dir}" ]] && return 1
 
     builtin cd -- "${input_dir}" || return 1
@@ -65,7 +65,7 @@ function fcd {
 function frg {
     local rg_prefix
 
-    rg_prefix="rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
+    rg_prefix="command rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
     __fzf --disabled \
         --bind "start:reload:${rg_prefix} {q} ${1:-.}" \
         --bind "change:reload:sleep 0.1; ${rg_prefix} {q} || true" \
@@ -92,9 +92,38 @@ function rm {
     done
 
     if (("${#to_trash[@]}" != 0)); then
-        trash-put "${to_trash[@]}"
+        command trash-put "${to_trash[@]}"
     else
         return 0
+    fi
+}
+
+function tree {
+    local show_all=false
+    local use_jq=false
+    local extra_args=()
+
+    for arg in "$@"; do
+        case "$arg" in
+        -a) show_all=true ;;
+        -J) use_jq=true ;;
+        *) extra_args+=("$arg") ;;
+        esac
+    done
+
+    local tree_args=(--dirsfirst -F -I '.git')
+
+    if [[ "$show_all" == true ]]; then
+        tree_args+=(-a)
+    else
+        tree_args+=(--gitignore)
+    fi
+
+    if [[ "$use_jq" == true ]]; then
+        tree_args+=(-J)
+        command tree "${tree_args[@]}" "${extra_args[@]}" | command jq --compact-output --monochrome-output
+    else
+        command tree "${tree_args[@]}" "${extra_args[@]}"
     fi
 }
 

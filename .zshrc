@@ -9,7 +9,7 @@ function __source_rc {
     local rc
     rc="${1}"
 
-    source "${HOME}"/.zprofile.d/"${rc}"
+    source "${XDG_CONFIG_HOME:="${HOME}/.config"}"/zprofile.d/"${rc}"
 }
 
 __source_rc "options.zsh"

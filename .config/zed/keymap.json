@@ -31,7 +31,7 @@
     },
   },
   {
-    "context": "ProjectPanel",
+    "context": "ProjectPanel && !editing",
     "bindings": {
       "space o e": "workspace::ToggleLeftDock",
       "q": "workspace::ToggleLeftDock",
