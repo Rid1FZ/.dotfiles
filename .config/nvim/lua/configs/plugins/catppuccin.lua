@@ -6,6 +6,7 @@ M.background = {
     dark = "mocha",
 }
 M.transparent_background = false
+M.term_colors = true
 M.float = {
     transparent = false,
     solid = false,
