@@ -5,8 +5,28 @@ keyrings-selected=['gnupg://']
 height=476
 width=864
 
+[ca/desrt/dconf-editor]
+saved-pathbar-path='/org/freedesktop/tracker/miner/files/ignored-directories'
+saved-view='/org/freedesktop/tracker/miner/files/ignored-directories'
+show-warning=false
+window-height=500
+window-is-maximized=false
+window-width=540
+
+[org/freedesktop/tracker/miner/files]
+ignored-directories=['po', 'CVS', 'core-dumps', 'lost+found', 'GDrive', 'gdrive']
+
+[org/gnome/Disks/benchmark]
+do-write=true
+num-access-samples=1000
+num-samples=100
+sample-size-mib=16
+
 [org/gnome/GWeather4]
 temperature-unit='centigrade'
+
+[org/gnome/Loupe]
+show-properties=true
 
 [org/gnome/Music]
 window-maximized=true
@@ -177,9 +197,17 @@ attach-modal-dialogs=false
 dynamic-workspaces=false
 overlay-key='Super'
 
+[org/gnome/nautilus/icon-view]
+captions=['none', 'none', 'none']
+
 [org/gnome/nautilus/preferences]
 default-folder-viewer='icon-view'
 migrated-gtk-settings=true
+recursive-search='local-only'
+show-create-link=true
+show-delete-permanently=true
+show-directory-item-counts='never'
+show-image-thumbnails='local-only'
 
 [org/gnome/nautilus/window-state]
 initial-size=(890, 550)
@@ -202,6 +230,9 @@ last-folder-path='/home/rid1/Projects/go-practice'
 
 [org/gnome/portal/filechooser/org.chromium.Chromium]
 last-folder-path='/home/rid1/Documents'
+
+[org/gnome/portal/filechooser/org.gnome.Nautilus]
+last-folder-path='/usr/share/icons/Papirus-Dark/128x128/places'
 
 [org/gnome/portal/filechooser/org.gnome.Settings]
 last-folder-path='/home/rid1/Downloads'
