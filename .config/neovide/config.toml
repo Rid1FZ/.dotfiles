@@ -13,8 +13,8 @@ neovim-bin = "nvim"
 [font]
 normal = ["JetBrainsMono Nerd Font"]
 size = 13
-hinting = "slight"
-edging = "antialias"
+hinting = "none"
+edging = "subpixelantialias"
 
 [box-drawing]
 mode = "native"
