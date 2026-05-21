@@ -39,12 +39,14 @@ FILE: the name of file inside `elisp' directory"
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Keep config directory clean — must load before custom-file is read
+(setq no-littering-etc-directory (expand-file-name "etc/" user/emacs-local-dir)
+      no-littering-var-directory (expand-file-name "var/" user/emacs-cache-dir))
+
 (use-package no-littering
   :ensure t)
 
-;; Set and load custom-file after no-littering resolves its path
-(setq custom-file (no-littering-expand-var-file-name "custom.el"))
+;; custom.el lives in the local dir alongside other persistent state.
+(setq custom-file (expand-file-name "custom.el" user/emacs-local-dir))
 (load custom-file 'noerror)
 
 ;; Load Packages
