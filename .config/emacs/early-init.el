@@ -41,9 +41,16 @@
       native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings '(not obsolete)
       warning-minimum-log-level :warning
-      package-user-dir  (expand-file-name "packages/" user/emacs-local-dir)
-      package-quickstart t
+      package-user-dir      (expand-file-name "elpa/" user/emacs-local-dir)
+      package-gnupghome-dir (expand-file-name "elpa/gnupg/" user/emacs-local-dir)
+      package-quickstart    t
       package-quickstart-file (expand-file-name "package-quickstart.el" user/emacs-local-dir))
+
+;; Remove any `package-quickstart.el` file before loading `init.el`
+(let ((legacy-qs (locate-user-emacs-file "package-quickstart.el")))
+  (when (and (file-exists-p legacy-qs)
+             (not (file-equal-p legacy-qs package-quickstart-file)))
+    (delete-file legacy-qs)))
 
 ;; Disable Autosave for Programming Modes
 (add-hook 'prog-mode-hook (lambda ()
