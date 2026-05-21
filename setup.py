@@ -624,7 +624,7 @@ def run_command(
     try:
         subprocess.run(
             args,
-            shell=True,
+            shell=False,
             capture_output=True,
             check=True,
             text=True,
