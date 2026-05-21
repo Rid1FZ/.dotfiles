@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Helium
+GenericName=Web Browser
+Comment=Access the Internet
+Exec=helium --disable-gpu-shader-disk-cache --disable-dev-shm-usage --process-per-site --hide-crash-restore-bubble %U
+StartupNotify=true
+StartupWMClass=helium
+Terminal=false
+Icon=/home/rid1/.local/share/icons/helium.png
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=x-scheme-handler/unknown;x-scheme-handler/about;application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
