@@ -46,7 +46,7 @@
       package-quickstart    t
       package-quickstart-file (expand-file-name "package-quickstart.el" user/emacs-local-dir))
 
-;; Remove any `package-quickstart.el` file before loading `init.el`
+;; Delete `package-quickstart.el` from config directory if exists
 (let ((legacy-qs (locate-user-emacs-file "package-quickstart.el")))
   (when (and (file-exists-p legacy-qs)
              (not (file-equal-p legacy-qs package-quickstart-file)))
