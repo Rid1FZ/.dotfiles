@@ -17,6 +17,7 @@ M.setup = function()
     g.mapleader = " "
     g.neovide_cursor_animation_length = 0
     g.neovide_scroll_animation_length = 0
+    g.tex_flavor = "latex"
 
     --------------------------------------------------------------------
     -- Disable unused built-in plugins
@@ -136,6 +137,7 @@ M.setup = function()
             bash = "bash",
             tmux = "tmux",
             dconf = "ini",
+            tex = "tex",
         },
         pattern = {
             [fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",

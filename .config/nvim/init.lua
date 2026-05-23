@@ -13,6 +13,7 @@ local configs = require("configs")
 local lspconfig = require("configs.lsp")
 local completions = require("utils.completions")
 local statusline = require("utils.statusline")
+local nvimtex = require("utils.nvimtex")
 
 local notify = vim.notify
 local log_levels = vim.log.levels
@@ -45,6 +46,11 @@ local ok_status, err = pcall(statusline.setup)
 if not ok_status then
     notify("Statusline setup failed: " .. tostring(err), log_levels.WARN)
 end
+
+--------------------------------------------------------------------
+-- Setup other utils
+--------------------------------------------------------------------
+pcall(nvimtex.setup)
 
 --------------------------------------------------------------------
 -- Setup autocommands
