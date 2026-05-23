@@ -81,6 +81,7 @@ class CopySpec(TypedDict):
     """Configuration for a COPY step."""
 
     SRC_GLOBS: list[str]
+    SRC_ROOT: NotRequired[str]
     IGNORE_GLOBS: NotRequired[list[str]]
     IF_EXISTS: NotRequired[IfExists]
 
@@ -89,6 +90,7 @@ class LinkSpec(TypedDict):
     """Configuration for a LINK step."""
 
     SRC_GLOBS: list[str]
+    SRC_ROOT: NotRequired[str]
     IGNORE_GLOBS: NotRequired[list[str]]
     RECURSIVE: NotRequired[bool]
     IF_EXISTS: NotRequired[IfExists]
@@ -434,15 +436,15 @@ def _walk_dir(src: Path, ignore: set[Path], *, verbose: bool = False) -> Generat
 def _copy_file(
     src: Path,
     dest_dir: Path,
-    dotfiles_dir: Path,
+    src_root: Path,
     *,
     verbose: bool = False,
     dry_run: bool = False,
     if_exists: str = "ignore",
     rebuild_symlinks: bool = False,
 ) -> None:
-    """Copy a single file (or optionally a symlink) from dotfiles_dir to dest_dir."""
-    dst = dest_dir / src.relative_to(dotfiles_dir)
+    """Copy a single file (or optionally a symlink) from src_root to dest_dir."""
+    dst = dest_dir / src.relative_to(src_root)
 
     if not _clear_hinder(dst, if_exists, verbose=verbose, dry_run=dry_run):
         return
@@ -469,7 +471,7 @@ def _copy_file(
 def _copy_dir(
     src: Path,
     dest_dir: Path,
-    dotfiles_dir: Path,
+    src_root: Path,
     ignore: set[Path],
     *,
     verbose: bool = False,
@@ -478,12 +480,12 @@ def _copy_dir(
     rebuild_symlinks: bool = False,
 ) -> None:
     """
-    Copy a directory tree from dotfiles_dir to dest_dir.
+    Copy a directory tree from src_root to dest_dir.
 
     An existing destination directory is entered rather than replaced; individual
     files within it handle their own if_exists policy.
     """
-    dst = dest_dir / src.relative_to(dotfiles_dir)
+    dst = dest_dir / src.relative_to(src_root)
 
     if not _clear_hinder(dst, if_exists, verbose=verbose, dry_run=dry_run):
         return
@@ -502,7 +504,7 @@ def _copy_dir(
         _copy_file(
             f,
             dest_dir,
-            dotfiles_dir,
+            src_root,
             verbose=verbose,
             dry_run=dry_run,
             if_exists=if_exists,
@@ -515,6 +517,7 @@ def copy(
     dest_dir: Path,
     dotfiles_dir: Path,
     *,
+    src_root: str = "",
     ignore_globs: list[str] | None = None,
     verbose: bool = False,
     dry_run: bool = False,
@@ -523,8 +526,9 @@ def copy(
 ) -> None:
     """Copy files matching srcs globs from dotfiles_dir to dest_dir."""
     dotfiles_dir = dotfiles_dir.absolute()
-    expanded_ignore = {match for glob in (ignore_globs or []) for match in dotfiles_dir.rglob(glob)}  # fmt: skip
-    expanded_srcs = (match for glob in srcs for match in dotfiles_dir.glob(glob))  # fmt: skip
+    effective_root = (dotfiles_dir / src_root) if src_root else dotfiles_dir
+    expanded_ignore = {match for glob in (ignore_globs or []) for match in effective_root.rglob(glob)}  # fmt: skip
+    expanded_srcs = (match for glob in srcs for match in effective_root.glob(glob))  # fmt: skip
 
     for src in expanded_srcs:
         if src in expanded_ignore:
@@ -536,7 +540,7 @@ def copy(
             _copy_file(
                 src,
                 dest_dir,
-                dotfiles_dir,
+                effective_root,
                 verbose=verbose,
                 dry_run=dry_run,
                 if_exists=if_exists,
@@ -547,7 +551,7 @@ def copy(
         _copy_dir(
             src,
             dest_dir,
-            dotfiles_dir,
+            effective_root,
             expanded_ignore,
             verbose=verbose,
             dry_run=dry_run,
@@ -562,14 +566,14 @@ def copy(
 def _link_entry(
     src: Path,
     dest_dir: Path,
-    dotfiles_dir: Path,
+    src_root: Path,
     *,
     verbose: bool = False,
     dry_run: bool = False,
     if_exists: str = "ignore",
 ) -> None:
-    """Create a symlink in dest_dir pointing to src in dotfiles_dir."""
-    dst = dest_dir / src.relative_to(dotfiles_dir)
+    """Create a symlink in dest_dir pointing to src in src_root."""
+    dst = dest_dir / src.relative_to(src_root)
 
     if not _clear_hinder(dst, if_exists, verbose=verbose, dry_run=dry_run):
         return
@@ -597,6 +601,7 @@ def link(
     dest_dir: Path,
     dotfiles_dir: Path,
     *,
+    src_root: str = "",
     ignore_globs: list[str] | None = None,
     recursive: bool = False,
     if_exists: str = "ignore",
@@ -610,8 +615,9 @@ def link(
     individual files within directories are linked instead.
     """
     dotfiles_dir = dotfiles_dir.absolute()
-    expanded_ignore = {match for glob in (ignore_globs or []) for match in dotfiles_dir.rglob(glob)}  # fmt: skip
-    expanded_srcs = [match for glob in srcs for match in dotfiles_dir.glob(glob)]  # fmt: skip
+    effective_root = (dotfiles_dir / src_root) if src_root else dotfiles_dir
+    expanded_ignore = {match for glob in (ignore_globs or []) for match in effective_root.rglob(glob)}  # fmt: skip
+    expanded_srcs = [match for glob in srcs for match in effective_root.glob(glob)]  # fmt: skip
 
     for src in expanded_srcs:
         if src in expanded_ignore:
@@ -620,11 +626,25 @@ def link(
             continue
 
         if not recursive or isfile(src) or islink(src) or isbrokenlink(src):
-            _link_entry(src, dest_dir, dotfiles_dir, verbose=verbose, dry_run=dry_run, if_exists=if_exists)  # fmt: skip
+            _link_entry(
+                src,
+                dest_dir,
+                effective_root,
+                verbose=verbose,
+                dry_run=dry_run,
+                if_exists=if_exists,
+            )
             continue
 
         for f in _walk_dir(src, expanded_ignore, verbose=verbose):
-            _link_entry(f, dest_dir, dotfiles_dir, verbose=verbose, dry_run=dry_run, if_exists=if_exists)  # fmt: skip
+            _link_entry(
+                f,
+                dest_dir,
+                effective_root,
+                verbose=verbose,
+                dry_run=dry_run,
+                if_exists=if_exists,
+            )
 
 
 # ── Command execution ─────────────────────────────────────────────────────────
@@ -871,6 +891,7 @@ def dispatch(
                         v["SRC_GLOBS"],
                         target_dir,
                         _dotfiles_dir,
+                        src_root=v.get("SRC_ROOT", ""),
                         ignore_globs=v.get("IGNORE_GLOBS"),
                         if_exists=v.get("IF_EXISTS", "ignore"),
                         verbose=verbose,
@@ -883,6 +904,7 @@ def dispatch(
                         v["SRC_GLOBS"],
                         target_dir,
                         _dotfiles_dir,
+                        src_root=v.get("SRC_ROOT", ""),
                         ignore_globs=v.get("IGNORE_GLOBS"),
                         recursive=v.get("RECURSIVE", False),
                         if_exists=v.get("IF_EXISTS", "ignore"),
@@ -893,7 +915,7 @@ def dispatch(
                 case _:
                     raise ConfigError(f"Step {i + 1}: unknown action {action!r}")
 
-        except DotfilesError, KeyboardInterrupt:
+        except (DotfilesError, KeyboardInterrupt):
             _save_state(i)
             raise
 
