@@ -893,7 +893,7 @@ def dispatch(
                 case _:
                     raise ConfigError(f"Step {i + 1}: unknown action {action!r}")
 
-        except DotfilesError:
+        except DotfilesError, KeyboardInterrupt:
             _save_state(i)
             raise
 
@@ -955,6 +955,9 @@ def main() -> int:
     except DotfilesError as e:
         Logger.error(str(e))
         return 1
+    except KeyboardInterrupt:
+        Logger.error("Interrupted by user")
+        return 130
 
     return 0
 
