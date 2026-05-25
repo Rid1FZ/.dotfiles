@@ -2,7 +2,7 @@
 --style=changes,numbers
 --italic-text=always
 --paging=never
---color=always
+--color=auto
 --decorations=auto
 --map-syntax "*.ino:C++"
 --map-syntax "*.dconf:INI"
