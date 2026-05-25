@@ -1,0 +1,3 @@
+include configs/options
+include configs/keybindings
+include configs/theme

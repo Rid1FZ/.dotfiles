@@ -1,0 +1,18 @@
+unmap f
+map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
+
+map = adjust_window width
+map [fullscreen] = adjust_window width
+
+map h scroll left
+map j scroll down
+map k scroll up
+map l scroll right
+
+map n navigate next
+map p navigate previous
+map [fullscreen] n navigate next
+map [fullscreen] p navigate previous
+
+map <Tab> toggle_index

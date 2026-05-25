@@ -1,0 +1,11 @@
+set adjust-open "width"
+set pages-per-row 1
+set scroll-page-aware true
+set scroll-full-overlap 0.01
+set scroll-step 10
+set zoom-min 10
+set guioptions "s"
+set font "JetBrainsMono Nerd Font 12"
+set render-loading true
+set show-directories true
+set show-hidden true
