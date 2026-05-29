@@ -48,6 +48,7 @@ SPECS: Spec = {
                     ".local/share/backgrounds/*",
                 ],
                 "IGNORE_GLOBS": [],
+                "SRC_ROOT": "home",
                 "IF_EXISTS": "backup",
             }
         },
@@ -63,6 +64,7 @@ SPECS: Spec = {
                     ".local/bin/*",
                 ],
                 "IGNORE_GLOBS": [".config/mimeapps.list"],
+                "SRC_ROOT": "home",
                 "RECURSIVE": False,
                 "IF_EXISTS": "backup",
             }
