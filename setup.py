@@ -101,7 +101,7 @@ class LinkSpec(TypedDict):
 class CmdStep(TypedDict):
     """A step that runs a shell command."""
 
-    CMD: list[str]
+    CMD: str
 
 
 class CopyStep(TypedDict):
@@ -664,7 +664,14 @@ def run_command(args: list[str], *, verbose: bool = False, dry_run: bool = False
         Logger.info(f"Running cmd: {cmd_string}")
 
     try:
-        subprocess.run(args, shell=False, capture_output=True, check=True, text=True, errors="replace")  # fmt: skip
+        subprocess.run(
+            args,
+            shell=True,
+            capture_output=True,
+            check=True,
+            text=True,
+            errors="replace",
+        )
     except FileNotFoundError:
         raise CommandError(f"Command not found: {args[0]!r}") from None
     except subprocess.CalledProcessError as e:
