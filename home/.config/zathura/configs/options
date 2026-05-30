@@ -9,3 +9,6 @@ set font "JetBrainsMono Nerd Font 12"
 set render-loading true
 set show-directories true
 set show-hidden true
+set recolor true
+set recolor-keephue true
+set recolor-reverse-video true
