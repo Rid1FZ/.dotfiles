@@ -1,27 +1,70 @@
 #!/usr/bin/env bash
 
-version_pat='s/^tmux[^0-9]*([.0-9]+).*/\1/p'
+get_tmux_option() {
+    local option value default
+    option="$1"
+    default="$2"
+    # NOTE: Older tmux versions (eg. 3.2a on Ubuntu 22.04) do not exit with an
+    #       error code when an option is not defined. Therefore we need to first
+    #       test if the option exists, and only then try to get its value or fall
+    #       back to the default.
+    value="$([[ -n $(tmux show-options -gq "$option") ]] &&
+        tmux show-option -gqv "$option" ||
+        echo "$default")"
 
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
+    # Deprecated, for backward compatibility
+    if [[ $value == 'null' ]]; then
+        echo ""
+        return
+    fi
 
-tmux bind-key -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
-tmux bind-key -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
-tmux bind-key -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
-tmux bind-key -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
+    echo "$value"
+}
 
-tmux_version="$(tmux -V | sed -En "$version_pat")"
-tmux setenv -g tmux_version "$tmux_version"
+# Export 'vim_pattern' so that it can be tested in pattern-check
+declare vim_pattern='(\S+/)?g?\.?(view|l?n?vim?x?|fzf|h?top|emacs|lazygit)(diff)?(-wrapped)?'
 
-#echo "{'version' : '${tmux_version}', 'sed_pat' : '${version_pat}' }" > ~/.tmux_version.json
+bind_key_vim() {
+    local key tmux_cmd is_vim tmux_navigator_disable_when_zoomed
+    key="$1"
+    tmux_cmd="$2"
 
-tmux if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-	"bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-tmux if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-	"bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+    vim_pattern="$(get_tmux_option "@vim_navigator_pattern" "${vim_pattern}")"
 
-tmux bind-key -T copy-mode-vi C-h select-pane -L
-tmux bind-key -T copy-mode-vi C-j select-pane -D
-tmux bind-key -T copy-mode-vi C-k select-pane -U
-tmux bind-key -T copy-mode-vi C-l select-pane -R
-tmux bind-key -T copy-mode-vi C-\\ select-pane -l
+    is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+      | grep -iqE '^[^TXZ ]+ +"@vim_navigator_pattern"$'"
+    is_vim="$(get_tmux_option "@vim_navigator_check" "${is_vim}")"
+    is_vim="${is_vim//@vim_navigator_pattern/${vim_pattern}}"
+
+    tmux_navigator_disable_when_zoomed="$(get_tmux_option "@tmux_navigator_disable_when_zoomed" "0")"
+    if [ "$tmux_navigator_disable_when_zoomed" = "1" ]; then
+        tmux_cmd="if-shell -F '#{window_zoomed_flag}' '' '$tmux_cmd'"
+    fi
+
+    # sending C-/ according to https://github.com/tmux/tmux/issues/1827
+    tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
+    # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
+    tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
+}
+
+main() {
+    move_left="$(get_tmux_option "@vim_navigator_mapping_left" 'C-h')"
+    move_right="$(get_tmux_option "@vim_navigator_mapping_right" 'C-l')"
+    move_up="$(get_tmux_option "@vim_navigator_mapping_up" 'C-k')"
+    move_down="$(get_tmux_option "@vim_navigator_mapping_down" 'C-j')"
+    move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" 'C-\')"
+
+    for k in $(echo "$move_left"); do bind_key_vim "$k" "select-pane -L"; done
+    for k in $(echo "$move_down"); do bind_key_vim "$k" "select-pane -D"; done
+    for k in $(echo "$move_up"); do bind_key_vim "$k" "select-pane -U"; done
+    for k in $(echo "$move_right"); do bind_key_vim "$k" "select-pane -R"; done
+    for k in $(echo "$move_prev"); do bind_key_vim "$k" "select-pane -l"; done
+
+    # Restoring clear screen
+    clear_screen="$(get_tmux_option "@vim_navigator_prefix_mapping_clear_screen" 'C-l')"
+    for k in $(echo "$clear_screen"); do tmux bind "$k" send-keys 'C-l'; done
+}
+
+if [ "$BASH_SOURCE" == "$0" ]; then
+    main "$@"
+fi
