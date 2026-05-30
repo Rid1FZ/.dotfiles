@@ -1,30 +1,55 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
-__file_path="$1"
-__mime_type="$(file -b --mime-type --dereference "${__file_path}")"
+function usage { echo "Usage: $(basename "$0") <file>"; }
 
-case "${__mime_type}" in
+parsed=$(getopt -o 'h' --long 'help' -n "$(basename "$0")" -- "$@") || exit 1
+eval set -- "${parsed}"
+
+while true; do
+    case "$1" in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    --)
+        shift
+        break
+        ;;
+    esac
+done
+
+if [[ $# -eq 0 ]]; then
+    echo -e "[error]: no argument given" >&2
+    exit 1
+elif [[ $# -gt 1 ]]; then
+    echo -e "[error]: too many arguments (expected 1, got $#)" >&2
+    exit 1
+fi
+
+file_path="$1"
+mime_type="$(file -b --mime-type --dereference "${file_path}")"
+
+case "${mime_type}" in
 inode/directory)
-    eza --classify --oneline --all --long --color=always --icons --group-directories-first "${__file_path}"
+    eza --classify --oneline --all --long --color=always --icons --group-directories-first "${file_path}"
     ;;
 video/* | image/*)
-    exiftool "${__file_path}"
+    exiftool "${file_path}"
     ;;
 text/*)
-    bat --style=changes,numbers "${__file_path}"
+    bat --style=changes,numbers --paging=never --color=always "${file_path}"
     ;;
 application/*)
-    case "${__mime_type}" in
+    case "${mime_type}" in
     */pdf)
-        exiftool "${__file_path}"
+        exiftool "${file_path}"
         ;;
     */gzip)
-        { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || gunzip -l "${__file_path}"
+        { [[ "${file_path}" = *.tar* ]] && tar -tvf "${file_path}"; } || gunzip -l "${file_path}"
         ;;
     */x-xz)
-        { [[ "${__file_path}" = *.tar* ]] && tar -tvf "${__file_path}"; } || xz -l "${__file_path}"
+        { [[ "${file_path}" = *.tar* ]] && tar -tvf "${file_path}"; } || xz -l "${file_path}"
         ;;
     esac
     ;;

@@ -6,10 +6,30 @@ function __fzf {
 }
 
 function open {
-    [[ -z "${1}" ]] && {
-        echo -e "\033[0;31m[error]\033[0m: no argument given" >&2
+    local parsed
+    parsed=$(getopt -o 'h' --long 'help' -n 'open' -- "$@") || return 1
+    eval set -- "${parsed}"
+
+    while true; do
+        case "$1" in
+        -h | --help)
+            echo "Usage: open <file|directory>"
+            return 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        esac
+    done
+
+    if [[ $# -eq 0 ]]; then
+        echo -e "[error]: no argument given" >&2
         return 1
-    }
+    elif [[ $# -gt 1 ]]; then
+        echo -e "[error]: too many arguments (expected 1, got $#)" >&2
+        return 1
+    fi
 
     case "$(command file -b --mime-type --dereference "${1}")" in
     inode/directory)
@@ -19,13 +39,11 @@ function open {
         command "${EDITOR}" "${1}"
         ;;
     *)
-        command xdg-open "$1" &>/dev/null || {
+        command xdg-open "${1}" &>/dev/null || {
             local cmd
-
-            echo -e "\033[0;31m[error]\033[0m: xdg-open failed\n"
+            echo -e "[error]: xdg-open failed\n"
             printf "enter command to open file: "
             read -r cmd
-
             command ${cmd} "${1}"
         }
         ;;
@@ -33,14 +51,35 @@ function open {
 }
 
 function ff {
-    local arg input_path
+    local parsed
+    parsed=$(getopt -o 'h' --long 'help' -n 'ff' -- "$@") || return 1
+    eval set -- "${parsed}"
 
-    arg="${1:-.}"
+    while true; do
+        case "$1" in
+        -h | --help)
+            echo "Usage: ff [directory]"
+            return 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        esac
+    done
+
+    if [[ $# -gt 1 ]]; then
+        echo -e "[error]: too many arguments (expected at most 1, got $#)" >&2
+        return 1
+    fi
+
+    local arg="${1:-.}"
     [[ -d "${arg}" ]] || {
-        echo -e "\033[0;31m[error]\033[0m: '${arg}' is not a directory" >&2
+        echo -e "[error]: '${arg}' is not a directory" >&2
         return 1
     }
 
+    local input_path
     input_path="$(command fd -Ha --no-ignore --type symlink --type file --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --keep-right --preview="preview {}")"
     [[ -z "${input_path}" ]] && return 1
 
@@ -48,23 +87,64 @@ function ff {
 }
 
 function fcd {
-    local arg input_dir
+    local parsed
+    parsed=$(getopt -o 'h' --long 'help' -n 'fcd' -- "$@") || return 1
+    eval set -- "${parsed}"
 
-    arg="${1:-.}"
+    while true; do
+        case "$1" in
+        -h | --help)
+            echo "Usage: fcd [directory]"
+            return 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        esac
+    done
+
+    if [[ $# -gt 1 ]]; then
+        echo -e "[error]: too many arguments (expected at most 1, got $#)" >&2
+        return 1
+    fi
+
+    local arg="${1:-.}"
     [[ -d "${arg}" ]] || {
-        echo -e "\033[0;31m[error]\033[0m: '${arg}' is not a directory" >&2
+        echo -e "[error]: '${arg}' is not a directory" >&2
         return 1
     }
 
+    local input_dir
     input_dir="$(command fd -Ha --no-ignore --type directory --follow --exclude='{.git,.svn,.hg}' ".*" "${arg}" | __fzf --info=default --keep-right --preview="preview {}")"
     [[ -z "${input_dir}" ]] && return 1
-
     builtin cd -- "${input_dir}" || return 1
 }
 
 function frg {
-    local rg_prefix
+    local parsed
+    parsed=$(getopt -o 'h' --long 'help' -n 'frg' -- "$@") || return 1
+    eval set -- "${parsed}"
 
+    while true; do
+        case "$1" in
+        -h | --help)
+            echo "Usage: frg [directory]"
+            return 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        esac
+    done
+
+    if [[ $# -gt 1 ]]; then
+        echo -e "[error]: too many arguments (expected at most 1, got $#)" >&2
+        return 1
+    fi
+
+    local rg_prefix
     rg_prefix="command rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
     __fzf --disabled \
         --bind "start:reload:${rg_prefix} {q} ${1:-.}" \
@@ -75,56 +155,107 @@ function frg {
 }
 
 function rm {
-    local to_trash arg
+    local extra_flags files nargs
 
-    (("$#" == 0)) && {
-        echo -e "\033[0;31m[error]\033[0m: please specify file to remove..." >&2
-        return 1
-    }
-    to_trash=()
+    extra_flags=()
+    files=()
+    nargs="$#"
 
-    for arg in "$@"; do
-        if [[ -L "${arg}" ]]; then
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --)
+            shift
+            files+=("$@")
+            break
+            ;;
+        --*)
+            extra_flags+=("$1")
+            shift
+            ;;
+        -*)
+            local opts="${1#-}" fwd=""
+            shift
+            while [[ -n "${opts}" ]]; do
+                fwd+="${opts:0:1}"
+                opts="${opts:1}"
+            done
+            [[ -n "${fwd}" ]] && extra_flags+=("-${fwd}")
+            ;;
+        *)
+            files+=("$1")
+            shift
+            ;;
+        esac
+    done
+
+    local to_trash=()
+    for arg in "${files[@]}"; do
+        if [[ -L "${arg}" && ! -e "${arg}" ]]; then
             unlink "${arg}"
         else
             to_trash+=("${arg}")
         fi
     done
 
-    if (("${#to_trash[@]}" != 0)); then
-        command trash-put "${to_trash[@]}"
-    else
-        return 0
+    if (("${nargs}" == 0)) || (("${#to_trash[@]}" != 0)) || (("${#extra_flags[@]}" != 0)); then
+        command trash-put "${extra_flags[@]}" "${to_trash[@]}"
     fi
 }
 
 function tree {
-    local show_all=false
-    local use_jq=false
-    local extra_args=()
+    local show_all use_jq extra_args
 
-    for arg in "$@"; do
-        case "$arg" in
-        -a) show_all=true ;;
-        -J) use_jq=true ;;
-        *) extra_args+=("$arg") ;;
+    show_all=false
+    use_jq=false
+    extra_args=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --all)
+            show_all=true
+            shift
+            ;;
+        --json)
+            use_jq=true
+            shift
+            ;;
+        --)
+            shift
+            extra_args+=("$@")
+            break
+            ;;
+        --*)
+            extra_args+=("$1")
+            shift
+            ;;
+        -*)
+            local opts="${1#-}" fwd=""
+            shift
+            while [[ -n "${opts}" ]]; do
+                case "${opts:0:1}" in
+                a) show_all=true ;;
+                J) use_jq=true ;;
+                *) fwd+="${opts:0:1}" ;;
+                esac
+                opts="${opts:1}"
+            done
+            [[ -n "${fwd}" ]] && extra_args+=("-${fwd}")
+            ;;
+        *)
+            extra_args+=("$1")
+            shift
+            ;;
         esac
     done
 
     local tree_args=(--dirsfirst -F -I '.git')
-
-    if [[ "$show_all" == true ]]; then
-        tree_args+=(-a)
-    else
-        tree_args+=(--gitignore)
-    fi
+    [[ "${show_all}" == true ]] && tree_args+=(-a) || tree_args+=(--gitignore)
+    [[ "${use_jq}" == true ]] && tree_args+=(-J)
 
     if [[ "$use_jq" == true ]]; then
-        tree_args+=(-J)
         command tree "${tree_args[@]}" "${extra_args[@]}" | command jq --compact-output --monochrome-output
     else
         command tree "${tree_args[@]}" "${extra_args[@]}"
     fi
 }
-
 # <<< functions <<<
