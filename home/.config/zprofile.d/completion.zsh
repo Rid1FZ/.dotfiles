@@ -11,7 +11,8 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete         # Shift+Tab
 bindkey -M menuselect '\r' .accept-line
 bindkey '^Xa' alias-expension
 
-autoload -U compinit; compinit
+autoload -U compinit
+compinit -d "${XDG_CACHE_HOME:-"${HOME}/.cache"}/zsh/zcompdump-${ZSH_VERSION:-"unknown"}"
 _comp_options+=(globdots)
 compdef vman="man"
 setopt GLOB_COMPLETE
