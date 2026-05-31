@@ -652,20 +652,24 @@ def link(
 # ── Command execution ─────────────────────────────────────────────────────────
 
 
-def run_command(args: list[str], *, verbose: bool = False, dry_run: bool = False) -> None:  # fmt: skip
+def run_command(
+    cmd: str,
+    *,
+    verbose: bool = False,
+    dry_run: bool = False,
+) -> None:
     """Run a subprocess command. Raises CommandError if the binary is missing or exits non-zero."""
-    cmd_string = " ".join(args)
 
     if dry_run:
-        Logger.info(f"[dry-run] Would run cmd: {cmd_string}")
+        Logger.info(f"[dry-run] Would run cmd: {cmd}")
         return
 
     if verbose:
-        Logger.info(f"Running cmd: {cmd_string}")
+        Logger.info(f"Running cmd: {cmd}")
 
     try:
         subprocess.run(
-            args,
+            cmd,
             shell=True,
             capture_output=True,
             check=True,
@@ -673,12 +677,14 @@ def run_command(args: list[str], *, verbose: bool = False, dry_run: bool = False
             errors="replace",
         )
     except FileNotFoundError:
-        raise CommandError(f"Command not found: {args[0]!r}") from None
+        import shlex
+
+        raise CommandError(f"Command not found: {shlex.split(cmd)[0]!r}") from None
     except subprocess.CalledProcessError as e:
-        raise CommandError(f"Command failed: {cmd_string}\n{e.stderr.strip()}") from e
+        raise CommandError(f"Command failed: {cmd}\n{e.stderr.strip()}") from e
 
     if verbose:
-        Logger.success(f"Command succeeded: {cmd_string}")
+        Logger.success(f"Command succeeded: {cmd}")
 
 
 # ── Validation ────────────────────────────────────────────────────────────────
@@ -889,7 +895,7 @@ def dispatch(
             match action:
                 case "CMD":
                     run_command(
-                        typing.cast(list[str], value),
+                        typing.cast(str, value),
                         verbose=verbose,
                         dry_run=dry_run,
                     )
