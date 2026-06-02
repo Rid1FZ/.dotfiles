@@ -393,6 +393,7 @@ Mode:
     Header: 3
     AlternateRows: true
     ColumnMode: true
+    StatusLine: false
     LineNumMode: false
     Wrap: "none"
     ColumnDelimiter: "|"
