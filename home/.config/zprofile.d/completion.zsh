@@ -34,7 +34,8 @@ zstyle ':completion:*:default' list-colors \
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompcache"
-zstyle ':completion:*' complete true
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:alias-expension:*' completer _expand_alias
 zstyle ':completion:*' menu select
 zstyle ':completion:*' complete-options true
