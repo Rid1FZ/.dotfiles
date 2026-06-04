@@ -86,7 +86,8 @@ General:
     MarkLine:
       Background: "darkgoldenrod"
     SectionLine:
-      Background: "slateblue"
+      Background: "blue"
+      Foreground: "#313244"
     VerticalHeader:
       # Add appropriate styles here
     Ruler:
@@ -379,9 +380,6 @@ Mode:
   markdown:
     SectionDelimiter: "^#"
     Wrap: "none"
-    Style:
-      SectionLine:
-        Background: "blue"
   psql:
     Header: 2
     AlternateRows: true
