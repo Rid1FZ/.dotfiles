@@ -170,9 +170,10 @@ local function run_one(bufnr, name, config, ctx, input_lines)
         return nil
     end
 
+    -- wait() does not raise on timeout: it kills the process itself (SIGKILL)
+    -- and returns with code = 124. code is always an integer (never nil).
     local result = obj:wait(5000)
 
-    -- SystemObj:wait() kills the process itself (SIGKILL) and returns with code = 124
     if result.code == 124 then
         vim.notify(("[fmt] '%s' timed out after 5s"):format(name), vim.log.levels.ERROR)
         return nil
@@ -181,15 +182,10 @@ local function run_one(bufnr, name, config, ctx, input_lines)
     -- Some formatters exit non-zero even on success (e.g. eslint_d exits 1
     -- when it fixed issues). exit_codes lists every code to treat as success;
     -- defaults to { 0 } when not specified.
+    -- Non-accepted exit codes (e.g. syntax errors in the file) are silently
+    -- ignored — they are expected formatter behavior, not a system failure.
     local accepted_codes = config.exit_codes or { 0 }
     if not vim.tbl_contains(accepted_codes, result.code) then
-        local stderr = (result.stderr or ""):gsub("%s+$", "")
-        if stderr ~= "" then
-            vim.notify(
-                ("[fmt] '%s' exited %d: %s"):format(name, result.code, stderr),
-                vim.log.levels.ERROR
-            )
-        end
         return nil
     end
 
@@ -276,6 +272,7 @@ M.format_no_wait = function(bufnr)
         ::continue::
     end
 
+    -- All formatters for this ft failed their condition; nothing to do.
     if vim.tbl_isempty(formatters) then
         return
     end
