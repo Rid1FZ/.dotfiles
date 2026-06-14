@@ -27,31 +27,34 @@ local DEBOUNCE_MS = 100
 ---Debounced branch refresh.
 ---Cancels any in-flight git job and pending timer, then schedules a fresh
 ---`git branch --show-current` call after DEBOUNCE_MS milliseconds.
----Gives trailing-edge debounce semantics identical to file.lua and diagnostics.lua.
 ---@type fun(cwd: string): nil
 local debounced_invalidate = utils.debounce_by_key(function(cwd)
+    -- Guard with is_closing() before kill() — calling kill() on a handle
+    -- that is already closing or closed could race.
     if git_job and not git_job:is_closing() then
         git_job:kill(9)
-        git_job = nil
     end
+    git_job = nil
 
     git_job = system(
         { "git", "branch", "--show-current" },
-        { text = true },
+        -- Pass cwd explicitly rather than relying on Neovim's inherited cwd,
+        -- which could shift between when the debounce was armed and when it fires.
+        { text = true, cwd = cwd },
         schedule_wrap(function(obj)
+            git_job = nil
+
+            -- Always update last_cwd regardless of outcome.
+            last_cwd = cwd
+
             if obj.code == 0 then
                 local branch = obj.stdout:gsub("\n", "")
-                if branch ~= "" and branch ~= "HEAD" then
-                    last_branch = branch
-                    last_cwd = cwd
-                    cmd.redrawstatus()
-                else
-                    last_branch = ""
-                end
+                last_branch = (branch ~= "" and branch ~= "HEAD") and branch or ""
             else
                 last_branch = ""
             end
-            git_job = nil
+
+            cmd.redrawstatus()
         end)
     )
 end, DEBOUNCE_MS)
@@ -65,7 +68,10 @@ local function get_branch()
     end
 
     local cwd = fn.getcwd()
-    if cwd == last_cwd and last_branch ~= "" then
+
+    -- last_cwd is now always updated by the callback (success or failure), so
+    -- a simple equality check is sufficient. No branch-not-empty guard needed.
+    if cwd == last_cwd then
         return last_branch
     end
 

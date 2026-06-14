@@ -79,7 +79,10 @@ M.start_treesitter = function(bufnr, winnr)
     local parser = treesitter.get_parser(bufnr, nil, { error = false })
 
     if not parser then
-        local config = require("tree-sitter-manager.config")
+        local ok, config = pcall(require, "tree-sitter-manager.config")
+        if not ok then
+            return
+        end
 
         if not contains(config.languages, filetype) then
             return
@@ -90,7 +93,7 @@ M.start_treesitter = function(bufnr, winnr)
     end
 
     treesitter.start(bufnr)
-    wo[winnr][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    wo[winnr][0].foldexpr = "v:lua.vim.treesitter.foldexpr()" -- NOTE: only wo[winnr][0] is currently supported
 end
 
 ---Load keymappings for specific plugin
@@ -109,14 +112,6 @@ M.load_mappings = function(section, mapping_opt)
         local mappings = require("mappings")
         mappings[section](mapping_opt)
     end)
-end
-
----Return a cwd resolver that walks upward from ctx.dirname looking for any
----file in `files`. Used as the `cwd` field in formatter configs.
----@param files string|string[]
----@return fun(self: table, ctx: fmt.Context): string|nil
-M.root_file = function(files)
-    return function(self, ctx) return vim.fs.root(ctx.dirname, files) end
 end
 
 ---Return the line ending string for a buffer based on its 'fileformat'.

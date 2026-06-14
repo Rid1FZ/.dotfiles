@@ -4,7 +4,6 @@ local M = {}
 local highlights = require("utils.completions.highlights")
 
 local api = vim.api
-local fn = vim.fn
 local bo = vim.bo -- always use the index form: bo[something]
 local lsp = vim.lsp
 local schedule = vim.schedule
@@ -16,13 +15,21 @@ local setup_autocommands = function()
     api.nvim_create_autocmd("LspAttach", {
         group = group,
         callback = function(args)
+            local client_id = args.data.client_id
+            local bufnr = args.buf
+
             schedule(function()
-                local client = assert(lsp.get_client_by_id(args.data.client_id))
+                -- Client may have detached between LspAttach and the scheduled tick.
+                local client = lsp.get_client_by_id(client_id)
                 if not client then
                     return
                 end
 
-                local bufnr = args.buf
+                -- Buffer may have been wiped between LspAttach and the scheduled tick.
+                if not api.nvim_buf_is_valid(bufnr) then
+                    return
+                end
+
                 if
                     bo[bufnr].buftype ~= ""
                     or bo[bufnr].filetype == ""
@@ -31,14 +38,17 @@ local setup_autocommands = function()
                     return
                 end
 
-                -- Set a more reasonable list of trigger characters
+                -- Merge server trigger characters with a sensible extra set.
+                -- vim.list.unique() requires sorted input (undefined on unsorted lists),
+                -- so table.sort first.
                 ---@type string[]
                 local default_triggers = client.server_capabilities.completionProvider
                         and client.server_capabilities.completionProvider.triggerCharacters
                     or {}
                 local extra_triggers = { ".", ":", "<", "'", '"', "/", "\\" }
                 local merged = list_extend(extra_triggers, default_triggers)
-                client.server_capabilities.completionProvider.triggerCharacters = fn.uniq(fn.sort(merged))
+                table.sort(merged)
+                client.server_capabilities.completionProvider.triggerCharacters = vim.list.unique(merged)
 
                 -- Enable completion
                 lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
