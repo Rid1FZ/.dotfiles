@@ -18,6 +18,11 @@ M.setup_highlights = function()
     -- Matched text highlighting
     highlight("PmenuMatch", { bg = colors.bg, fg = colors.red })
     highlight("PmenuMatchSel", { bg = colors.yellow, fg = colors.dark_red })
+
+    -- border, shadow, and shadow-through groups (active when 'pumborder' is set)
+    highlight("PmenuBorder", { bg = colors.bg, fg = colors.blue })
+    highlight("PmenuShadow", { bg = colors.black })
+    highlight("PmenuShadowThrough", { fg = colors.dark_gray })
 end
 
 return M

@@ -26,5 +26,6 @@ return {
         local edition = parse_rust_edition(ctx.dirname) or "2021"
         return { "--edition", edition, "--emit", "stdout" }
     end,
+    root_markers = { "Cargo.toml", ".git" },
     cwd = utils.root_file({ "Cargo.toml" }),
 }

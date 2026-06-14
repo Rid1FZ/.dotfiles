@@ -10,4 +10,5 @@ return {
         end
         return args
     end,
+    root_markers = { ".git" },
 }
