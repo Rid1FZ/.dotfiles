@@ -27,5 +27,4 @@ return {
         return { "--edition", edition, "--emit", "stdout" }
     end,
     root_markers = { "Cargo.toml", ".git" },
-    cwd = utils.root_file({ "Cargo.toml" }),
 }
