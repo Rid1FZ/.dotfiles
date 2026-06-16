@@ -6,7 +6,11 @@ return {
     settings = {
         formatterMode = "disable",
         exportPdf = "never",
-        -- Hot reload: set exportPdf = "onSave" (or "onType") and
-        -- configure outputPath = "$dir/$name" if needed
+        syntaxOnly = "disable",
+        projectResolution = "lockDatabase",
+        lint = {
+            enabled = true,
+            when = "onType",
+        },
     },
 }
