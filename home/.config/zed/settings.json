@@ -62,4 +62,26 @@
     "light": "One Light",
     "dark": "Catppuccin Mocha",
   },
+  "lsp": {
+    // Typst
+    "tinymist": {
+      "initialization_options": {
+        "preview": {
+          "background": {
+            "enabled": false,
+          },
+        },
+      },
+      "settings": {
+        "exportPdf": "never",
+        "formatterMode": "typstyle",
+        "syntaxOnly": "disable",
+        "projectResolution": "lockDatabase",
+        "lint": {
+          "enabled": true,
+          "when": "onType",
+        },
+      },
+    },
+  },
 }
