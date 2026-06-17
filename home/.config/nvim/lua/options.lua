@@ -18,6 +18,7 @@ M.setup = function()
     g.neovide_cursor_animation_length = 0
     g.neovide_scroll_animation_length = 0
     g.tex_flavor = "latex"
+    g.health = { style = "float" }
 
     --------------------------------------------------------------------
     -- Disable unused built-in plugins
