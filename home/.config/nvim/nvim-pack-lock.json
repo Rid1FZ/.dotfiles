@@ -5,11 +5,11 @@
       "src": "https://github.com/max397574/better-escape.nvim"
     },
     "catppuccin": {
-      "rev": "49a926655a2f5579e9c276470fc300baaa49e524",
+      "rev": "e068ab5f8261f23f6f71ffd8791ae40315b77b9c",
       "src": "https://github.com/catppuccin/nvim"
     },
     "fzf-lua": {
-      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
+      "rev": "267f5db2aa2202b9f6cc7a50783f0ccd2121766c",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "indent-blankline.nvim": {
@@ -21,11 +21,11 @@
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.diff": {
-      "rev": "05be51814a718e74244829754a2a900a430a8d8b",
+      "rev": "0743d26bd858ebe32efcf5c86a91a422a000f273",
       "src": "https://github.com/echasnovski/mini.diff"
     },
     "mini.pairs": {
-      "rev": "30cf2f01c4aaa2033db67376b9924fa2442c05d6",
+      "rev": "4a014143fcb4e9df26198ccb3ecff3b9e77a048c",
       "src": "https://github.com/nvim-mini/mini.pairs"
     },
     "nvim-highlight-colors": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/alexghergh/nvim-tmux-navigation"
     },
     "nvim-tree": {
-      "rev": "fb343438d49fba8c35ecc4829d66fca7a1f0ed3d",
+      "rev": "8e8be709c9a93e1ebefde7964884a8b564bfd3e0",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-web-devicons": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "tree-sitter-manager.nvim": {
-      "rev": "95f81026390077f8eea9eef6d32ad59d4c3bd3ee",
+      "rev": "ae305699da5e97b6cffdd5cc6f6045b1b0bd26ea",
       "src": "https://github.com/romus204/tree-sitter-manager.nvim"
     }
   }
