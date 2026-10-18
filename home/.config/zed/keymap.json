@@ -15,6 +15,7 @@
       "K": "editor::Hover",
       "space l a": "editor::ToggleCodeActions",
       "space l D": "diagnostics::Deploy",
+      "space l r": "editor::Rename",
       "space f f": "file_finder::Toggle",
       "space f b": "tab_switcher::Toggle",
       "space f g": "workspace::NewSearch",
