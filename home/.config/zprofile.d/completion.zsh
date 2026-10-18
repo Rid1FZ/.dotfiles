@@ -11,14 +11,12 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete         # Shift+Tab
 bindkey -M menuselect '\r' .accept-line
 bindkey '^Xa' alias-expension
 
-autoload -U compinit
-compinit -d "${XDG_CACHE_HOME:-"${HOME}/.cache"}/zsh/zcompdump-${ZSH_VERSION:-"unknown"}"
+fpath=("${XDG_DATA_HOME:-${HOME}/.local/share}/zsh/completions" ${fpath})
+
+[[ -d "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh" ]] || mkdir -p "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh"
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompdump-${ZSH_VERSION}"
 _comp_options+=(globdots)
-compdef vman="man"
-setopt GLOB_COMPLETE
-setopt MENU_COMPLETE
-setopt AUTO_LIST
-setopt COMPLETE_IN_WORD
 
 # Ztyle pattern
 zle -C alias-expension complete-word _generic

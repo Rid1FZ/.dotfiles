@@ -1,45 +1,41 @@
 #!/bin/env bash
 
 # >>> utility functions for setting environment variables >>>
-function reverse_colon_values {
-    local string="${1}"
-
-    echo "${string}" |
-        awk -F: '
-            END {
-                for (i=NF; i>0; i--) print $i
-            }
-        '
-}
-
-function prepend_value {
-    local varname="${1}"
-    local value="${2}"
-
-    if ! printenv "${varname}" | grep -qE "(^|:)${value}($|:)"; then
-        export "${varname}"="${value}:$(printenv "${varname}")"
-    fi
-}
-
 function set_env {
-    local varname="${1}"
-    local value="${2}"
+    local varname="${1}" value="${2}"
 
-    local restricted_vars="HOME:SHELL:USER:PWD:OLDPWD:SHLVL"
-    local csv_vars="PATH:LD_LIBRARY_PATH"
+    # never override these
+    [[ ":HOME:SHELL:USER:PWD:OLDPWD:SHLVL:" == *":${varname}:"* ]] && return 0
 
-    if echo "${restricted_vars}" | grep -qE "(^|:)${varname}($|:)"; then
-        return 0
-    fi
+    case "${varname}" in
+    PATH | LD_LIBRARY_PATH)
+        # prepend each entry (keeping their order) unless it is already present
+        local current front="" rest="${value}:" part
+        eval "current=\"\${${varname}-}\""
+        while [[ -n "${rest}" ]]; do
+            part="${rest%%:*}"
+            rest="${rest#*:}"
 
-    if echo "${csv_vars}" | grep -qE "(^|:)${varname}($|:)"; then
-        while IFS= read -r part; do
-            prepend_value "${varname}" "${part}"
-        done <<<"$(reverse_colon_values "${value}")"
-        return 0
-    fi
+            [[ -z "${part}" ]] && continue
 
-    export "${varname}"="${value}"
+            case ":${current}:${front}" in
+            *":${part}:"*) continue ;;
+            esac
+
+            front+="${part}:"
+        done
+
+        # no trailing ':' when the variable was empty/unset: an empty entry means "current directory"
+        if [[ -n "${current}" ]]; then
+            export "${varname}"="${front}${current}"
+        elif [[ -n "${front}" ]]; then
+            export "${varname}"="${front%:}"
+        fi
+        ;;
+    *)
+        export "${varname}"="${value}"
+        ;;
+    esac
 }
 # <<< utility functions for setting environment variables <<<
 
@@ -93,20 +89,19 @@ set_env DOCKER_CONFIG "${XDG_CONFIG_HOME:="${HOME}/.config"}/docker"
 set_env PATH "${HOME}/.local/share/bob/nvim-bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/build-tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/cmdline-tools/latest/bin:${GOPATH}/bin:${CARGO_HOME}/bin:${NPM_CONFIG_PREFIX}/bin:${HOME}/.local/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 set_env LD_LIBRARY_PATH "${ANDROID_HOME}/cmdline-tools/latest/lib"
 
-case "$(ps -p $$ -o comm=)" in
-"zsh")
-    set_env HISTFILE "${XDG_STATE_HOME:=${HOME}/.local/state}/zsh/zsh_history"
+for __dir in zsh bash less python; do
+    [[ -d "${XDG_STATE_HOME}/${__dir}" ]] || mkdir -p "${XDG_STATE_HOME}/${__dir}"
+done
+unset __dir
 
-    fpath+=("${XDG_DATA_HOME:=${HOME}/.local/share}/zsh/completions")
-    export fpath
-    ;;
-"bash")
+if [[ -n "${ZSH_VERSION-}" ]]; then
+    set_env HISTFILE "${XDG_STATE_HOME:=${HOME}/.local/state}/zsh/zsh_history"
+elif [[ -n "${BASH_VERSION-}" ]]; then
     set_env HISTFILE "${XDG_STATE_HOME:=${HOME}/.local/state}/bash/bash_history"
     set_env HISTCONTROL "ignoreboth"
-    ;;
-esac
+fi
 # <<< environment variables <<<
 
 # >>> unset utility functions >>>
-unset reverse_colon_values prepend_value set_env
+unset -f set_env
 # <<< unset utility functions <<<

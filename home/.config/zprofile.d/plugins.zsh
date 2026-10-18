@@ -1,11 +1,15 @@
 #!/bin/env zsh
 
 # >>> fzf integration >>>
-source <(fzf --zsh)
+if command -v fzf >/dev/null 2>&1; then
+    source <(fzf --zsh)
+fi
 # <<< fzf integration <<<
 
 # >>> direnv integration >>>
-eval "$(direnv hook zsh)"
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
+fi
 # <<< direnv integration <<<
 
 # >>> source plugins from plugins directory >>>
@@ -14,7 +18,7 @@ __dirs=(${(@s/:/)__plugin_dirs})
 
 for __dir in ${__dirs[@]}; do
     if [[ -d "${__dir}" ]]; then
-        for __plugin in "${__dir}"/**/*.plugin.zsh; do
+        for __plugin in "${__dir}"/**/*.plugin.zsh(N); do
             source "${__plugin}"
         done
     fi

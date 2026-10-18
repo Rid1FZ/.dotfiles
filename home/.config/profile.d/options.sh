@@ -11,8 +11,5 @@ shopt -s autocd \
     failglob \
     histappend
 
-set emacs \
-    histexpand \
-    nounset \
-    pipefail
+set -o emacs -o histexpand -o pipefail
 # <<< Options <<<

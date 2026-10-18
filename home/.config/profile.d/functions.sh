@@ -44,7 +44,9 @@ function open {
             echo -e "[error]: xdg-open failed\n"
             printf "enter command to open file: "
             read -r cmd
-            command ${cmd} "${1}"
+            [[ -n "${cmd}" ]] || return 1
+            # eval: zsh does not word-split an unquoted ${cmd}, so "code --wait" would fail
+            eval "command ${cmd} \"\${1}\""
         }
         ;;
     esac
@@ -144,18 +146,19 @@ function frg {
         return 1
     fi
 
-    local rg_prefix
+    local rg_prefix search_path
+    search_path="$(printf '%q' "${1:-.}")"
     rg_prefix="command rg --no-config --column --line-number --no-heading --hidden --follow --color=always --colors=path:fg:blue --smart-case --glob='!{.git,.svn,.hg}'"
     __fzf --disabled \
-        --bind "start:reload:${rg_prefix} {q} ${1:-.}" \
-        --bind "change:reload:sleep 0.1; ${rg_prefix} {q} || true" \
+        --bind "start:reload:${rg_prefix} -- {q} ${search_path}" \
+        --bind "change:reload:sleep 0.1; ${rg_prefix} -- {q} ${search_path} || true" \
         --delimiter : \
         --preview 'bat --color=always {1} --highlight-line {2} --theme="Catppuccin Macchiato"' \
         --bind 'enter:become(nvim {1} +{2})'
 }
 
 function rm {
-    local extra_flags files nargs
+    local arg extra_flags files nargs
 
     extra_flags=()
     files=()

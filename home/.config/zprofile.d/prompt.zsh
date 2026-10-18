@@ -25,7 +25,9 @@ function set_prompt {
     [[ -n "${CONTAINER_ID}" || -n "${container}" ]] && RPS1+=' %B%F{green} %f%b'
 }
 
-function precmd {
+function __prompt_precmd {
+    local pre_prompt
+
     set_prompt
     vcs_info
 
@@ -33,4 +35,6 @@ function precmd {
     pre_prompt+=$'%B%F{blue}%~%f%b${vcs_info_msg_0_}%F{yellow}%(1j. %j󰜎 .)%f'
     print -rP "${pre_prompt}"
 }
+
+add-zsh-hook precmd __prompt_precmd
 # <<< prompt <<<

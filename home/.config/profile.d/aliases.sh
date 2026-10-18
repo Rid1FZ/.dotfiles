@@ -13,7 +13,6 @@ alias cat="bat"
 alias diff="colordiff"
 alias rg="rg --ignore-case"
 alias cdd="cd \$DOTFILES"
-alias cat="bat"
 alias emacss="emacs --script"
 alias update-grub="sudo grub2-mkconfig -o /boot/grub2/grub.cfg"
 

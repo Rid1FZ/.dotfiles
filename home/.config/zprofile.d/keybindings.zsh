@@ -1,7 +1,7 @@
 #!/bin/env zsh
 
 # >>> zsh keybindings >>>
-autoload edit-command-line
+autoload -Uz edit-command-line
 zle -N edit-command-line
 
 bindkey -e

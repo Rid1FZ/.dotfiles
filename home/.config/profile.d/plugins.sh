@@ -1,7 +1,11 @@
 # >>> fzf integration >>>
-source <(fzf --bash)
+if command -v fzf >/dev/null 2>&1; then
+    source <(fzf --bash)
+fi
 # <<< fzf integration <<<
 
 # >>> direnv integration >>>
-eval "$(direnv hook bash)"
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook bash)"
+fi
 # <<< direnv integration <<<

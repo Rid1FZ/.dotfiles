@@ -10,6 +10,4 @@ setopt AUTO_CD \
     PIPE_FAIL \
     PROMPT_SUBST \
     SHARE_HISTORY
-
-autoload -U compinit;compinit -d "${XDG_CACHE_HOME:-${HOME}/.cache}/zsh/zcompdump"
 # <<< Options <<<

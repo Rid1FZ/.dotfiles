@@ -1,8 +1,6 @@
 #!/bin/env zsh
 
-# >>> source global definitions >>>
-[[ -f "/etc/zshrc" ]] && source "/etc/zshrc"
-# <<< source global definitions <<<
+# zsh already reads /etc/zshrc by itself before this file, so it is not sourced again here.
 
 # >>> source local configs >>>
 function __source_rc {
@@ -15,12 +13,15 @@ function __source_rc {
 __source_rc "options.zsh"
 __source_rc "keybindings.zsh"
 __source_rc "completion.zsh"
-__source_rc "syntax-highlighting.zsh"
 __source_rc "env-vars.zsh"
 __source_rc "prompt.zsh"
 __source_rc "aliases.zsh"
 __source_rc "functions.zsh"
 __source_rc "plugins.zsh"
 
-unset __source_rc
+# zsh-syntax-highlighting must be sourced last: it wraps every ZLE widget that exists
+# at load time, so widgets created later (fzf, plugins, ...) would not be highlighted.
+__source_rc "syntax-highlighting.zsh"
+
+unfunction __source_rc
 # <<< source local configs <<<
