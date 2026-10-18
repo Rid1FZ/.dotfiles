@@ -1,4 +1,11 @@
 {
+  "inlay_hints": {
+    "show_background": false,
+    "enabled": true
+  },
+  "toolbar": {
+    "selections_menu": true,
+  },
   "window_title_format": "${projectName}${separator}${fileName}",
   "format_on_save": "on",
   "indent_guides": {
