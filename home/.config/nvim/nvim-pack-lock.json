@@ -9,7 +9,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "fzf-lua": {
-      "rev": "3868dcc78d2c2766c9510ab18b6d3815071b389e",
+      "rev": "c67fadd9a24230417267e4f9068227e093c0be2b",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "indent-blankline.nvim": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "tree-sitter-manager.nvim": {
-      "rev": "d93782393d7d4b48ddbdbcb0fdff6f8cb8d7043a",
+      "rev": "e99a8d5abf935cc193cc71600a2ad6a5b61b1aa0",
       "src": "https://github.com/romus204/tree-sitter-manager.nvim"
     }
   }
