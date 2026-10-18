@@ -1,4 +1,6 @@
 {
+  "window_title_format": "${projectName}${separator}${fileName}",
+  "format_on_save": "on",
   "indent_guides": {
     "coloring": "indent_aware",
   },
@@ -59,7 +61,7 @@
   "buffer_font_size": 15,
   "theme": {
     "mode": "system",
-    "light": "One Light",
+    "light": "Catppuccin Frappé",
     "dark": "Catppuccin Mocha",
   },
   "lsp": {
