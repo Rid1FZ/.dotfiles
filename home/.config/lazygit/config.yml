@@ -33,8 +33,8 @@ gui:
       - "#cdd6f4"
     searchingActiveBorderColor:
       - "#f9e2af"
-  authorColors:
-    "*": "#b4befe"
+    authorColors:
+      "*": "#b4befe"
   commitLength:
     show: true
   showListFooter: true
@@ -72,11 +72,10 @@ gui:
     rate: 100
   statusPanelView: dashboard
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: ""
       useConfig: false
-      externalDiffCommand: ""
+      type: rawGit
   commit:
     signOff: false
     autoWrapCommitMessage: true
