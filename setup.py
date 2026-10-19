@@ -857,6 +857,7 @@ def dispatch(
     verbose: bool = False,
     dry_run: bool = False,
     from_start: bool = False,
+    if_exists_: IfExists | None = None,
     dotfiles_dir: str | None = None,
 ) -> None:
     """
@@ -870,14 +871,10 @@ def dispatch(
     _dotfiles_dir = (
         Path(dotfiles_dir).expanduser()
         if dotfiles_dir is not None
-        else Path(
-            os.path.expandvars(typing.cast(str, specs["DOTFILES_DIR"]))
-        ).expanduser()
+        else Path(os.path.expandvars(specs["DOTFILES_DIR"])).expanduser()
     )
 
-    target_dir = Path(
-        os.path.expandvars(typing.cast(str, specs["TARGET_DIR"]))
-    ).expanduser()
+    target_dir = Path(os.path.expandvars(specs["TARGET_DIR"])).expanduser()
 
     start_from = 0 if from_start else _load_state()
 
@@ -902,19 +899,25 @@ def dispatch(
 
                 case "COPY":
                     v = typing.cast(CopySpec, value)
+                    if_exists_ = (
+                        if_exists_ if if_exists_ else v.get("IF_EXISTS", "ignore")
+                    )
                     copy(
                         v["SRC_GLOBS"],
                         target_dir,
                         _dotfiles_dir,
                         src_root=v.get("SRC_ROOT", ""),
                         ignore_globs=v.get("IGNORE_GLOBS"),
-                        if_exists=v.get("IF_EXISTS", "ignore"),
+                        if_exists=if_exists_,
                         verbose=verbose,
                         dry_run=dry_run,
                     )
 
                 case "LINK":
                     v = typing.cast(LinkSpec, value)
+                    if_exists_ = (
+                        if_exists_ if if_exists_ else v.get("IF_EXISTS", "ignore")
+                    )
                     link(
                         v["SRC_GLOBS"],
                         target_dir,
@@ -922,7 +925,7 @@ def dispatch(
                         src_root=v.get("SRC_ROOT", ""),
                         ignore_globs=v.get("IGNORE_GLOBS"),
                         recursive=v.get("RECURSIVE", False),
-                        if_exists=v.get("IF_EXISTS", "ignore"),
+                        if_exists=if_exists_,
                         verbose=verbose,
                         dry_run=dry_run,
                     )
@@ -946,6 +949,7 @@ class CliArgs(argparse.Namespace):
     from_start: bool = False
     verbose: bool = False
     dry_run: bool = False
+    if_exists: IfExists | None = None
     dotfiles_dir: str | None = None
 
 
@@ -973,6 +977,13 @@ def main() -> int:
         help="Print what would be done without making any changes.",
     )
     parser.add_argument(
+        "-e",
+        "--if-exists",
+        dest="if_exists",
+        choices=typing.get_args(IfExists),
+        help="Override IF_EXISTS for every COPY/LINK step when the target already exists.",
+    )
+    parser.add_argument(
         "-D",
         "--dotfiles-dir",
         dest="dotfiles_dir",
@@ -987,6 +998,7 @@ def main() -> int:
             verbose=args.verbose,
             dry_run=args.dry_run,
             from_start=args.from_start,
+            if_exists_=args.if_exists,
             dotfiles_dir=args.dotfiles_dir,
         )
     except DotfilesError as e:
