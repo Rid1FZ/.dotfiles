@@ -7,7 +7,6 @@ local opt = vim.o
 local system = vim.system
 local cmd = vim.cmd
 local schedule_wrap = vim.schedule_wrap
-local fn = vim.fn
 local api = vim.api
 local bo = vim.bo -- always use the index form: bo[something]
 local format = string.format
@@ -67,10 +66,8 @@ local function get_branch()
         return ""
     end
 
-    local cwd = fn.getcwd()
+    local cwd = utils.get_project_root(api.nvim_get_current_buf())
 
-    -- last_cwd is now always updated by the callback (success or failure), so
-    -- a simple equality check is sufficient. No branch-not-empty guard needed.
     if cwd == last_cwd then
         return last_branch
     end

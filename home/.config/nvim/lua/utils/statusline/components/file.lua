@@ -14,9 +14,6 @@ local cmd = vim.cmd
 local colors = require("utils.statusline.highlights.colors")
 local highlight = require("utils").highlight
 
----@type table<integer, string>
-local project_root_cache = {}
-
 ---@type table<integer, {filepath: string?, results: table<integer, string>}>
 local file_path_cache = {}
 
@@ -26,21 +23,10 @@ local file_icon_cache = {}
 local DEBOUNCE_MS = 150
 
 ---@type string[]
-local root_markers = {
-    ".git",
-    ".hg",
-    ".svn",
-    "package.json",
-    "Cargo.toml",
-    "go.mod",
-    "pyproject.toml",
-    "Makefile",
-}
 
 ---Debounced cache invalidation for a given buffer.
 ---@type fun(bufnr: integer): nil
 local debounced_invalidate = utils.debounce_by_key(function(bufnr)
-    project_root_cache[bufnr] = nil
     file_path_cache[bufnr] = nil
     file_icon_cache[bufnr] = nil
 
@@ -48,28 +34,6 @@ local debounced_invalidate = utils.debounce_by_key(function(bufnr)
         cmd.redrawstatus()
     end
 end, DEBOUNCE_MS)
-
----Find the project root directory for the current buffer.
----@return string Project root path
-local function get_project_root()
-    local bufnr = api.nvim_get_current_buf()
-    if project_root_cache[bufnr] then
-        return project_root_cache[bufnr]
-    end
-
-    local file = api.nvim_buf_get_name(bufnr)
-    if file == "" then
-        local cwd = uv.cwd()
-        project_root_cache[bufnr] = cwd
-        return cwd --[[@as string]]
-    end
-
-    local found = fs.find(root_markers, { upward = true, path = file })[1]
-    local root = found and fs.dirname(found) or uv.cwd()
-
-    project_root_cache[bufnr] = root
-    return root
-end
 
 ---Get file icon component with appropriate highlighting.
 ---@return string Statusline format string with file icon (empty for special buffers)
@@ -142,7 +106,7 @@ M.get_filepath = function()
 
     local display_path = file_path_cache[bufnr].filepath
     if not display_path then
-        local root = get_project_root()
+        local root = utils.get_project_root(bufnr)
         local root_name = fn.fnamemodify(root, ":t")
         local relative_path = full_path:gsub("^" .. vim.pesc(root) .. "/", "")
 

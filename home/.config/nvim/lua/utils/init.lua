@@ -12,6 +12,21 @@ local schedule = vim.schedule
 local format = string.format
 local defer_fn = vim.defer_fn
 
+---@type table<integer, string>
+local project_root_cache = {}
+
+---@type string[]
+local root_markers = {
+    ".git",
+    ".hg",
+    ".svn",
+    "package.json",
+    "Cargo.toml",
+    "go.mod",
+    "pyproject.toml",
+    "Makefile",
+}
+
 ---Set highlighting
 ---@param name string The highlight group name
 ---@param val vim.api.keyset.highlight The highlight attributes
@@ -121,5 +136,40 @@ M.buf_line_ending = function(bufnr)
     local ff = vim.bo[bufnr].fileformat
     return ff == "dos" and "\r\n" or ff == "mac" and "\r" or "\n"
 end
+
+---Find the project root directory for a given buffer.
+---@param bufnr? integer Defaults to the current buffer
+---@return string Project root path
+M.get_project_root = function(bufnr)
+    bufnr = bufnr or api.nvim_get_current_buf()
+
+    if project_root_cache[bufnr] then
+        return project_root_cache[bufnr]
+    end
+
+    local file = api.nvim_buf_get_name(bufnr)
+    if file == "" then
+        local cwd = vim.uv.cwd() or ""
+        project_root_cache[bufnr] = cwd
+        return cwd --[[@as string]]
+    end
+
+    local root = vim.fs.root(file, root_markers) or vim.uv.cwd()
+
+    project_root_cache[bufnr] = root
+    return root --[[@as string]]
+end
+
+-- Clear caches
+api.nvim_create_autocmd({ "BufDelete", "BufFilePost", "DirChanged" }, {
+    group = api.nvim_create_augroup("UtilsClearCache", { clear = true }),
+    callback = function(args)
+        if args.event == "DirChanged" then
+            project_root_cache = {} -- Flush everything if global directory changes
+        else
+            project_root_cache[args.buf] = nil
+        end
+    end,
+})
 
 return M
