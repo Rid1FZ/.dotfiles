@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-nohup alacritty --title Htop --class htop --command htop &
+nohup alacritty --title Htop --class htop --command htop &>>/tmp/htop-launcher.log &
