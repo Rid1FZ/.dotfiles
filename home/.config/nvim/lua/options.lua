@@ -15,10 +15,18 @@ M.setup = function()
     -- Global variables
     --------------------------------------------------------------------
     g.mapleader = " "
-    g.neovide_cursor_animation_length = 0
-    g.neovide_scroll_animation_length = 0
     g.tex_flavor = "latex"
     g.health = { style = "float" }
+
+    --------------------------------------------------------------------
+    -- Neovide specific variables
+    --------------------------------------------------------------------
+    if vim.g.neovide then
+        g.neovide_cursor_animation_length = 0
+        g.neovide_scroll_animation_length = 0
+        g.neovide_progress_bar_enabled = false
+        g.neovide_hide_mouse_when_typing = true
+    end
 
     --------------------------------------------------------------------
     -- Disable unused built-in plugins
