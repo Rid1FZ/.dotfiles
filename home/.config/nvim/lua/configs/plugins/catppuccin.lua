@@ -1,5 +1,6 @@
 local M = {}
 
+M.compile_path = vim.fn.stdpath("cache") .. "/catppuccin"
 M.flavour = "mocha"
 M.background = {
     light = "latte",
