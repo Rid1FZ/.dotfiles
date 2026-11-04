@@ -62,7 +62,7 @@ set_env ANDROID_HOME "${XDG_DATA_HOME:="${HOME}/.local/share"}/android"
 set_env ANDROID_USER_HOME "${XDG_CONFIG_HOME:="${HOME}/.config"}/android"
 
 # Java
-set_env JAVA_HOME "/usr/lib/jvm/jre-21-openjdk"
+set_env JAVA_HOME "/usr/lib/jvm/java-openjdk"
 
 # Rust
 set_env CARGO_HOME "${XDG_DATA_HOME:="${HOME}/.local/share"}/cargo"
