@@ -1,0 +1,37 @@
+{
+  "name": "catppuccin-mocha",
+  "base": "native",
+  "extra_style": {
+    "Text": "#cdd6f4",
+    "Keyword": "#cba6f7",
+    "Keyword.Constant": "#fab387",
+    "Keyword.Declaration": "#cba6f7",
+    "Keyword.Namespace": "#cba6f7",
+    "Keyword.Type": "#f9e2af",
+    "Name": "#cdd6f4",
+    "Name.Builtin": "#89b4fa",
+    "Name.Class": "#f9e2af",
+    "Name.Decorator": "#fab387",
+    "Name.Exception": "#f38ba8",
+    "Name.Function": "#89b4fa",
+    "Name.Function.Magic": "#89dceb",
+    "Name.Namespace": "#f2cdcd",
+    "String": "#a6e3a1",
+    "String.Doc": "#a6e3a1 italic",
+    "String.Escape": "#f5c2e7",
+    "Number": "#fab387",
+    "Operator": "#89dceb",
+    "Operator.Word": "#cba6f7",
+    "Punctuation": "#9399b2",
+    "Comment": "#6c7086 italic",
+    "Error": "#cdd6f4 bg:#f38ba8",
+    "Prompt": "#a6e3a1",
+    "PromptNum": "#a6e3a1 bold",
+    "OutPrompt": "#f38ba8",
+    "OutPromptNum": "#f38ba8 bold"
+  },
+  "symbols": {
+    "arrow": "->",
+    "top_line": "-"
+  }
+}
