@@ -9,7 +9,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "fzf-lua": {
-      "rev": "07fce8ac8dffba4e11f1cbe5490d730a2cc5ec7a",
+      "rev": "82ddfe6efc56480c052fd213e0cbb2f024dfd754",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "indent-blankline.nvim": {
@@ -21,11 +21,11 @@
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.diff": {
-      "rev": "2890bd1edc42b57af769774e53c2bfbbe3f45d4d",
+      "rev": "91d6ce4b7f400439fe761f01a58280f2c0f99c01",
       "src": "https://github.com/echasnovski/mini.diff"
     },
     "mini.pairs": {
-      "rev": "03eb1f0062a2cee5314d1ac3939246e4bb21352e",
+      "rev": "eea81afc1b4de898de9bb310c2225f9225fd42b9",
       "src": "https://github.com/nvim-mini/mini.pairs"
     },
     "nvim-highlight-colors": {
@@ -37,11 +37,11 @@
       "src": "https://github.com/alexghergh/nvim-tmux-navigation"
     },
     "nvim-tree": {
-      "rev": "69eb0c34ed3d836d5a0d92d913b77dd73b054f2f",
+      "rev": "dbc9d96a3633c2de85f409416ebd4a3aacf4220a",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-web-devicons": {
-      "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
+      "rev": "0dc0cfb0c6858041174a53c7aa4adaf65e994b3c",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "tree-sitter-manager.nvim": {
