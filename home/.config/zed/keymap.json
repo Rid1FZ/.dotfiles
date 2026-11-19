@@ -49,6 +49,10 @@
     "context": "Terminal",
     "bindings": {
       "escape escape": "terminal_panel::Toggle",
+      "ctrl-p": ["terminal::SendKeystroke", "ctrl-p"],
+      "ctrl-n": ["terminal::SendKeystroke", "ctrl-n"],
+      "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"],
+      "ctrl-r": ["terminal::SendKeystroke", "ctrl-r"],
     },
   },
 ]
