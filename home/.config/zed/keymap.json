@@ -41,8 +41,8 @@
       "y": "project_panel::Copy",
       "x": "project_panel::Cut",
       "p": "project_panel::Paste",
-      "space d": "project_panel::Trash",
-      "space D": "project_panel::Delete",
+      "d": "project_panel::Trash",
+      "D": "project_panel::Delete",
     },
   },
   {
