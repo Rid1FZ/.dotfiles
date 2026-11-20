@@ -151,9 +151,9 @@ M.setup = function()
             tex = "tex",
         },
         pattern = {
-            [fn.expand("$HOME") .. "/.config/hypr/.*%.conf"] = "hyprlang",
-            [fn.expand("$HOME") .. "/.config/waybar/config"] = "jsonc",
-            [fn.expand("$HOME") .. "/.config/zathura/.*"] = "zathurarc",
+            [".*/.config/hypr/.*%.conf"] = "hyprlang",
+            [".*/.config/waybar/config"] = "jsonc",
+            [".*/.config/zathura/.*"] = "zathurarc",
         },
     })
 end
