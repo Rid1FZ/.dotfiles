@@ -1,91 +1,105 @@
-# Fedora 44 + GNOME 50 Memory & Performance Optimization
+# Fedora 45 Memory & Performance Optimization (GNOME 51 / KDE Plasma 6.8)
 
-Notes on reducing unnecessary RAM usage and background activity on Fedora 44
-Workstation.
+Notes on reducing unnecessary RAM usage and background activity on Fedora
+Workstation (GNOME) and Fedora KDE Plasma Desktop.
 
-> Tested against: Fedora 44, GNOME 50, Wayland-only session (X11 is no longer
-> offered). Commands use `dnf5`, the native package manager since Fedora 43.
+> Revalidated November 2026 against Fedora 45, GNOME 51 and Plasma 6.8
+> (Wayland-only on both; commands use `dnf5`). Reference machine: Intel Core 3
+> 100U, 8 GB DDR5, NVMe. Sections tagged
+> **[GNOME]** / **[KDE]** are desktop-specific. Items I could not re-verify
+> against Fedora 45 are marked *(recheck)*.
 
----
-
-## 1. Disable Unused GNOME Extensions
-
-Extensions run inside the `gnome-shell` process itself. Because GNOME Shell is a
-single-process compositor, a poorly written or heavy extension can cause memory
-growth that never gets freed until you log out.
-
-Open the Extensions app:
+**Measure first.** Fedora 45 shows roughly 95 MiB more "used" memory than 44 on
+an idle system, almost all of it unevictable pages in the root cgroup, not any
+service. Do not chase it. Look at real consumers:
 
 ```bash
-gnome-extensions-app
+systemd-cgtop -m          # per-cgroup memory
+free -h; zramctl
 ```
-
-Turn off any extension you don't actively use. There is no safe shortcut here — what
-counts as "unused" is personal.
 
 ---
 
-## 2. PackageKit
+## 1. Desktop shell extras
 
-On Fedora 44, GNOME Software ships a direct DNF5 plugin (`libgs_plugin_dnf5.so`) and
-no longer routes RPM operations through PackageKit. Disabling or removing PackageKit
-has no effect on GNOME Software's ability to install or update packages — contrary to
-what older guides suggest.
+**[GNOME]** Extensions run inside the `gnome-shell` process, so a leaky one
+grows the compositor itself until you log out. Disable what you do not use:
 
-PackageKit is still used by **Cockpit** (the web admin panel) and some third-party
-tools. If you don't use those, you can disable it:
+```bash
+gnome-extensions list --enabled
+gnome-extensions disable <uuid>
+```
+
+(or the Extensions app). Re-check extension compatibility after the 50 to 51
+upgrade; Extensions that do not declare 51 support are disabled.
+
+**[KDE]** Plasma widgets, KWin scripts and effects each cost memory. Remove
+unused panel widgets, and disable effects and KWin scripts you do not use in
+System Settings → Window Management → Desktop Effects / KWin Scripts. Plasma
+6.8 itself reduced startup memory, including the Discover update notifier.
+
+---
+
+## 2. PackageKit and software centres
+
+The two desktops differ here, and the old advice only held for GNOME:
+
+- **[GNOME]** GNOME Software talks to dnf5 directly (via the dnf5daemon, not
+  PackageKit). Disabling PackageKit does not affect GNOME Software.
+- **[KDE]** **Discover uses PackageKit** (since Fedora 44 PackageKit itself
+  uses a DNF5 backend). If you use Discover for RPM updates or the update
+  notifier, do **not** disable PackageKit.
+
+If you update only from the terminal and Flatpak, you can save memory on KDE by
+disabling Discover's notifier autostart instead (System Settings → Autostart;
+Plasma 6.8 lets you toggle an entry without deleting it), and on either desktop
+by stopping PackageKit:
 
 ```bash
 sudo systemctl disable --now packagekit.service
 ```
 
-This does **not** break GNOME Software update notifications or RPM management — that
-now lives in the DNF5 plugin directly.
+PackageKit is also used by Cockpit and some third-party tools.
 
 ---
 
-## 3. ABRT (Automated Bug Reporting Tool)
+## 3. ABRT *(recheck on Fedora 45)*
 
-On **Fedora 44 Workstation, `gnome-abrt` was already removed** before release. The
-upstream retrace server also does not support Fedora 43 or Fedora 44 crash reports,
-meaning even the CLI components are non-functional for report submission. ABRT is
-effectively inert on this release.
+On Fedora 44 Workstation `gnome-abrt` had already been removed and the upstream
+retrace server did not accept 43/44 crash reports, leaving the ABRT daemon
+collecting data that goes nowhere. List what is installed before removing:
 
-The remaining daemon still runs in the background collecting crash data that goes
-nowhere. Safe to remove entirely:
+```bash
+dnf5 list --installed 'abrt*' 'libreport*'
+```
 
 ```bash
 sudo dnf5 remove abrt abrt-desktop abrt-gui abrt-libs libreport \
     libreport-gtk libreport-fedora 2>/dev/null || true
 ```
 
-The `2>/dev/null || true` handles any packages from the list that aren't installed on
-your system — Fedora 44 may already be missing several of them.
+**[KDE]** crash reporting is DrKonqi, which is independent of ABRT. Keep it.
 
 ---
 
 ## 4. SSSD
 
-**Check your authselect profile before touching anything:**
+Check your authselect profile first:
 
 ```bash
 authselect current
 ```
 
-Since Fedora 40, fresh installs use the `local` profile by default — not the `sssd`
-profile. If your output shows `Profile ID: local`, SSSD is not handling your
-authentication and the packages can be safely removed:
+Fresh installs since Fedora 40 use the `local` profile. If it says
+`Profile ID: local`, SSSD is not authenticating you and can be removed:
 
 ```bash
 sudo dnf5 remove sssd sssd-common sssd-client sssd-kcm
 ```
 
-If your output shows `Profile ID: sssd`, **do not remove SSSD**. Your system is
-depending on it for authentication. This is common on systems upgraded from Fedora 39
-or earlier, or in enterprise environments.
-
-The `esc` and `openct` packages (smart card tools) are safe to remove on any
-standalone workstation:
+If it says `sssd`, **do not remove it**. (Fedora 45 also drops the `nis`
+authselect profile; irrelevant on a standalone workstation.) Smart-card tools
+are safe to remove on a standalone machine:
 
 ```bash
 sudo dnf5 remove esc openct 2>/dev/null || true
@@ -93,52 +107,45 @@ sudo dnf5 remove esc openct 2>/dev/null || true
 
 ---
 
-## 5. Location Services (geoclue2)
+## 5. Location services (geoclue2)
 
-Geoclue is a D-Bus activated service — it only runs when an application explicitly
-requests location information, and every app requires explicit user permission.
+Geoclue is D-Bus activated: it runs only when an app asks, and each app needs
+permission. **Do not remove geoclue2**; desktop features depend on it softly.
 
-**Do not remove geoclue2.** It is a soft dependency of GNOME features including:
-- Night Light (automatic color temperature by time of sunset)
-- GNOME Clocks showing local sunset/sunrise
-- GNOME Weather
-
-The correct approach is to disable location services via GNOME Settings:
-
-**Settings → Privacy & Security → Location Services → Off**
-
-This disables it system-wide without removing the package. The daemon will not be
-queried by any application.
+- **[GNOME]** Settings → Privacy & Security → Location Services → Off. This
+  disables it system-wide without removing the package (Night Light then needs
+  a manual schedule or a fixed location).
+- **[KDE]** There is no single global switch in System Settings. Use manual
+  location/schedule in Night Light rather than the automatic mode, and decline
+  location prompts from apps. *(recheck: whether Night Light's automatic mode
+  queries GeoClue on 6.8)*
 
 ---
 
-## 6. Virtual Machine Guest Tools
+## 6. Virtual machine guest tools
 
-If Fedora is installed on bare metal, these can be removed:
+On bare metal these can be removed:
 
 ```bash
 sudo dnf5 remove qemu-guest-agent spice-vdagent open-vm-tools 2>/dev/null || true
 ```
 
-Use `|| true` since not all are installed by default — only the applicable one is
-pulled in depending on whether the installer detected a VM environment.
-
 ---
 
-## 7. Clean Up Leftover Dependencies
-
-After any package removal, run:
+## 7. Clean up leftover dependencies
 
 ```bash
 sudo dnf5 autoremove
 ```
 
+Read the list before confirming; it can include packages you were relying on
+only as weak dependencies.
+
 ---
 
-## 8. Background Services to Disable
+## 8. Background services to disable
 
-These services are safe to disable if the relevant hardware or use case doesn't apply.
-All commands are idempotent — running them on an already-disabled service is harmless.
+All commands are idempotent.
 
 ### Bluetooth (if unused)
 
@@ -146,102 +153,110 @@ All commands are idempotent — running them on an already-disabled service is h
 sudo systemctl disable --now bluetooth.service
 ```
 
-If you use Bluetooth occasionally, prefer leaving it enabled and toggling it from the
-quick settings panel instead.
+If you use it occasionally, keep it enabled and toggle from Quick Settings
+**[GNOME]** or the Bluetooth applet **[KDE]**.
 
 ### Printing (CUPS)
 
 ```bash
-sudo systemctl disable --now cups.service cups.socket cups.path
+sudo systemctl disable --now cups.service cups.socket cups.path cups-browsed.service
 ```
 
-CUPS uses socket activation, so all three units need to be disabled. Re-enable them
-if you add a printer later.
+CUPS is socket/path activated, so disable all units. `cups-browsed` (network
+printer discovery) may not exist on every install; ignore "not found" errors.
 
-### Network device discovery (Avahi / mDNS)
+### Network discovery (Avahi / mDNS)
 
 ```bash
 sudo systemctl disable --now avahi-daemon.service avahi-daemon.socket
 ```
 
-Avahi handles `.local` hostname resolution and service discovery. Disable it if you
-don't use network printers, AirPlay, or share files on a local network.
+Needed for `.local` names, network printers, AirPlay and some file sharing.
+KDE Connect does not use Avahi.
 
-### Cellular modem support
+### Cellular modem
 
 ```bash
 sudo systemctl disable --now ModemManager.service
 ```
 
-Only needed if you have a USB or built-in cellular modem.
-
 ### Legacy RAID and iSCSI monitoring
 
-These are enterprise storage services unlikely to be running on a workstation. Check
-they actually exist before disabling:
-
 ```bash
-# Check which ones are present
 systemctl status mdmonitor.service iscsi.service iscsid.socket 2>/dev/null
-
-# Disable what's present
 sudo systemctl disable --now mdmonitor.service 2>/dev/null || true
 sudo systemctl disable --now iscsi.service iscsid.socket 2>/dev/null || true
 ```
 
----
+### Indexer
 
-## 9. Recovering a Bloated gnome-shell
-
-**`Alt+F2 → r` does not work on Wayland**, and Fedora 44 ships GNOME 50 as a
-Wayland-only session. Triggering a shell restart kills the compositor, which terminates
-all open applications. There is no safe in-session shell restart on Wayland.
-
-**What actually works:**
-
-- **Log out and back in.** This is the correct equivalent — GNOME Shell is a fresh
-  process after login, starting with a clean heap.
-- **Switch to a TTY if the session is frozen:** Press `Ctrl+Alt+F3`, log in, then
-  run `sudo systemctl restart gdm` to kill and respawn the session. Save your work
-  first if possible.
+See `fedora-setup.md` §9.2 (**[GNOME]** LocalSearch, **[KDE]** Baloo).
 
 ---
 
-## 10. On Dropping Disk Cache (`vm.drop_caches`)
+## 9. Recovering a bloated desktop shell
 
-**Do not run this routinely:**
+There is no safe in-session compositor restart on Wayland, on either desktop.
+`Alt+F2 → r` does not exist on GNOME's Wayland-only session, and restarting the
+compositor ends the session and every app in it.
+
+**[GNOME]** Log out and back in (fresh `gnome-shell`, clean heap). If frozen:
+switch to a TTY (`Ctrl+Alt+F3`; on Fedora 45 this is kmscon), log in, and run
+`sudo systemctl restart gdm` (saves nothing; unsaved work is lost).
+
+**[KDE]** Plasma's shell, unlike KWin, *can* be restarted without losing your
+windows:
+
+```bash
+systemctl --user restart plasma-plasmashell.service
+# fallback if it is not running as a systemd unit:
+plasmashell --replace &
+```
+
+KWin (the compositor) cannot be restarted on Wayland. If the whole session is
+frozen, use a TTY and restart the login manager:
+
+```bash
+sudo systemctl restart plasmalogin     # Fedora 44+ fresh installs
+sudo systemctl restart sddm            # systems still on SDDM
+```
+
+---
+
+## 10. On dropping disk cache (`vm.drop_caches`)
+
+Do not run this routinely:
 
 ```bash
 sudo sync; sudo sysctl -w vm.drop_caches=3
 ```
 
-Linux intentionally fills unused RAM with disk cache (file contents, inode data,
-directory entries). This cache is what makes the system feel fast — opening a
-recently-accessed file reads from RAM rather than disk. When another process needs that
-RAM, the kernel silently evicts cache pages automatically. Manually dropping caches
-forces an immediate rebuild from disk, costing more I/O and CPU than just letting the
-kernel handle it. The "freed" RAM will be reallocated as cache within seconds of
-normal use.
-
-This command exists for benchmarking purposes (to get a clean state before measuring
-cold-cache performance). It is not a memory optimization technique.
+Linux fills unused RAM with file cache on purpose and evicts it automatically
+when a process needs memory. Dropping it forces an immediate rebuild from disk,
+costing more I/O and CPU than leaving it alone. It exists for benchmarking cold
+caches, not as a memory optimization.
 
 ---
 
-## 11. Summary of What's Safe vs Risky
+## 11. Swap, zram and OOM
+
+zram, sysctl and systemd-oomd are covered in `fedora-setup.md` §2.
+
+---
+
+## 12. Summary: safe vs risky
 
 | Action | Safe? | Condition |
 |---|---|---|
-| Disable PackageKit | ✔ Safe | No effect on GNOME Software on Fedora 44 |
-| Remove ABRT | ✔ Safe | Already broken on Fedora 44 |
+| Disable PackageKit | ✔ GNOME / ⚠ KDE | **Breaks Discover** RPM updates on KDE |
+| Remove ABRT | ✔ Safe | Recheck package list on Fedora 45 |
 | Remove SSSD | ⚠ Check first | Only if `authselect current` shows `local` |
 | Remove smart card tools (`esc`, `openct`) | ✔ Safe | Standalone workstation |
-| Remove geoclue2 | ✘ Don't | Breaks Night Light; disable via Settings instead |
+| Remove geoclue2 | ✘ Don't | Disable location in settings instead |
 | Remove VM guest tools | ✔ Safe | Bare metal only |
-| Disable bluetooth | ✔ Safe | If unused |
-| Disable CUPS | ✔ Safe | If no printer |
-| Disable Avahi | ✔ Safe | If no local network sharing |
-| Disable ModemManager | ✔ Safe | If no cellular modem |
+| Disable bluetooth / CUPS / Avahi / ModemManager | ✔ Safe | If hardware/use case absent |
 | Disable RAID/iSCSI services | ✔ Safe | Workstation install |
-| `Alt+F2 → r` shell restart | ✘ Wrong | Doesn't work on Wayland; kills session |
+| `dnf5 mark remove` | ✘ Does not exist | Use `dnf5 remove` + `excludepkgs` |
+| `Alt+F2 → r` | ✘ Wrong | No such restart on Wayland |
+| Restart `plasma-plasmashell` | ✔ KDE only | Shell only; KWin cannot be restarted |
 | `vm.drop_caches=3` | ✘ Counterproductive | Not a memory optimization |
